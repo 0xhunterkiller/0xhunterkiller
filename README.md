@@ -49,7 +49,3 @@
 <br clear="both">
 
 ###
-
-<p align="left">Hello World!!</p>
-
-###
