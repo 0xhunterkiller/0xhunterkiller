@@ -1,7 +1,7 @@
-<h2 align="left">Hi 👋! My name is 0xhunterkiller and I'm a devops engineer</h2>
+<h2 align="left">Hi 👋! My name is 0xhunterkiller </h2>
 <img align="right" height="150" src="./hunterkiller.png"  />
 
-###
+I am a Cloud Engineer and I have only one skill, the skill to learn things quickly. I dabble in a lot of things, while mostly concentrating in `Cloud Computing`, I also have a good amount of knowledge in `Distributed Systems`, `Cybersecurity`,`Economics, Markets and Game Theory`,etc. 
 
 <div align="left">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="30" alt="python logo"  />
