@@ -4,3 +4,10 @@ language = "en"
 multilingual = false
 src = "src"
 title = "HuntingTactics"
+
+[output.html]
+additional-css=["custom.css"]
+
+[output.html.fold]
+enable = true
+level = 0
