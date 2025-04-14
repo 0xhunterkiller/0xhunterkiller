@@ -82,14 +82,6 @@ Welcome to a collection of some of my most impactful contributions — from Kube
 
 ---
 
-## 💡 Featured Projects
-
-- [**Behold**](https://github.com/0xhunterkiller/behold) – A test observability tool for Kubernetes deployments.
-- [**Rook**](https://github.com/0xhunterkiller/rook) – Directory Integrity Monitoring with real-time alerts.
-- [**Keylogger (Ethical POC)**](https://github.com/0xhunterkiller/keylogger) – Malware research demo (ethical hacking).
-
----
-
 ## 📌 TL;DR
 
 - 🧠 Infra you can trust.  
