@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light" dir="ltr">
+<html lang="en" class="light sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-        
+
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -24,27 +24,30 @@
         <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="../highlight.css">
-        <link rel="stylesheet" href="../tomorrow-night.css">
-        <link rel="stylesheet" href="../ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../custom.css">
 
-    </head>
-    <body class="sidebar-visible no-js">
-    <div id="body-container">
-        <!-- Provide site root to javascript -->
-        <script>
-            var path_to_root = "../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
-        </script>
 
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -58,24 +61,22 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            var html = document.querySelector('html');
+            const html = document.documentElement;
             html.classList.remove('light')
             html.classList.add(theme);
-            var body = document.querySelector('body');
-            body.classList.remove('no-js')
-            body.classList.add('js');
+            html.classList.add("js");
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var body = document.querySelector('body');
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -83,45 +84,25 @@
                 sidebar = 'hidden';
             }
             sidebar_toggle.checked = sidebar === 'visible';
-            body.classList.remove('sidebar-visible');
-            body.classList.add("sidebar-" + sidebar);
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../AboutMe.html"><strong aria-hidden="true">1.</strong> About Me</a></li><li class="chapter-item "><a href="../blogs/blog-intro.html"><strong aria-hidden="true">2.</strong> Blogs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../blogs/clojure-notes.html"><strong aria-hidden="true">2.1.</strong> Clojure Fundamentals</a></li><li class="chapter-item "><a href="../blogs/rust-chap3.html"><strong aria-hidden="true">2.2.</strong> Rust Programming Concepts</a></li><li class="chapter-item "><a href="../blogs/resnets.html"><strong aria-hidden="true">2.3.</strong> Residual Networks</a></li><li class="chapter-item "><a href="../blogs/convnets.html"><strong aria-hidden="true">2.4.</strong> What are Convolutional Neural Networks?</a></li><li class="chapter-item "><a href="../blogs/dip3.html"><strong aria-hidden="true">2.5.</strong> Image Functions, Pixels and Types of Image Processing</a></li><li class="chapter-item "><a href="../blogs/dip2.html"><strong aria-hidden="true">2.6.</strong> Why Image Processing?</a></li><li class="chapter-item "><a href="../blogs/primes.html"><strong aria-hidden="true">2.7.</strong> The Notorious Prime Numbers</a></li><li class="chapter-item "><a href="../blogs/metared-ctf.html"><strong aria-hidden="true">2.8.</strong> Data Exfiltration Challenge—CTF Internacional MetaRed 2021-3rd STAGE</a></li><li class="chapter-item "><a href="../blogs/dvwa-solutions.html"><strong aria-hidden="true">2.9.</strong> Solutions for DVWA</a></li><li class="chapter-item "><a href="../blogs/cybersec-resources.html"><strong aria-hidden="true">2.10.</strong> Cyber Security Resources</a></li><li class="chapter-item "><a href="../blogs/dip1.html"><strong aria-hidden="true">2.11.</strong> Intro to Image Manipulation</a></li><li class="chapter-item "><a href="../blogs/evolution-of-the-society.html"><strong aria-hidden="true">2.12.</strong> Evolution of the Society — What Next?</a></li><li class="chapter-item "><a href="../blogs/data-science-2.html"><strong aria-hidden="true">2.13.</strong> Saai talks Data Science #2</a></li><li class="chapter-item "><a href="../blogs/data-science-1.html"><strong aria-hidden="true">2.14.</strong> Saai talks Data Science #1</a></li><li class="chapter-item "><a href="../blogs/paths.html"><strong aria-hidden="true">2.15.</strong> Paths — A way into the future for everybody.</a></li></ol></li><li class="chapter-item expanded "><a href="../theTurbulence/turbulence.html"><strong aria-hidden="true">3.</strong> The Turbulence</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../theTurbulence/crowdstrike_falcon_update.html" class="active"><strong aria-hidden="true">3.1.</strong> Crowdstrike Falcon Content Update for Windows Hosts</a></li></ol></li></ol>
-            </div>
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <!-- Track and set sidebar scroll position -->
-        <script>
-            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
-            sidebarScrollbox.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A') {
-                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
-                }
-            }, { passive: true });
-            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
-            sessionStorage.removeItem('sidebar-scroll');
-            if (sidebarScrollTop) {
-                // preserve sidebar scroll position when navigating via links within sidebar
-                sidebarScrollbox.scrollTop = sidebarScrollTop;
-            } else {
-                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
-                var activeSection = document.querySelector('#sidebar .active');
-                if (activeSection) {
-                    activeSection.scrollIntoView({ block: 'center' });
-                }
-            }
-        </script>
-
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -131,6 +112,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -194,11 +176,11 @@ hospitals are down. Hard to imagine how many millions if not billions of dollars
 </code></pre>
 <h1 id="cause-of-the-outage"><a class="header" href="#cause-of-the-outage">Cause of the outage</a></h1>
 <p>The Crowdstrike Falcon sensor, is an endpoint security component, which is designed to protect devices from malicious actors. While the WindowsBootLoader, loads the OS Kernel into memory, it also loads critical components like the Falcon Sensor, which is a LKM (<a href="https://en.wikipedia.org/wiki/Loadable_kernel_module">Loadable Kernel Module</a>). If this module errors out, it causes a failure in the boot sequence, causing the system to crash. Systems that were not running Falcon Sensor, were not affected.</p>
-<p align="center"> <img src="./media/bsod.jpeg" alt="BSOD"/> </p>
+<p align="center"> <img src="./media/crowdstrike-falcon-update/bsod.jpeg" alt="BSOD"/> </p>
 <p>The Falcon Sensor, receives configuration updates, multiple times in a day as a part of the Crowdstrike's defensive operations. One such configuration update, was what caused the issue. The config update triggered an error, causing a failure in the boot sequence, resulting in the BSOD screen. In this case turning it off and on again wouldn't work!!</p>
-<p align="center"> <img src="./media/itcrowd.png" alt="IT Crowd"/> </p>
+<p align="center"> <img src="./media/crowdstrike-falcon-update/itcrowd.png" alt="IT Crowd"/> </p>
 <p>When a computer is live (turned on), Falcon sensor driver pulls updates from the CS cloud. If this happened between 04:09 UTC to 05:27 UTC on July 19th. Then, that host, would not be able to boot properly due to a bad config update for the falcon sensor.</p>
-<p align="center"> <img src="./media/ms-restart-joke.png" alt="MS Restart Joke"/> </p>
+<p align="center"> <img src="./media/crowdstrike-falcon-update/ms-restart-joke.png" alt="MS Restart Joke"/> </p>
 <p>The config files referred to as "Channel Files" reside in <code>C:\Windows\System32\drivers\CrowdStrike\</code> and they are used by falcon, to protect the host when its offline (when its not able to contact the crowdstrike cloud). The botched config file or "channel" file in this case starts with <code>C-00000291-</code> and has a <code>.sys</code> extension. Which is why, the initial remedy was to delete this file. After all, if a config is not there, it wont be applied right.</p>
 <p>So, if you are facing this problem, the last updated timestamp of this file. <code>C:\Windows\System32\drivers\CrowdStrike\C-00000291-*.sys</code>, is probably after 04:09 UTC. The version of the file before 04:09UTC is in a good state. If you are on Windows, you can use the following steps to recover:</p>
 <ul>
@@ -228,14 +210,14 @@ del C-00000291*.sys
 <h1 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h1>
 <p>Experts estimate the damage from the global Microsoft outage at billions of dollars, with significant impacts on various sectors. Many Hospitals were also shutdown, hindering emergency services, which might have caused some damage to human lives. The airline industry was severely affected, resulting in thousands of flight cancellations and operational suspensions by major US carriers such as United Airlines, Delta Air Lines, and American Airlines. The London Stock Exchange halted trading, and a third of McDonald's restaurants in Japan closed due to malfunctioning cash registers.</p>
 <p>Crowdstrike stocks fell by nearly 10% in 2 days. Economists suggest that the company will not be able to survive the financial storms its going to face, from the lawsuits that follow.</p>
-<p align="center"> <img src="./media/cs-fall.png" alt="Crowdstrike stock falls"/> </p>
+<p align="center"> <img src="./media/crowdstrike-falcon-update/crowdstrike-falcon-update/cs-fall.png" alt="Crowdstrike stock falls"/> </p>
 <p>All this could have been avoided, if only Crowdstrike tested their code in a staging environment, understanding the criticality of the software they are running. This whole episode has only re-established the need for proper testing of software, before ramming it on production. It also raises a few questions on why we let one seemingly not so popular organization take down the entire world.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../theTurbulence/turbulence.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../blogs/paths.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
@@ -246,7 +228,7 @@ del C-00000291*.sys
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../theTurbulence/turbulence.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../blogs/paths.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
@@ -254,6 +236,22 @@ del C-00000291*.sys
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 
