@@ -17,5 +17,4 @@
     - [Saai talks Data Science #2](./blogs/data-science-2.md)
     - [Saai talks Data Science #1](./blogs/data-science-1.md)
     - [Paths — A way into the future for everybody.](./blogs/paths.md)
-- [The Turbulence](./theTurbulence/turbulence.md)
-    - [Crowdstrike Falcon Content Update for Windows Hosts](./theTurbulence/crowdstrike_falcon_update.md)
+    - [Crowdstrike Falcon Content Update for Windows Hosts](./blogs/crowdstrike-falcon-update.md)

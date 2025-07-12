@@ -29,16 +29,16 @@ hospitals are down. Hard to imagine how many millions if not billions of dollars
 
 The Crowdstrike Falcon sensor, is an endpoint security component, which is designed to protect devices from malicious actors. While the WindowsBootLoader, loads the OS Kernel into memory, it also loads critical components like the Falcon Sensor, which is a LKM ([Loadable Kernel Module](https://en.wikipedia.org/wiki/Loadable_kernel_module)). If this module errors out, it causes a failure in the boot sequence, causing the system to crash. Systems that were not running Falcon Sensor, were not affected.
 
-<p align="center"> <img src="./media/bsod.jpeg" alt="BSOD"/> </p>
+<p align="center"> <img src="./media/crowdstrike-falcon-update/bsod.jpeg" alt="BSOD"/> </p>
 
 
 The Falcon Sensor, receives configuration updates, multiple times in a day as a part of the Crowdstrike's defensive operations. One such configuration update, was what caused the issue. The config update triggered an error, causing a failure in the boot sequence, resulting in the BSOD screen. In this case turning it off and on again wouldn't work!!
 
-<p align="center"> <img src="./media/itcrowd.png" alt="IT Crowd"/> </p>
+<p align="center"> <img src="./media/crowdstrike-falcon-update/itcrowd.png" alt="IT Crowd"/> </p>
 
 When a computer is live (turned on), Falcon sensor driver pulls updates from the CS cloud. If this happened between 04:09 UTC to 05:27 UTC on July 19th. Then, that host, would not be able to boot properly due to a bad config update for the falcon sensor.
 
-<p align="center"> <img src="./media/ms-restart-joke.png" alt="MS Restart Joke"/> </p>
+<p align="center"> <img src="./media/crowdstrike-falcon-update/ms-restart-joke.png" alt="MS Restart Joke"/> </p>
 
 The config files referred to as "Channel Files" reside in `C:\Windows\System32\drivers\CrowdStrike\` and they are used by falcon, to protect the host when its offline (when its not able to contact the crowdstrike cloud). The botched config file or "channel" file in this case starts with `C-00000291-` and has a `.sys` extension. Which is why, the initial remedy was to delete this file. After all, if a config is not there, it wont be applied right. 
 
@@ -73,6 +73,6 @@ Experts estimate the damage from the global Microsoft outage at billions of doll
 
 Crowdstrike stocks fell by nearly 10% in 2 days. Economists suggest that the company will not be able to survive the financial storms its going to face, from the lawsuits that follow.
 
-<p align="center"> <img src="./media/cs-fall.png" alt="Crowdstrike stock falls"/> </p>
+<p align="center"> <img src="./media/crowdstrike-falcon-update/crowdstrike-falcon-update/cs-fall.png" alt="Crowdstrike stock falls"/> </p>
 
 All this could have been avoided, if only Crowdstrike tested their code in a staging environment, understanding the criticality of the software they are running. This whole episode has only re-established the need for proper testing of software, before ramming it on production. It also raises a few questions on why we let one seemingly not so popular organization take down the entire world.
