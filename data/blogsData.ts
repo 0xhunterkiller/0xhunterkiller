@@ -4,9 +4,8 @@ export interface BlogPost {
   title: string;
   description: string;
   tags: string[];
-  source: "medium" | "linkedin" | "github" | "substack";
-  url?: string; // external link (for Medium, LinkedIn, Substack)
-  slug?: string; // internal blog route (for GitHub blogs)
+  source: "medium" | "linkedin" | "substack";
+  url: string;
   featured?: boolean;
 }
 
@@ -45,21 +44,5 @@ export const blogs: BlogPost[] = [
     tags: ["clojure", "logging", "backend"],
     source: "substack",
     url: "https://stories.getswym.com/p/comparing-different-logging-solutions",
-  },
-  {
-    title: "DVWA Solutions",
-    description:
-      "A deep-dive into web security using Damn Vulnerable Web App — exploring and fixing common vulnerabilities.",
-    tags: ["security", "web", "github"],
-    source: "github",
-    slug: "dvwa-solutions", // internal markdown page
-  },
-  {
-    title: "Crowdstrike Analysis",
-    description:
-      "A breakdown and analysis of CrowdStrike’s 2024 Falcon outage and its impact on global infrastructure.",
-    tags: ["analysis", "incident", "github"],
-    source: "github",
-    slug: "crowdstrike-analysis",
   },
 ];

@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import Link from "next/link";
 import { blogs } from "@/data/blogsData";
+import BlogCard from "@/components/BlogCard";
 
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
+  // Collect unique tags
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     blogs.forEach((b) => b.tags.forEach((t) => tags.add(t)));
@@ -37,7 +37,7 @@ export default function BlogPage() {
         </p>
       </section>
 
-      {/* Search + Tag Filters */}
+      {/* Search + Tags */}
       <section className="w-full space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <input
@@ -78,22 +78,22 @@ export default function BlogPage() {
       </section>
 
       {/* Featured Blogs */}
-      <section className="w-full">
-        <h2 className="text-2xl font-semibold text-blue-400 mb-4">
-          Featured
-        </h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {featured.map((b) => (
-            <BlogCard key={b.title} {...b} />
-          ))}
-        </div>
-      </section>
+      {featured.length > 0 && (
+        <section className="w-full">
+          <h2 className="text-2xl font-semibold text-blue-400 mb-4">
+            Featured
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {featured.map((b) => (
+              <BlogCard key={b.title} {...b} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* All Blogs */}
       <section className="w-full">
-        <h2 className="text-2xl font-semibold text-blue-400 mb-4">
-          All Blogs
-        </h2>
+        <h2 className="text-2xl font-semibold text-blue-400 mb-4">All Blogs</h2>
         {filteredBlogs.length === 0 ? (
           <p className="text-gray-500 text-center">No blogs found.</p>
         ) : (
@@ -105,66 +105,5 @@ export default function BlogPage() {
         )}
       </section>
     </main>
-  );
-}
-
-// ✅ Blog Card Component
-function BlogCard({
-  title,
-  description,
-  tags,
-  source,
-  url,
-  slug,
-}: {
-  title: string;
-  description: string;
-  tags: string[];
-  source: string;
-  url?: string;
-  slug?: string;
-}) {
-  const isExternal = source !== "github";
-  const Wrapper: any = isExternal ? "a" : Link;
-  const href = isExternal ? url : `/blog/${slug}`;
-
-  const sourceColors: Record<string, string> = {
-    medium: "text-yellow-400",
-    linkedin: "text-blue-500",
-    github: "text-gray-300",
-    substack: "text-orange-400",
-  };
-
-  return (
-    <motion.div
-      whileHover={{ scale: 1.03 }}
-      transition={{ duration: 0.25 }}
-      className="border border-blue-500/20 bg-[#0b0f17]/60 rounded-xl p-5 hover:border-blue-400/50 transition-all duration-300"
-    >
-      <Wrapper
-        href={href}
-        target={isExternal ? "_blank" : undefined}
-        rel={isExternal ? "noopener noreferrer" : undefined}
-        className="block h-full"
-      >
-        <h3 className="text-blue-400 font-semibold mb-2">{title}</h3>
-        <p className="text-sm text-gray-300 mb-3">{description}</p>
-
-        <div className="flex flex-wrap gap-1 text-xs text-gray-400 mb-3">
-          {tags.map((t) => (
-            <span
-              key={t}
-              className="px-2 py-0.5 border border-blue-500/30 rounded-md"
-            >
-              #{t}
-            </span>
-          ))}
-        </div>
-
-        <p className={`text-xs font-semibold ${sourceColors[source]}`}>
-          {source.charAt(0).toUpperCase() + source.slice(1)}
-        </p>
-      </Wrapper>
-    </motion.div>
   );
 }
