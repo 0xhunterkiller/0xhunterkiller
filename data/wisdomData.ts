@@ -52,6 +52,12 @@ export const wisdom = [
   },
   {
     content:
+      "I am not interested in living a 1000 years, I just want to live today.",
+    author: "Portgas D. Ace",
+    tag: "life",
+  },
+  {
+    content:
       "If debugging is the process of removing bugs, then programming must be the process of putting them in.",
     author: "Edsger W. Dijkstra",
     tag: "humor",
