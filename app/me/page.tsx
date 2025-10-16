@@ -6,7 +6,6 @@ import {
   achievements,
   skills,
   certifications,
-  featuredBlogs,
 } from "@/data/meData";
 import { blogs } from "@/data/blogsData";
 import BlogCard from "@/components/BlogCard";
