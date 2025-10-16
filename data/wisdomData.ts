@@ -28,6 +28,12 @@ export const wisdom = [
   },
   {
     content:
+      "The one who preaches privacy is the one who breaches it.",
+    author: "Sreesan",
+    tag: "privacy",
+  },
+  {
+    content:
       "The most disastrous thing you can ever learn is your first programming language.",
     author: "Alan Kay",
     tag: "learning",
