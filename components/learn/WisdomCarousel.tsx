@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { wisdom } from "@/data/wisdomData";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -17,6 +17,14 @@ export default function WisdomCarousel() {
     setDirection(newDirection);
     newDirection > 0 ? nextCard() : prevCard();
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      paginate(1);
+    }, 30000); // 30 seconds
+    return () => clearInterval(interval);
+  }, [index]); // re-run timer each time index changes
+
 
   const variants = {
     enter: (direction: number) => ({
