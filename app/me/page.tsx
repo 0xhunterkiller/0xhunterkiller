@@ -8,8 +8,11 @@ import {
   certifications,
   featuredBlogs,
 } from "@/data/meData";
+import { blogs } from "@/data/blogsData";
+import BlogCard from "@/components/BlogCard";
 
 export default function AboutMe() {
+  const featuredBlogs = blogs.filter((b) => b.featured);
   return (
     <main className="min-h-screen flex flex-col items-center justify-start text-gray-200 py-20 px-6 md:px-16 space-y-16">
       {/* Header */}
@@ -99,17 +102,12 @@ export default function AboutMe() {
           Featured Blogs
         </h2>
         <div className="grid md:grid-cols-3 gap-6">
-          {featuredBlogs.map(({ title, desc }) => (
-            <div
-              key={title}
-              className="border border-blue-500/20 bg-[#0b0f17]/60 rounded-xl p-5 hover:scale-[1.03] hover:border-blue-400/50 transition-all duration-300"
-            >
-              <h3 className="text-blue-400 font-semibold mb-2">{title}</h3>
-              <p className="text-gray-300 text-sm">{desc}</p>
-            </div>
+          {featuredBlogs.map((blog) => (
+            <BlogCard key={blog.title} {...blog} />
           ))}
         </div>
       </section>
+
     </main>
   );
 }
