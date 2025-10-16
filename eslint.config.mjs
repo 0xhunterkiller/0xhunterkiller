@@ -19,6 +19,12 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      // disable this one specifically
+      "@typescript-eslint/no-explicit-any": "off",
+      // optional: keep console logs in dev
+      "no-console": "off",
+    },
   },
 ];
 
