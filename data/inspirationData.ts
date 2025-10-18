@@ -64,4 +64,13 @@ export const inspirations: InspirationItem[] = [
     author: "Ashwin Barama",
     link: "https://ashwinbarama810.medium.com/copy-and-paste-the-story-of-ariane-flight-v88-914a5f0424ed"
   },
+  {
+    title: "Cloudflare Deploys Really Slow Code, Takes Down Entire Company",
+    description:
+      "bAD Reg*x fa1ls at 5cale!!",
+    platform: "YouTube",
+    author: "Kevin Fang",
+    type: "video",
+    link: "https://youtu.be/DDe-S3uef2w",
+  }
 ];
