@@ -9,7 +9,7 @@ export interface BlogPost {
   featured?: boolean;
 }
 
-export const blogsData: BlogPost[] = [
+export const blogs: BlogPost[] = [
   // --- Medium ---
   {
     title: "What are Distributed Systems?",
