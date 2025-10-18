@@ -40,6 +40,7 @@ export default function InspirationsGrid() {
             </div>
             <p className="text-sm text-gray-400 mb-3">{item.description}</p>
 
+            {item.author && (<p className="text-xs text-gray-400 mb-2">— {item.author}</p>)}
             <div className="flex items-center justify-between text-xs text-gray-500">
               <span className="italic">{item.platform}</span>
               <ExternalLink className="w-4 h-4 text-gray-500" />
