@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import {
   timelinePreview,
   achievements,
@@ -83,17 +84,33 @@ export default function AboutMe() {
         <h2 className="text-2xl font-semibold text-blue-400 mb-4">
           Certifications
         </h2>
-        <ul className="grid md:grid-cols-2 gap-4 text-gray-300">
+
+        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {certifications.map((cert) => (
             <li
-              key={cert}
-              className="border border-blue-500/20 rounded-lg p-3 bg-[#0b0f17]/60 hover:border-blue-400/50 transition-all"
+              key={cert.name}
+              className={`group relative flex items-center justify-between border border-blue-500/20 rounded-lg px-4 py-2 bg-[#0b0f17]/60 transition-all ${
+                cert.link
+                  ? "cursor-pointer hover:border-blue-400/60 hover:bg-[#111827]/70"
+                  : "cursor-default"
+              }`}
+              onClick={() => cert.link && window.open(cert.link, "_blank")}
             >
-              {cert}
+              <span className="text-gray-300 group-hover:text-blue-200">
+                {cert.name}
+              </span>
+
+              {cert.link && (
+                <ExternalLink
+                  className="w-4 h-4 text-blue-400 opacity-70 group-hover:opacity-100 transition-opacity"
+                  strokeWidth={1.8}
+                />
+              )}
             </li>
           ))}
         </ul>
       </section>
+
 
       {/* Featured Blogs */}
       <section className="w-full max-w-5xl">

@@ -3,30 +3,42 @@
 export const timelinePreview = [
   {
     year: "2025",
-    text: "Promoted to Software Engineer I, led Swym’s AI Transformation efforts, migrated all major systems to Kubernetes.",
+    text: "Promoted to Software Engineer I. Led Swym’s AI Transformation efforts — introduced AI-driven CI/CD assistants, Slack deployment bots, and spearheaded complete infrastructure modernization across clusters.",
   },
   {
     year: "2024",
-    text: "Designed tracing infrastructure with Jaeger + Kafka, improved observability, and drove cluster optimization.",
+    text: "Designed a robust observability and tracing ecosystem using Jaeger, Kafka, and OpenTelemetry. Drove infra cost optimization, redefined cluster reliability, and mentored juniors on Kubernetes operations.",
   },
   {
     year: "2023",
-    text: "Migrated NodeJS & Clojure services to Kubernetes, implemented secure secrets management, and initiated DevOps process automation.",
+    text: "Transitioned from intern to full-time Associate Software Engineer. Migrated major services to Kubernetes, built CI/CD pipelines with ArgoCD, Jenkins, and Helm, and initiated secure secret management with Azure Key Vault.",
   },
 ];
 
 export const achievements = [
   {
-    title: "Led Migration to Modern Kubernetes Stack",
-    desc: "Spearheaded Swym’s infra migration — moving critical Clojure, NodeJS, and platform services to managed Kubernetes clusters with observability, scalability, and resilience.",
+    title: "AI Transformation & Automation Leadership",
+    desc: "Led Swym’s AI initiative across engineering — built Slack-based deployment assistants, explored LangGraph and LangChain for CI/CD improvements, and drove operational automation across clusters.",
   },
   {
-    title: "Introduced OpenTelemetry Tracing",
-    desc: "Implemented distributed tracing via Jaeger and OpenTelemetry SDKs, improving debugging efficiency and performance analysis.",
+    title: "Kubernetes Modernization & Migration",
+    desc: "Planned and executed migration of core production workloads to next-gen AKS clusters with workload identities, VNet isolation, App Gateways, and Helm v2 charts — improving scalability and reducing deployment risk.",
   },
   {
-    title: "Optimized Build Pipelines",
-    desc: "Reduced Jenkins build times by 75%, introduced Docker caching and multi-stage builds, saving hours of developer time weekly.",
+    title: "Observability and Tracing Stack",
+    desc: "Architected a unified observability platform with Jaeger, OpenSearch, FluentBit, and Kafka — delivering distributed tracing and real-time alerting, reducing debugging time by 60%.",
+  },
+  {
+    title: "Build Pipeline Optimization",
+    desc: "Reduced Jenkins build times by 75% through multi-stage Docker builds, caching strategies, and workload parallelization — improving developer productivity and CI/CD reliability.",
+  },
+  {
+    title: "Security, Compliance, and Reliability",
+    desc: "Implemented SOC2-aligned secret management with Azure Key Vault, led vulnerability remediation from penetration testing reports, and introduced secure ingress policies with Azure AD-based RBAC.",
+  },
+  {
+    title: "Documentation & Mentorship",
+    desc: "Conducted 10+ KT sessions on Kubernetes, Helm, Jenkins, and Observability. Authored internal developer handbooks and playbooks for production-grade deployments and incident response.",
   },
   {
     title: "Cost Optimization & Reliability",
@@ -37,29 +49,70 @@ export const achievements = [
 export const skills = [
   "Kubernetes",
   "Docker",
-  "Clojure",
-  "Python",
-  "Grafana",
-  "Prometheus",
-  "OpenTelemetry",
-  "Fluentd / FluentBit",
-  "Azure Cloud",
+  "Azure Cloud (AKS, VMSS, VNet)",
   "Helm",
   "ArgoCD",
-  "Jenkins",
-  "Linux",
   "Terraform",
+  "Linux",
+  "Jenkins",
   "GitHub Actions",
+  "CI/CD Automation",
+  "Infrastructure as Code",
+  "Prometheus",
+  "Grafana",
+  "Jaeger",
+  "OpenTelemetry",
+  "Fluentd / FluentBit",
+  "Opensearch",
+  "Incident Response",
+  "Clojure",
+  "Python",
+  "Node.js",
+  "Bash / Shell Scripting",
+  "Appsmith",
+  "Networking & Load Balancing",
+  "Security & Compliance",
+  "Cost Optimization",
 ];
 
 export const certifications = [
-  "Certified Kubernetes Administrator (CKA)",
-  "Certified Ethical Hacker (CEH)",
-  "ISC2: Certified in Cybersecurity",
-  "Google Cybersecurity Specialization",
-  "Data Science Professional Certificate",
-  "Python for Everybody Specialization",
+  {
+    name: "Certified Kubernetes Administrator (CKA)",
+    link: "https://www.credly.com/badges/1ae0e1a0-ef2e-48a4-9034-042d793bd239",
+  },
+  {
+    name: "Certified Ethical Hacker (CEH)",
+  },
+  {
+    name: "ISC2: Certified in Cybersecurity",
+    link: "https://www.credly.com/badges/1d5e4472-09d4-4020-8250-a4c6a0d37063",
+  },
+  {
+    name: "Google Cybersecurity Specialization",
+    link: "https://www.coursera.org/account/accomplishments/professional-cert/5GMXVR98HTJQ",
+  },
+  {
+    name: "Data Science Professional Certificate",
+    link: "https://www.youracclaim.com/badges/199a6733-044b-4b4b-8481-530209b8037a?source",
+  },
+  {
+    name: "Python for Everybody Specialization",
+    link: "https://www.coursera.org/account/accomplishments/specialization/certificate/ADKTABWP9BLS",
+  },
+  {
+    name: "Competitive Strategy",
+    link: "https://www.coursera.org/account/accomplishments/certificate/CHAY7HGPCNEM",
+  },
+  {
+    name: "Advanced Competitive Strategy",
+    link: "https://www.coursera.org/account/accomplishments/certificate/KBQ3SLPMLT2E",
+  },
+  {
+    name: "Strategic Organization Design",
+    link: "https://www.coursera.org/account/accomplishments/certificate/TPQC8BWTX729",
+  },
 ];
+
 
 export const featuredBlogs = [
   {
