@@ -23,10 +23,13 @@ export default function WisdomCarousel() {
   useEffect(() => {
     const interval = setInterval(() => {
       paginate(1);
-    }, 30000); // 30 seconds
+    }, 30000);
     return () => clearInterval(interval);
-  }, [index, paginate]); // re-run timer each time index changes
+  }, [index, paginate]);
 
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) =>
+    Math.abs(offset) * velocity;
 
   const variants = {
     enter: (direction: number) => ({
@@ -63,17 +66,27 @@ export default function WisdomCarousel() {
               opacity: { duration: 0.2 },
             }}
             className="absolute w-full"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.8}
+            onDragEnd={(_, { offset, velocity }) => {
+              const swipe = swipePower(offset.x, velocity.x);
+
+              if (swipe < -swipeConfidenceThreshold) {
+                paginate(1); // Swipe left → next
+              } else if (swipe > swipeConfidenceThreshold) {
+                paginate(-1); // Swipe right → prev
+              }
+            }}
           >
-            <div className="border border-blue-500/20 bg-[#0b0f17]/70 rounded-xl p-6 text-gray-200 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+            <div className="border border-blue-500/20 bg-[#0b0f17]/70 rounded-xl p-6 text-gray-200 shadow-[0_0_20px_rgba(59,130,246,0.1)] select-none">
               <p className="text-lg italic mb-3 leading-relaxed">
                 “{quote.content}”
               </p>
               {quote.author && (
                 <p className="text-sm text-gray-400 mb-2">— {quote.author}</p>
               )}
-              <p className="text-xs text-blue-400 font-mono">
-                #{quote.tag}
-              </p>
+              <p className="text-xs text-blue-400 font-mono">#{quote.tag}</p>
             </div>
           </motion.div>
         </AnimatePresence>
