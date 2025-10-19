@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: "Saai Sudarsanan — Portfolio",
     description: "Hi, I am Saai Sudarsanan and this is my portfolio!",
     images: ["/og/portfolio.png"],
+  },
+  other: {
+    "google-site-verification": "EGDTC_v8AjZuChs1L7nBnVhOcFEAmBQ6ZMZExCOguYA"
   }
 };
 
