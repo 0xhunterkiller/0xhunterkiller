@@ -1,30 +1,17 @@
-import WisdomCarousel from "@/components/learn/WisdomCarousel";
-import ResourceHub from "@/components/learn/ResourceHub";
-import InspirationsGrid from "@/components/learn/InspirationsGrid";
+import Learn from '@/components/pages/LearnComp'
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Learn",
+  description: "Learn from Saai Sudarsanan — tech articles, technologies, wisdom from internet and various roadmaps to help you navigate the tech world",
+  openGraph: {
+    title: "Saai Sudarsanan — Learn",
+    description:
+      "Curated Roadmaps and Resources for everyone in tech by Saai Sudarsanan.",
+    images: ["/og/portfolio.png"],
+  }
+};
 
 export default function LearnPage() {
-  return (
-    <main className="min-h-screen flex flex-col items-center py-20 px-6 md:px-16 text-gray-200 space-y-16 w-full max-w-6xl">
-      {/* Header */}
-      <section className="text-center max-w-3xl">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">
-          Learn
-        </h1>
-        <p className="text-gray-300 text-lg">
-          Curated wisdom, resources, and content to help you grow as a
-          Software Engineer.
-        </p>
-      </section>
-
-      {/* Section 1: Words of Wisdom */}
-      <WisdomCarousel />
-
-      {/* Section 2: Resource Hub */}
-      <ResourceHub />
-    
-      {/* Section 3: Inspirations Grid */}
-      <InspirationsGrid />
-
-    </main>
-  );
+  return <Learn />;
 }

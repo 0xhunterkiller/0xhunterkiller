@@ -21,21 +21,19 @@ const cascadiaCode = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Saai Sudarsanan — Portfolio",
+  title: {
+    default: "Saai Sudarsanan | Portfolio",
+    template: "%s | Saai Sudarsanan"
+  },
   description:
     "Software Engineer @ Swym | Building scalable systems, automating workflows, and sharing knowledge.",
   icons: { icon: "/favicon.ico" },
-  keywords: [
-    "Saai Sudarsanan",
-    "0xhunterkiller",
-    "DevOps Engineer",
-    "Software Engineer",
-    "Swym",
-    "Clojure",
-    "Kubernetes",
-    "Cloud Engineering",
-    "Portfolio",
-  ],
+  metadataBase: new URL("https://0xhunterkiller.github.io/0xhunterkiller/"),
+  openGraph: {
+    title: "Saai Sudarsanan — Portfolio",
+    description: "Hi, I am Saai Sudarsanan and this is my portfolio!",
+    images: ["/og/portfolio.png"],
+  }
 };
 
 export default function RootLayout({
