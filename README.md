@@ -1,4 +1,4 @@
-## Hi 👋! My name is [0xhunterkiller](https://0xhunterkiller.github.io/0xhunterkiller)
+## Hi 👋! My name is [0xhunterkiller](https://0xhunterkiller.kernel9.com)
 <img align="right" height="150" src="./public/og/portfolio.png"  />
 
 I am a Cloud Engineer and I have only one skill, the skill to learn things quickly. I dabble in a lot of things, while mostly concentrating in `Cloud Computing`, I also have a good amount of knowledge in `Distributed Systems`, `Cybersecurity`,`Economics, Markets and Game Theory`,etc. 

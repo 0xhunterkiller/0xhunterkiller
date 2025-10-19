@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   description:
     "Software Engineer @ Swym | Building scalable systems, automating workflows, and sharing knowledge.",
   icons: { icon: "/favicon.ico" },
-  metadataBase: new URL("https://0xhunterkiller.github.io/0xhunterkiller/"),
+  metadataBase: new URL("https://0xhunterkiller.kernel9.com/"),
   openGraph: {
     title: "Saai Sudarsanan — Portfolio",
     description: "Hi, I am Saai Sudarsanan and this is my portfolio!",

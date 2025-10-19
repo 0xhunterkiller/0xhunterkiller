@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: ['/'],
       disallow: ['/_next/'],
     },
-    sitemap: 'https://0xhunterkiller.github.io/0xhunterkiller/sitemap.xml',
+    sitemap: 'https://0xhunterkiller.kernel9.com/sitemap.xml',
   }
 }
