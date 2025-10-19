@@ -7,8 +7,8 @@ import {
   achievements,
   skills,
   certifications,
-} from "@/data/meData";
-import { blogs } from "@/data/blogsData";
+} from "@/data/aboutme/meData";
+import { blogs } from "@/data/blog/blogsData";
 import BlogCard from "@/components/BlogCard";
 
 export default function AboutMe() {

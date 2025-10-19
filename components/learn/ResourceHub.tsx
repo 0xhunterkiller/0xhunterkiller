@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import ResourceCard from "./ResourceCard";
-import { resources, Resource } from "@/data/resourcesData";
+import { resources, Resource } from "@/data/learn/resourcesData";
 
 const difficultyOrder = { beginner: 1, intermediate: 2, advanced: 3 };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { inspirations } from "@/data/inspirationData";
+import { inspirations } from "@/data/learn/inspirationData";
 import { motion } from "framer-motion";
 import { ExternalLink, SquarePlay, BookOpen, Mic } from "lucide-react";
 

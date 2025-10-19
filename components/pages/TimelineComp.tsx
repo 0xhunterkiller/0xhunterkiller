@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { timelineData } from "@/data/timelineData";
+import { timelineData } from "@/data/aboutme/timelineData";
 
 export default function Timeline() {
   return (

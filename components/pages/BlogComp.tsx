@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { blogs } from "@/data/blogsData";
+import { blogs } from "@/data/blog/blogsData";
 import BlogCard from "@/components/BlogCard";
 
 export default function Blog() {

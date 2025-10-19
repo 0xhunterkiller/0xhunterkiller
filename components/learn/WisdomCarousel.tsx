@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import { wisdom } from "@/data/wisdomData";
+import { wisdom } from "@/data/learn/wisdomData";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function WisdomCarousel() {
