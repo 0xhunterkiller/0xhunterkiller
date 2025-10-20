@@ -64,6 +64,12 @@ export const wisdom = [
   },
   {
     content:
+      "At a time, don't waste time",
+    author: "Saai Sudarsanan",
+    tag: "productivity"
+  },
+  {
+    content:
       "Premature optimization is the root of all evil.",
     author: "Donald Knuth",
     tag: "efficiency",

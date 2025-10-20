@@ -22,6 +22,7 @@ const eslintConfig = [
     rules: {
       // disable this one specifically
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
       // optional: keep console logs in dev
       "no-console": "off",
     },

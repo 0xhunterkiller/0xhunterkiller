@@ -7,10 +7,8 @@ export interface Resource {
   description: string;
   link: string;
   technology: string; // e.g., "Kubernetes", "Observability", "Clojure"
-  roadmap?: string;   // e.g., "DevOps Roadmap", "Observability Roadmap"
-  step?: number;      // order within the roadmap (1..N)
   difficulty: Difficulty;
-  rating: number;     // 1.0 - 5.0
+  rating: number; // 1.0 - 5.0
 }
 
 /**
@@ -457,7 +455,3 @@ export const resources: Resource[] = [
 export const ALL_TECHNOLOGIES = Array.from(
   new Set(resources.map((r) => r.technology))
 ).sort();
-
-export const ALL_ROADMAPS = Array.from(
-  new Set(resources.map((r) => r.roadmap).filter(Boolean))
-).sort() as string[];

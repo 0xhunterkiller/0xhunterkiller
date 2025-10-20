@@ -10,8 +10,6 @@ interface ResourceCardProps {
   rating: number;
   difficulty: "beginner" | "intermediate" | "advanced";
   technology: string;
-  roadmap?: string;
-  step?: number;
 }
 
 export default function ResourceCard({
@@ -21,8 +19,6 @@ export default function ResourceCard({
   rating,
   difficulty,
   technology,
-  roadmap,
-  step,
 }: ResourceCardProps) {
   return (
     <motion.a
@@ -63,11 +59,6 @@ export default function ResourceCard({
         <span className="px-2 py-0.5 border border-blue-500/30 rounded-md text-blue-400">
           {technology}
         </span>
-        {roadmap && (
-          <span className="px-2 py-0.5 border border-blue-500/30 rounded-md text-blue-300">
-            {roadmap} {step && <span className="text-gray-400">(Step {step})</span>}
-          </span>
-        )}
       </div>
     </motion.a>
   );

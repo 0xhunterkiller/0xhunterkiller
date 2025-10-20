@@ -1,6 +1,6 @@
 import WisdomCarousel from "@/components/learn/WisdomCarousel";
 import ResourceHub from "@/components/learn/ResourceHub";
-import InspirationsGrid from "@/components/learn/InspirationsGrid";
+import InspirationsHub from "@/components/learn/InspirationsHub";
 
 export default function Learn() {
   return (
@@ -23,7 +23,7 @@ export default function Learn() {
       <ResourceHub />
     
       {/* Section 3: Inspirations Grid */}
-      <InspirationsGrid />
+      <InspirationsHub />
 
     </main>
   );
