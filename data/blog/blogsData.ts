@@ -69,6 +69,15 @@ export const blogs: BlogPost[] = [
     url: "https://medium.com/@saaisudarsanan/what-are-convolutional-neural-networks-ee93fabfaaa5",
     featured: true
   },
+  {
+    title: "All-Powerful(kind of) Machines",
+    description:
+      "Turing Machines? Limits of Computation? Find answers here.",
+    tags: ["observability", "theory-of-computation"],
+    source: "medium",
+    url: "https://saaisudarsanan.medium.com/all-powerful-kind-of-machines-375c62c830c2",
+    featured: true
+  },
 
   // --- LinkedIn Newsletter ---
   {
