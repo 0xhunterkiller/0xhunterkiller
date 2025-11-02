@@ -73,7 +73,7 @@ export const blogs: BlogPost[] = [
     title: "All-Powerful(kind of) Machines",
     description:
       "Turing Machines? Limits of Computation? Find answers here.",
-    tags: ["observability", "theory-of-computation"],
+    tags: ["observability", "math"],
     source: "medium",
     url: "https://saaisudarsanan.medium.com/all-powerful-kind-of-machines-375c62c830c2",
     featured: true
