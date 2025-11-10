@@ -136,15 +136,7 @@ export const notableProjects = [
     link: "https://github.com/0xhunterkiller/ilogu3000",
   },
   {
-    name: "Slack Alert Bot",
-    desc: "Bearer-token based bot that sends alerts to Slack channels without requiring Slack app installations.",
-  },
-  {
-    name: "Prometheus Self-Serve Platform",
-    desc: "A self-serve observability system enabling any team to provision Prometheus, Alertmanager, and Thanos through ArgoCD and Helm charts.",
-  },
-  {
-    name: "DevOps Tool API",
-    desc: "An internal API + Appsmith workspace to allow teams to safely modify Azure App Config values.",
+    name: "turinglib",
+    desc: "turinglib is a lightweight Python library for building, simulating, and experimenting with Turing Machines — the foundational model of computation. It provides an object-oriented interface for defining tape symbols, actions, states, and state machines, allowing you to express theoretical computation models in a clear and testable way.",
   },
 ];
