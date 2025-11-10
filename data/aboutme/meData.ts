@@ -128,3 +128,23 @@ export const featuredBlogs = [
     desc: "A personal take on cybersecurity principles, risks, and evolving best practices in modern systems.",
   }
 ];
+
+export const notableProjects = [
+  {
+    name: "ilogu3000",
+    desc: "A benchmarking suite for Clojure logging frameworks — identified CPU inefficiencies in pretty-printing and optimized log formatting.",
+    link: "https://github.com/0xhunterkiller/ilogu3000",
+  },
+  {
+    name: "Slack Alert Bot",
+    desc: "Bearer-token based bot that sends alerts to Slack channels without requiring Slack app installations.",
+  },
+  {
+    name: "Prometheus Self-Serve Platform",
+    desc: "A self-serve observability system enabling any team to provision Prometheus, Alertmanager, and Thanos through ArgoCD and Helm charts.",
+  },
+  {
+    name: "DevOps Tool API",
+    desc: "An internal API + Appsmith workspace to allow teams to safely modify Azure App Config values.",
+  },
+];

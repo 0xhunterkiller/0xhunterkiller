@@ -7,6 +7,7 @@ import {
   achievements,
   skills,
   certifications,
+  notableProjects,
 } from "@/data/aboutme/meData";
 import { blogs } from "@/data/blog/blogsData";
 import BlogCard from "@/components/BlogCard";
@@ -110,7 +111,33 @@ export default function AboutMe() {
           ))}
         </ul>
       </section>
-
+  
+      {/* Notable Projects */}
+      <section className="w-full max-w-5xl">
+        <h2 className="text-2xl font-semibold text-blue-400 mb-4">
+          Notable Projects
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          {notableProjects.map((proj) => (
+            <div
+              key={proj.name}
+              className="border border-blue-500/20 bg-[#0b0f17]/60 rounded-xl p-5 hover:scale-[1.02] hover:border-blue-400/50 transition-all duration-300"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-blue-400 font-semibold">{proj.name}</h3>
+                {proj.link && (
+                  <ExternalLink
+                    onClick={() => window.open(proj.link, "_blank")}
+                    className="w-4 h-4 text-blue-400 opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
+                    strokeWidth={1.8}
+                  />
+                )}
+              </div>
+              <p className="text-gray-300 text-sm">{proj.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Featured Blogs */}
       <section className="w-full max-w-5xl">
