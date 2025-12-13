@@ -76,7 +76,6 @@ export const blogs: BlogPost[] = [
     tags: ["observability", "math"],
     source: "medium",
     url: "https://saaisudarsanan.medium.com/all-powerful-kind-of-machines-375c62c830c2",
-    featured: true
   },
 
   // --- LinkedIn Newsletter ---
@@ -162,6 +161,15 @@ export const blogs: BlogPost[] = [
     tags: ["incident-response"],
     source: "substack",
     url: "https://stories.getswym.com/p/midnight-mayhem-lessons-from-a-2",
+    featured: true
+  },
+  {
+    title: "BFCM 2025 - A Magical time for Shoppers, Merchants and Engineers",
+    description:
+    "What it took to run production systems on Kubernetes through BFCM 2025.",
+    tags: ["devops"],
+    source: "substack",
+    url: "https://stories.getswym.com/p/bfcm-2025-a-magical-time-for-shoppers",
     featured: true
   },
 ];
