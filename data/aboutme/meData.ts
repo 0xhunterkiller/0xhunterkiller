@@ -44,6 +44,10 @@ export const achievements = [
     title: "Cost Optimization & Reliability",
     desc: "Reduced infra costs by moving workloads to spot instances, introduced backup automation, and enhanced monitoring precision.",
   },
+  {
+    title: "Handling High-Scale Production Traffic",
+    desc: "Handled peak production traffic of 1M+ RPM during BFCM 2025 with all services running on Kubernetes, maintaining stability through careful capacity planning, observability, and operational discipline.",
+  },
 ];
 
 export const skills = [
