@@ -70,6 +70,14 @@ export const blogs: BlogPost[] = [
     featured: true
   },
   {
+    title: "Gradient Descent from Scratch",
+    description: "Building the Gradient Descent Algorithm from scratch and explaining it with Manim",
+    tags: ["math", "AI"],
+    source: "medium",
+    url: "https://medium.com/@saaisudarsanan/gradient-descent-from-scratch-081ccdf9259f",
+    featured: true
+  },
+  {
     title: "All-Powerful(kind of) Machines",
     description:
       "Turing Machines? Limits of Computation? Find answers here.",
