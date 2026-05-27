@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Github, Linkedin, BookOpen, ExternalLink, Download } from "lucide-react";
+import { ArrowRight, Github, Linkedin, BookOpen, ExternalLink, Download, Mail } from "lucide-react";
 import { siteConfig } from "@/data/config";
 
 export default function Home() {
@@ -81,6 +81,12 @@ export default function Home() {
         >
           Resume
           <Download className="w-4 h-4" />
+        </a>
+        <a
+          href={`mailto:${siteConfig.email}`}
+          className="inline-flex items-center gap-1.5 text-gray-600 hover:text-gray-400 px-4 py-2.5 transition-colors font-mono text-xs"
+        >
+          <Mail className="w-3.5 h-3.5" /> email
         </a>
         <Link
           href={siteConfig.social.github}

@@ -112,6 +112,59 @@ function MilestoneCard({ milestone }: { milestone: Milestone }) {
   );
 }
 
+function HandlePopover() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative inline-block">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="font-mono text-xs text-cyan-400/50 hover:text-cyan-400 uppercase tracking-[0.2em] transition-colors"
+      >
+        0xhunterkiller
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <>
+            <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.15 }}
+              className="absolute left-0 top-full mt-2 z-20 w-80 border border-white/10 bg-[#0d1b2e] rounded-xl p-4 shadow-2xl"
+            >
+              <div className="space-y-3 text-xs text-gray-400 leading-relaxed">
+                <div>
+                  <span className="font-mono text-cyan-400 font-bold">0x</span>
+                  {" "}— the hexadecimal prefix in programming and hacker culture.
+                  Denotes base-16 notation — the language of memory addresses and machine code.
+                </div>
+                <div>
+                  <span className="font-mono text-cyan-400 font-bold">hunterkiller</span>
+                  {" "}— a military unit in irregular warfare that splits reconnaissance and
+                  engagement between separate elements: one finds the target, the other
+                  eliminates it.{" "}
+                  <a
+                    href="https://en.wikipedia.org/wiki/Hunter-killer_team"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Wikipedia ↗
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function AboutMe() {
   const [showAllMilestones, setShowAllMilestones] = useState(false);
   const featuredBlogs = blogs.filter((b) => b.featured).slice(0, 3);
@@ -121,9 +174,9 @@ export default function AboutMe() {
     <main className="min-h-screen max-w-5xl mx-auto w-full px-6 md:px-12 lg:px-16 py-28 space-y-20">
       {/* Header */}
       <section>
-        <p className="font-mono text-xs text-cyan-400/50 uppercase tracking-[0.2em] mb-3">
-          About
-        </p>
+        <div className="mb-3">
+          <HandlePopover />
+        </div>
         <h1 className="text-4xl md:text-5xl font-black text-white">
           Saai Sudarsanan
         </h1>
