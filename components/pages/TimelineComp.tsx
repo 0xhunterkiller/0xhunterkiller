@@ -5,75 +5,81 @@ import { timelineData } from "@/data/aboutme/timelineData";
 
 export default function Timeline() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-start py-20 px-6 md:px-16 text-gray-200 space-y-16">
+    <main className="min-h-screen max-w-4xl mx-auto w-full px-6 md:px-12 py-28">
       {/* Header */}
-      <section className="text-center max-w-3xl">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">
-          My Timeline
+      <div className="mb-16">
+        <p className="font-mono text-xs text-cyan-400/50 uppercase tracking-[0.2em] mb-3">
+          Full Timeline
+        </p>
+        <h1 className="text-4xl md:text-5xl font-black text-white">
+          The Journey
         </h1>
-        <p className="text-gray-300 text-lg mb-8">
-          A look back at my journey — from learning to leading.
+        <p className="text-gray-500 mt-3 max-w-xl text-sm leading-relaxed">
+          Month-by-month from student to Senior Software Engineer I. Every
+          milestone, migration, and lesson learned.
         </p>
         <Link
           href="/me"
-          className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          className="inline-flex items-center gap-1 font-mono text-xs text-blue-400/60 hover:text-blue-300 transition-colors mt-4"
         >
-          ← Back to About Me
+          ← Back to About
         </Link>
-      </section>
+      </div>
 
       {/* Timeline */}
-      <section className="w-full max-w-4xl relative">
-        {/* Vertical Line */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 w-[2px] h-full bg-gradient-to-b from-cyan-500 via-blue-500 to-blue-700 opacity-40" />
+      <div className="relative">
+        {/* Vertical spine */}
+        <div className="absolute left-0 top-2 bottom-0 w-px bg-gradient-to-b from-cyan-500/30 via-blue-500/20 to-transparent" />
 
-        <div className="flex flex-col space-y-12">
-          {timelineData.map(({ year, role, organization, highlights }, index) => (
-            <div
-              key={year}
-              className={`relative flex flex-col md:flex-row md:items-start ${
-                index % 2 === 0 ? "md:flex-row-reverse" : ""
-              }`}
-            >
-              {/* Connector Dot */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-blue-500 rounded-full border-2 border-cyan-400 shadow-[0_0_12px_rgba(56,189,248,0.4)]" />
+        <div className="space-y-16 pl-8">
+          {timelineData.map(({ year, role, organization, highlights }) => (
+            <div key={year} className="relative">
+              {/* Year dot */}
+              <div className="absolute -left-[calc(2rem+4px)] top-1 w-2.5 h-2.5 rounded-full bg-cyan-400/80 border border-cyan-300/50 shadow-[0_0_10px_rgba(34,211,238,0.4)]" />
 
-              {/* Timeline Card */}
-              <div
-                className={`md:w-1/2 px-6 ${
-                  index % 2 === 0 ? "md:pl-12 md:pr-0" : "md:pr-12 md:pl-0"
-                }`}
-              >
-                <div className="border border-blue-500/20 bg-[#0b0f17]/60 rounded-xl p-6 hover:border-blue-400/50 transition-all duration-300">
-                  <h2 className="text-2xl font-semibold text-blue-400 mb-2">
-                    {year}
-                  </h2>
+              {/* Year label */}
+              <div className="mb-5">
+                <h2 className="text-2xl font-black text-white">{year}</h2>
+                {(role || organization) && (
+                  <p className="font-mono text-xs text-gray-600 mt-1">
+                    {role}
+                    {organization ? ` · ${organization}` : ""}
+                  </p>
+                )}
+              </div>
 
-                  {(role || organization) && (
-                    <p className="text-sm text-gray-400 mb-4 italic">
-                      {role} {organization && `@ ${organization}`}
-                    </p>
-                  )}
-
-                  <ul className="space-y-5">
-                    {highlights.map((item, i) => (
-                      <li key={i}>
-                        <p className="text-base text-gray-200 font-medium mb-1">
-                          {item.title}
-                        </p>
+              {/* Highlights */}
+              <div className="space-y-4">
+                {highlights.map((item, i) => (
+                  <div
+                    key={i}
+                    className="border border-white/[0.06] bg-white/[0.02] rounded-xl p-5 hover:border-white/10 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 flex-wrap mb-2">
+                          <h3 className="text-gray-200 font-semibold text-sm">
+                            {item.title}
+                          </h3>
+                          {item.date && (
+                            <span className="font-mono text-[10px] text-gray-700">
+                              {item.date}
+                            </span>
+                          )}
+                        </div>
                         {item.description && (
-                          <p className="text-sm text-gray-400 mb-1">
+                          <p className="text-gray-500 text-xs leading-relaxed">
                             {item.description}
                           </p>
                         )}
-                        {item.tags && (
-                          <div className="flex flex-wrap gap-1 text-xs text-gray-400 mt-1">
+                        {item.tags && item.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-3">
                             {item.tags.map((tag, t) => (
                               <span
                                 key={t}
-                                className="px-2 py-0.5 border border-blue-500/30 rounded-md"
+                                className="font-mono text-[9px] px-2 py-0.5 border border-white/[0.07] rounded text-gray-700"
                               >
-                                #{tag}
+                                [{tag}]
                               </span>
                             ))}
                           </div>
@@ -83,20 +89,30 @@ export default function Timeline() {
                             href={item.link.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-blue-400 hover:text-blue-300 mt-1 inline-block"
+                            className="inline-flex items-center gap-1 font-mono text-xs text-blue-400/60 hover:text-blue-300 transition-colors mt-3"
                           >
                             {item.link.label} ↗
                           </a>
                         )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
         </div>
-      </section>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-20 pt-8 border-t border-white/[0.05]">
+        <Link
+          href="/me"
+          className="font-mono text-xs text-gray-700 hover:text-gray-500 transition-colors"
+        >
+          ← Back to About
+        </Link>
+      </div>
     </main>
   );
 }

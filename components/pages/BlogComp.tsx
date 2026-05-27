@@ -8,7 +8,6 @@ export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
-  // Collect unique tags
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     blogs.forEach((b) => b.tags.forEach((t) => tags.add(t)));
@@ -26,84 +25,85 @@ export default function Blog() {
   const featured = blogs.filter((b) => b.featured);
 
   return (
-    <main className="min-h-screen flex flex-col items-center py-20 px-6 md:px-16 text-gray-200 space-y-16 w-full max-w-6xl">
+    <main className="min-h-screen max-w-5xl mx-auto w-full px-6 md:px-12 lg:px-16 py-28 space-y-16">
       {/* Header */}
-      <section className="text-center max-w-3xl">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">
-          Blog
-        </h1>
-        <p className="text-gray-300 text-lg">
-          Technical deep dives, dev stories, and lessons learned from the field.
+      <div>
+        <p className="font-mono text-xs text-cyan-400/50 uppercase tracking-[0.2em] mb-3">
+          Writing
         </p>
-      </section>
+        <h1 className="text-4xl md:text-5xl font-black text-white">Blog</h1>
+        <p className="text-gray-500 mt-3 max-w-xl text-sm leading-relaxed">
+          22 articles across Medium, LinkedIn, and Substack. Technical
+          deep-dives, war stories, and lessons learned.
+        </p>
+      </div>
 
       {/* Search + Tags */}
-      <section className="w-full space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <input
-            type="text"
-            placeholder="Search blogs..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full md:w-1/2 px-4 py-2 rounded-lg bg-[#0b0f17]/70 border border-blue-500/20 text-gray-200 focus:outline-none focus:border-blue-400 transition-all"
-          />
-          <div className="flex flex-wrap gap-2">
+      <div className="space-y-4">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full md:w-80 px-4 py-2 rounded-lg bg-white/[0.03] border border-white/[0.07] text-gray-300 placeholder-gray-700 focus:outline-none focus:border-white/15 transition-all font-mono text-sm"
+        />
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setActiveTag(null)}
+            className={`font-mono text-xs px-3 py-1.5 rounded-lg transition-all ${
+              activeTag === null
+                ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                : "border border-white/[0.07] text-gray-600 hover:border-white/15 hover:text-gray-400"
+            }`}
+          >
+            all
+          </button>
+          {allTags.map((tag) => (
             <button
-              onClick={() => setActiveTag(null)}
-              className={`px-3 py-1 rounded-lg text-sm transition-all ${
-                activeTag === null
-                  ? "bg-blue-500/40 text-white"
-                  : "border border-blue-500/30 text-gray-300 hover:border-blue-400/60"
+              key={tag}
+              onClick={() => setActiveTag((prev) => (prev === tag ? null : tag))}
+              className={`font-mono text-xs px-3 py-1.5 rounded-lg transition-all ${
+                activeTag === tag
+                  ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                  : "border border-white/[0.07] text-gray-600 hover:border-white/15 hover:text-gray-400"
               }`}
             >
-              All
+              {tag}
             </button>
-            {allTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() =>
-                  setActiveTag((prev) => (prev === tag ? null : tag))
-                }
-                className={`px-3 py-1 rounded-lg text-sm transition-all ${
-                  activeTag === tag
-                    ? "bg-blue-500/40 text-white"
-                    : "border border-blue-500/30 text-gray-300 hover:border-blue-400/60"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* Featured Blogs */}
-      {featured.length > 0 && (
-        <section className="w-full">
-          <h2 className="text-2xl font-semibold text-blue-400 mb-4">
+      {/* Featured */}
+      {featured.length > 0 && !searchTerm && !activeTag && (
+        <div>
+          <h2 className="font-mono text-xs text-gray-600 uppercase tracking-[0.2em] mb-4">
             Featured
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-3">
             {featured.map((b) => (
               <BlogCard key={b.title} {...b} />
             ))}
           </div>
-        </section>
+        </div>
       )}
 
-      {/* All Blogs */}
-      <section className="w-full">
-        <h2 className="text-2xl font-semibold text-blue-400 mb-4">All Blogs</h2>
+      {/* All / Filtered */}
+      <div>
+        <h2 className="font-mono text-xs text-gray-600 uppercase tracking-[0.2em] mb-4">
+          {searchTerm || activeTag ? "Results" : "All Articles"}
+          <span className="text-gray-800 ml-2">{filteredBlogs.length}</span>
+        </h2>
         {filteredBlogs.length === 0 ? (
-          <p className="text-gray-500 text-center">No blogs found.</p>
+          <p className="text-gray-700 font-mono text-sm">no results found.</p>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredBlogs.map((b) => (
               <BlogCard key={b.title} {...b} />
             ))}
           </div>
         )}
-      </section>
+      </div>
     </main>
   );
 }
