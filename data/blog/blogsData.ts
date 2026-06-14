@@ -180,4 +180,13 @@ export const blogs: BlogPost[] = [
     url: "https://stories.getswym.com/p/bfcm-2025-a-magical-time-for-shoppers",
     featured: true
   },
+  {
+    title: "From Zero to Production: Lessons from Building Alfred",
+    description:
+    "An AI Agent that helps you auto-triage alerts and act as a first-responder.",
+    tags: ["ai", "devops"],
+    source: "substack",
+    url: "https://stories.getswym.com/p/from-zero-to-production-lessons-from",
+    featured: true
+  }
 ];
