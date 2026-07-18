@@ -8,11 +8,21 @@ import { siteConfig } from "@/data/config";
 export default function Home() {
   return (
     <main className="min-h-screen max-w-5xl mx-auto w-full px-6 md:px-12 lg:px-16 flex flex-col justify-center py-24">
+      {/* Operating principle */}
+      <motion.p
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="font-mono text-[11px] md:text-xs text-gray-600 border-l-2 border-cyan-500/30 pl-3 mb-8 max-w-xl leading-relaxed"
+      >
+        {siteConfig.operatingPrinciple}
+      </motion.p>
+
       {/* Identity */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.6, delay: 0.15 }}
       >
         <p className="font-mono text-cyan-400/60 text-xs tracking-[0.25em] uppercase mb-4">
           {siteConfig.handle}

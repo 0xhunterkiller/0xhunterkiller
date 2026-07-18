@@ -5,6 +5,8 @@ export const siteConfig = {
   company: "Swym Corporation",
   email: "connectwithsaai@gmail.com",
   bio: "Building AI-powered infrastructure that handles 1M+ RPM — and the ops tooling to manage it. Three promotions in three years. Currently pursuing OMSCS at Georgia Tech.",
+  operatingPrinciple:
+    "Success is not final, failure is not fatal: it is the courage to continue that counts.",
   resumeUrl:
     "https://docs.google.com/document/d/1imY3BnnjjdiffU02dVahPFcoZvJkdYHrdIdtuAqKx1s/export?format=pdf",
   social: {
