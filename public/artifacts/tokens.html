@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tokens, end to end — how an LLM reads text</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1020;
+  --ink-2:#141930;
+  --panel:#191f3a;
+  --panel-2:#20274a;
+  --line:#2c3358;
+  --text:#e7e9f5;
+  --muted:#9aa0c0;
+  --faint:#6b719a;
+  --accent:#35e0c4;
+  --accent-dim:#1e8f7f;
+  /* token spectrum */
+  --t0:#ff7a6b; --t1:#f5a24c; --t2:#efd14c; --t3:#9bd65e;
+  --t4:#4fd1c5; --t5:#5aa9f5; --t6:#a98bf0; --t7:#f06bc4;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--ink);color:var(--text);
+  font-family:var(--body);line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(1200px 700px at 80% -10%,rgba(53,224,196,.08),transparent 60%),
+                   radial-gradient(900px 600px at 0% 20%,rgba(169,139,240,.07),transparent 55%);
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px}
+a{color:var(--accent)}
+
+/* ---------- hero ---------- */
+.hero{padding:88px 0 44px;position:relative}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);margin:0 0 18px}
+.hero h1{
+  font-family:var(--disp);font-weight:700;font-size:clamp(2.3rem,6.5vw,4rem);
+  line-height:1.02;letter-spacing:-.02em;margin:0 0 18px;
+}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lede{font-size:clamp(1.02rem,2.4vw,1.22rem);color:var(--muted);max-width:640px;margin:0}
+
+/* ---------- live tokenizer (signature) ---------- */
+.tok-lab{margin:40px 0 8px;background:linear-gradient(180deg,var(--panel),var(--ink-2));
+  border:1px solid var(--line);border-radius:16px;padding:22px;position:relative;overflow:hidden}
+.tok-lab::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,var(--t0),var(--t1),var(--t2),var(--t3),var(--t4),var(--t5),var(--t6),var(--t7));
+  height:3px;opacity:.9}
+.tok-lab h2{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:6px 0 14px;font-weight:500}
+.tok-input{width:100%;background:var(--ink);color:var(--text);border:1px solid var(--line);
+  border-radius:10px;padding:13px 15px;font-family:var(--body);font-size:1rem;resize:vertical;min-height:70px}
+.tok-input:focus{outline:2px solid var(--accent-dim);border-color:var(--accent-dim)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin:18px 0 4px;min-height:44px;align-items:flex-start}
+.chip{font-family:var(--mono);font-size:.92rem;padding:5px 8px;border-radius:7px;
+  color:#0d1020;font-weight:500;white-space:pre;position:relative;cursor:default;
+  transition:transform .12s ease}
+.chip:hover{transform:translateY(-2px)}
+.chip .id{display:block;font-size:.58rem;font-weight:700;opacity:.62;text-align:center;margin-top:1px;letter-spacing:.02em}
+.chip .sp{opacity:.45}
+.stat-row{display:flex;flex-wrap:wrap;gap:26px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.stat{display:flex;flex-direction:column}
+.stat b{font-family:var(--disp);font-size:1.7rem;font-weight:600;line-height:1;color:var(--text)}
+.stat span{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:6px}
+.stat b.accentnum{color:var(--accent)}
+.hint{font-size:.82rem;color:var(--faint);margin:14px 0 0}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.preset{font-family:var(--mono);font-size:.74rem;background:var(--panel-2);color:var(--muted);
+  border:1px solid var(--line);border-radius:20px;padding:5px 12px;cursor:pointer;transition:.15s}
+.preset:hover{border-color:var(--accent-dim);color:var(--text)}
+
+/* ---------- sections ---------- */
+section.step{padding:56px 0;border-top:1px solid var(--line)}
+.step-head{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.num{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:700;letter-spacing:.1em}
+.step h3{font-family:var(--disp);font-weight:600;font-size:clamp(1.5rem,3.6vw,2.1rem);letter-spacing:-.01em;margin:0}
+.step p{color:var(--muted);max-width:660px}
+.step p strong{color:var(--text);font-weight:600}
+code.inl{font-family:var(--mono);background:var(--ink-2);border:1px solid var(--line);
+  padding:1px 6px;border-radius:5px;font-size:.86em;color:var(--accent)}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:24px}
+.panel-title{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 16px}
+
+/* BPE merge walk */
+.bpe-word{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 18px;min-height:46px;align-items:center}
+.bpe-unit{font-family:var(--mono);font-weight:600;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:8px;padding:8px 12px;font-size:1.05rem;transition:.25s;position:relative}
+.bpe-unit.merged{background:rgba(53,224,196,.14);border-color:var(--accent-dim);color:var(--accent)}
+.bpe-unit.pair{border-color:var(--t1);box-shadow:0 0 0 2px rgba(245,162,76,.25)}
+.bpe-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{font-family:var(--disp);font-weight:600;font-size:.9rem;background:var(--accent);color:#08221d;
+  border:none;border-radius:9px;padding:9px 16px;cursor:pointer;transition:.15s}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn.ghost:hover{color:var(--text);border-color:var(--faint)}
+.bpe-log{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin-top:14px;min-height:22px}
+.bpe-log b{color:var(--t1)}
+
+/* pipeline diagram */
+.pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:10px;margin-top:8px}
+.pipe-cell{background:var(--panel-2);border:1px solid var(--line);border-radius:11px;padding:14px 10px;text-align:center;position:relative}
+.pipe-cell .glyph{font-family:var(--mono);font-size:1.3rem;color:var(--accent);display:block;margin-bottom:6px}
+.pipe-cell .lbl{font-size:.72rem;color:var(--muted);line-height:1.3}
+.pipe-arrow{color:var(--faint);text-align:center;font-family:var(--mono);align-self:center}
+
+/* embedding row */
+.embed-row{display:flex;gap:3px;flex-wrap:wrap;margin:4px 0 6px}
+.embed-cell{width:26px;height:26px;border-radius:5px;font-family:var(--mono);font-size:.55rem;
+  display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85)}
+.embed-lead{font-family:var(--mono);color:var(--muted);font-size:.85rem;margin-bottom:6px}
+.embed-lead b{color:var(--accent)}
+.scatter{position:relative;height:230px;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;margin-top:16px;overflow:hidden}
+.dot{position:absolute;transform:translate(-50%,-50%);font-family:var(--mono);font-size:.78rem;
+  padding:3px 8px;border-radius:14px;white-space:nowrap}
+.dot::before{content:"";position:absolute;left:-5px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* softmax / temperature */
+.bars{margin-top:6px}
+.bar-line{display:grid;grid-template-columns:96px 1fr 62px;align-items:center;gap:12px;margin:8px 0}
+.bar-tok{font-family:var(--mono);font-size:.86rem;color:var(--text);text-align:right}
+.bar-track{background:var(--ink-2);border-radius:7px;height:26px;overflow:hidden;border:1px solid var(--line)}
+.bar-fill{height:100%;border-radius:6px 0 0 6px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));
+  transition:width .4s cubic-bezier(.3,.8,.3,1);min-width:2px}
+.bar-pct{font-family:var(--mono);font-size:.82rem;color:var(--muted);text-align:right}
+.temp-ctl{display:flex;align-items:center;gap:16px;margin:4px 0 20px;flex-wrap:wrap}
+.temp-ctl label{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+input[type=range]{-webkit-appearance:none;appearance:none;height:5px;border-radius:5px;
+  background:linear-gradient(90deg,var(--accent),var(--t6));width:220px;max-width:55vw}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--text);cursor:pointer;border:3px solid var(--accent)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--accent)}
+.temp-val{font-family:var(--disp);font-weight:600;font-size:1.3rem;color:var(--accent);min-width:52px}
+.temp-note{font-size:.82rem;color:var(--faint)}
+
+/* loop */
+.loop{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.loop-step{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:.88rem}
+.loop-step .k{color:var(--faint);width:20px;text-align:right}
+.loop-ctx{background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;flex:1}
+.loop-ctx .known{color:var(--muted)}
+.loop-ctx .new{color:var(--accent);font-weight:700}
+.loop-ctx .cursor{color:var(--t1)}
+
+/* impact cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:24px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:20px}
+.card h4{font-family:var(--disp);font-weight:600;font-size:1.08rem;margin:0 0 8px;color:var(--text)}
+.card p{font-size:.9rem;color:var(--muted);margin:0}
+.card .tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:10px}
+.budget{height:12px;border-radius:6px;background:var(--ink-2);border:1px solid var(--line);overflow:hidden;margin:12px 0 6px;display:flex}
+.budget i{height:100%;display:block}
+.strawberry{font-family:var(--mono);display:flex;gap:4px;margin:10px 0 4px;flex-wrap:wrap}
+.strawberry span{padding:4px 7px;border-radius:6px;color:#0d1020;font-weight:600;font-size:.9rem}
+.calc-line{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.84rem;color:var(--muted);margin:4px 0}
+.calc-line b{color:var(--text)}
+.calc-total{border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+.calc-total b{color:var(--accent);font-size:1.05rem}
+
+/* recap */
+.recap{padding:60px 0 90px;border-top:1px solid var(--line)}
+.recap ol{counter-reset:r;list-style:none;padding:0;margin:20px 0 0}
+.recap li{counter-increment:r;position:relative;padding:12px 0 12px 46px;border-bottom:1px solid var(--line);color:var(--muted)}
+.recap li::before{content:counter(r,decimal-leading-zero);position:absolute;left:0;top:12px;
+  font-family:var(--mono);color:var(--accent);font-size:.82rem;font-weight:700}
+.recap li b{color:var(--text)}
+.foot{font-family:var(--mono);font-size:.74rem;color:var(--faint);margin-top:36px;line-height:1.7}
+
+@media (max-width:560px){
+  .bar-line{grid-template-columns:74px 1fr 50px;gap:8px}
+  .stat-row{gap:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <p class="eyebrow">Tokens · end&nbsp;to&nbsp;end</p>
+  <h1>An LLM never sees your words.<br>It sees <em>tokens</em>.</h1>
+  <p class="lede">Before a model can reason about text, the text is chopped into subword pieces called tokens, turned into numbers, and fed through the network one step at a time. Type below to watch it happen.</p>
+
+  <div class="tok-lab">
+    <h2>Live tokenizer</h2>
+    <textarea id="tokIn" class="tok-input" spellcheck="false">Tokenization isn't about words — it's about frequent chunks.</textarea>
+    <div class="presets" id="presets"></div>
+    <div class="chips" id="chips"></div>
+    <div class="stat-row">
+      <div class="stat"><b id="sTok" class="accentnum">0</b><span>tokens</span></div>
+      <div class="stat"><b id="sChar">0</b><span>characters</span></div>
+      <div class="stat"><b id="sRatio">0</b><span>chars / token</span></div>
+    </div>
+    <p class="hint">Hover a chip to see its vocabulary ID. The little <span style="color:var(--muted)">·</span> marks a leading space — spaces live <em>inside</em> tokens, which is why <code class="inl">" the"</code> and <code class="inl">"the"</code> are different tokens.</p>
+  </div>
+  <p class="hint" style="margin-top:10px;color:var(--faint)">This tool is an illustrative approximation of Byte-Pair Encoding — real GPT/Gemini vocabularies are learned from data, but the behavior you see (subword splits, leading spaces, digit fragments) is faithful.</p>
+</header>
+
+<main>
+
+<!-- 01 -->
+<section class="step wrap">
+  <div class="step-head"><span class="num">01</span><h3>What actually is a token?</h3></div>
+  <p>A token is the smallest unit of text the model works with. It is usually <strong>not a whole word and not a single character</strong> — it sits in between, at the level of frequently-seen chunks. Common words like <code class="inl"> the</code> are one token. Rare or long words get split: <code class="inl">tokenization</code> might become <code class="inl">token</code> + <code class="inl">ization</code>. Whitespace, punctuation, and even emoji all become tokens too.</p>
+  <div class="panel">
+    <p class="panel-title">Three ways to cut the same sentence</p>
+    <div class="pipe" style="grid-template-columns:1fr">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="loop-ctx"><span class="known">Characters (too many units):</span> <span class="new">u&nbsp;n&nbsp;h&nbsp;a&nbsp;p&nbsp;p&nbsp;i&nbsp;n&nbsp;e&nbsp;s&nbsp;s</span> — 11 units</div>
+        <div class="loop-ctx"><span class="known">Words (huge, brittle vocab):</span> <span class="new">unhappiness</span> — 1 unit, but a whole slot wasted on one rare word</div>
+        <div class="loop-ctx"><span class="known">Subword tokens (the sweet spot):</span> <span class="cursor">un</span> · <span class="cursor">happ</span> · <span class="cursor">iness</span> — reuses pieces across thousands of words</div>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:20px">Subwords are a compromise: small enough that a fixed vocabulary (typically <strong>~50,000 to ~200,000 tokens</strong>) can express any text, large enough that common text stays short. That vocabulary size is a hard design constant of the model.</p>
+</section>
+
+<!-- 02 -->
+<section class="step wrap">
+  <div class="step-head"><span class="num">02</span><h3>How the split is learned — Byte-Pair Encoding</h3></div>
+  <p>The vocabulary isn't hand-written. An algorithm called <strong>Byte-Pair Encoding (BPE)</strong> starts from raw characters and repeatedly merges the most frequent adjacent pair into a new single unit. Do that thousands of times over a huge corpus and the merges that survive <em>are</em> the vocabulary. Step through a tiny run below.</p>
+  <div class="panel">
+    <p class="panel-title">Merging the word "lowering" · click to run BPE</p>
+    <div id="bpeWord" class="bpe-word"></div>
+    <div class="bpe-controls">
+      <button class="btn" id="bpeNext">Next merge →</button>
+      <button class="btn ghost" id="bpeReset">Reset</button>
+    </div>
+    <div id="bpeLog" class="bpe-log">Start: every character is its own unit. The most frequent pair gets merged first.</div>
+  </div>
+  <p style="margin-top:20px">In the real training run this happens across billions of words, so the pairs that win are the ones that recur everywhere — <code class="inl">ing</code>, <code class="inl">tion</code>, <code class="inl"> the</code>. That's why the tokenizer feels like it "knows" English morphology: it doesn't, it just kept the merges that paid off statistically.</p>
+</section>
+
+<!-- 03 -->
+<section class="step wrap">
+  <div class="step-head"><span class="num">03</span><h3>Every token is really an integer</h3></div>
+  <p>Once the vocabulary exists, each token maps to a fixed <strong>integer ID</strong> — its row number in the vocabulary. The model never manipulates letters; it manipulates these IDs. Tokenizing is just a dictionary lookup from text chunk to number, and detokenizing is the same lookup in reverse.</p>
+  <div class="panel">
+    <p class="panel-title">text → token → id</p>
+    <div style="font-family:var(--mono);font-size:.9rem;line-height:2.1">
+      <div><span style="color:var(--muted)">"Kubernetes"</span> &nbsp;→&nbsp; <span style="color:var(--t5)">"Kub"</span> <span style="color:var(--faint)">→ 42055</span> &nbsp;·&nbsp; <span style="color:var(--t3)">"ernetes"</span> <span style="color:var(--faint)">→ 44357</span></div>
+      <div><span style="color:var(--muted)">" scaling"</span> &nbsp;→&nbsp; <span style="color:var(--t1)">"·scaling"</span> <span style="color:var(--faint)">→ 27972</span></div>
+      <div><span style="color:var(--muted)">"429"</span> &nbsp;→&nbsp; <span style="color:var(--t0)">"4"</span> <span style="color:var(--faint)">→ 19</span> &nbsp;·&nbsp; <span style="color:var(--t0)">"29"</span> <span style="color:var(--faint)">→ 1959</span></div>
+    </div>
+  </div>
+  <p style="margin-top:20px">That last line is why models are shaky at arithmetic: a number like <code class="inl">429</code> isn't a quantity to them, it's an arbitrary sequence of digit-fragment IDs. The model has to <em>learn</em> that <code class="inl">4</code>+<code class="inl">29</code> means four hundred twenty-nine — nothing in the IDs tells it so.</p>
+</section>
+
+<!-- 04 -->
+<section class="step wrap">
+  <div class="step-head"><span class="num">04</span><h3>From ID to meaning — embeddings</h3></div>
+  <p>An integer ID carries no meaning on its own (ID 5,000 isn't "bigger" than ID 12). So the first thing the model does is look up each ID in an <strong>embedding table</strong> and replace it with a long list of numbers — a vector, often 2,000–12,000 dimensions wide. These vectors are <em>learned</em>, and tokens that behave similarly end up pointing in similar directions.</p>
+  <div class="panel">
+    <p class="panel-title">One token → one vector (showing 24 of ~4096 dimensions)</p>
+    <div class="embed-lead">token <b>"·scaling"</b> · id <b>27972</b> becomes:</div>
+    <div class="embed-row" id="embedRow"></div>
+    <div class="embed-lead" style="margin-top:14px;color:var(--faint)">each cell is one learned number; the full vector is the model's entire "notion" of that token before it reads any context.</div>
+  </div>
+  <div class="panel">
+    <p class="panel-title">Why it's a vector: similar tokens cluster (2D sketch)</p>
+    <div class="scatter" id="scatter"></div>
+    <p style="font-size:.82rem;color:var(--faint);margin:14px 0 0">Illustrative projection. In real models these live in thousands of dimensions, but the intuition holds: geometry encodes meaning, so directions become reusable — the step from <code class="inl">king</code>→<code class="inl">queen</code> resembles <code class="inl">man</code>→<code class="inl">woman</code>.</p>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="step wrap">
+  <div class="step-head"><span class="num">05</span><h3>Through the model — the network turns vectors into a prediction</h3></div>
+  <p>The sequence of token vectors (plus a <strong>position signal</strong> so order isn't lost) flows through many transformer layers. Attention lets every token look at every earlier token and mix in relevant context, so the vector for <code class="inl">bank</code> ends up different in "river bank" vs "bank account." After the final layer, the model produces one score — a <strong>logit</strong> — for <em>every</em> token in the vocabulary: "how likely are you to come next?"</p>
+  <div class="panel">
+    <p class="panel-title">the whole pipeline, one glance</p>
+    <div class="pipe">
+      <div class="pipe-cell"><span class="glyph">"Aa"</span><span class="lbl">raw text</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-cell"><span class="glyph">▮▮▮</span><span class="lbl">token IDs</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-cell"><span class="glyph">[·]</span><span class="lbl">embeddings + position</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-cell"><span class="glyph">≋</span><span class="lbl">transformer layers (attention)</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-cell"><span class="glyph">▁▃▇</span><span class="lbl">logit per vocab token</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="step wrap">
+  <div class="step-head"><span class="num">06</span><h3>Picking the next token — softmax &amp; temperature</h3></div>
+  <p>Raw logits are unbounded scores. <strong>Softmax</strong> squashes the whole set into probabilities that sum to 100%. Then <strong>temperature</strong> reshapes that distribution before a token is drawn: low temperature sharpens it toward the top choice (deterministic, safe), high temperature flattens it (diverse, riskier). Drag the slider.</p>
+  <div class="panel">
+    <p class="panel-title">"The cache was completely ___" · next-token probabilities</p>
+    <div class="temp-ctl">
+      <label for="temp">Temperature</label>
+      <input type="range" id="temp" min="0.1" max="2" step="0.05" value="0.7">
+      <span class="temp-val" id="tempVal">0.70</span>
+      <span class="temp-note" id="tempNote"></span>
+    </div>
+    <div class="bars" id="bars"></div>
+  </div>
+  <p style="margin-top:20px">At <code class="inl">temperature → 0</code> the model always takes the single highest-probability token (greedy) — repeatable, but flat. Turn it up and rarer tokens get a real chance, which is where both creativity and hallucination come from. This one knob is the difference between a boring answer and a wild one.</p>
+</section>
+
+<!-- 07 -->
+<section class="step wrap">
+  <div class="step-head"><span class="num">07</span><h3>One token at a time — the autoregressive loop</h3></div>
+  <p>A model doesn't emit a sentence in one shot. It predicts <strong>one token</strong>, appends it to the input, and runs the whole thing again to predict the next — over and over until it emits a special <em>stop</em> token. Everything it has already written becomes part of the context for what comes next.</p>
+  <div class="panel">
+    <p class="panel-title">generating "scaling pods now" token by token</p>
+    <div class="loop" id="loop"></div>
+    <div class="bpe-controls" style="margin-top:16px">
+      <button class="btn" id="loopStep">Generate next token →</button>
+      <button class="btn ghost" id="loopReset">Reset</button>
+    </div>
+  </div>
+  <p style="margin-top:20px">This is also why latency scales with output length: every single output token is a full forward pass through the network. Longer answers literally cost more compute, token for token.</p>
+</section>
+
+<!-- 08 -->
+<section class="step wrap">
+  <div class="step-head"><span class="num">08</span><h3>Why any of this matters in practice</h3></div>
+  <p>Tokens aren't trivia — they're the unit of nearly every real constraint you hit when building with LLMs.</p>
+  <div class="cards">
+
+    <div class="card">
+      <span class="tag">context window</span>
+      <h4>Memory is measured in tokens</h4>
+      <p>A "128K context" means 128,000 tokens of prompt + history + output combined. When the budget fills, the oldest tokens fall out of view.</p>
+      <div class="budget" id="budget"></div>
+      <p style="font-size:.78rem;color:var(--faint);margin-top:2px">system · history · your prompt · room to answer</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">cost</span>
+      <h4>You pay per token</h4>
+      <p>Billing is input tokens + output tokens, not requests. Output usually costs several times more than input.</p>
+      <div style="margin-top:12px">
+        <div class="calc-line"><span>1,200 input tok × $3/M</span><b>$0.0036</b></div>
+        <div class="calc-line"><span>450 output tok × $15/M</span><b>$0.0068</b></div>
+        <div class="calc-line calc-total"><span>per call</span><b>$0.0104</b></div>
+      </div>
+      <p style="font-size:.78rem;color:var(--faint);margin-top:8px">multiply by millions of calls and token efficiency becomes a real line item.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">the classic failure</span>
+      <h4>"How many R's in strawberry?"</h4>
+      <p>The model sees chunks, not letters — so counting characters is genuinely hard for it:</p>
+      <div class="strawberry">
+        <span style="background:var(--t0)">str</span>
+        <span style="background:var(--t3)">aw</span>
+        <span style="background:var(--t5)">berry</span>
+      </div>
+      <p style="font-size:.78rem;color:var(--faint);margin-top:4px">The three R's are buried <em>inside</em> tokens it can't natively see through.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">prompt / prefix caching</span>
+      <h4>Reuse the prefix, skip the work</h4>
+      <p>Because generation is left-to-right, an unchanged prompt prefix produces identical early computation. Caching it means a stable system prompt or tool schema isn't re-processed every call — cheaper and faster, the same reason a fixed model prefix earns implicit caching.</p>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<section class="recap wrap">
+  <div class="step-head"><span class="num">↺</span><h3>The whole journey</h3></div>
+  <ol>
+    <li><b>Text is chopped into subword tokens</b> — not words, not characters, but frequent chunks.</li>
+    <li><b>BPE learned those chunks</b> by merging the most common adjacent pairs, over and over.</li>
+    <li><b>Each token becomes an integer ID</b> — a row in a fixed vocabulary.</li>
+    <li><b>Each ID is looked up as a learned vector</b>, where geometry encodes meaning.</li>
+    <li><b>Layers of attention mix in context</b> and output a logit for every vocab token.</li>
+    <li><b>Softmax + temperature</b> turn those scores into a probability draw.</li>
+    <li><b>The chosen token is appended and fed back</b> — one token at a time until stop.</li>
+    <li><b>Context, cost, and quirks</b> all trace straight back to the token.</li>
+  </ol>
+  <p class="foot">Interactive tokenizer, BPE walk, embedding sketch, softmax and generation loop are illustrative — sized to build intuition, not to reproduce a specific vendor's exact vocabulary. The mechanics shown are the real ones.</p>
+</section>
+
+<script>
+(function(){
+  "use strict";
+  var PAL = ['--t0','--t1','--t2','--t3','--t4','--t5','--t6','--t7'].map(function(v){
+    return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  });
+
+  /* ---------- tiny stable hash for pseudo-IDs ---------- */
+  function hashId(s){
+    var h=2166136261;
+    for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}
+    return Math.abs(h)%50257; // GPT-2-ish vocab size
+  }
+
+  /* ---------- illustrative tokenizer ----------
+     Approximates BPE behavior: GPT-2-style pre-split, then chunk long runs. */
+  function tokenize(text){
+    if(!text) return [];
+    var re=/'s|'t|'re|'ve|'m|'ll|'d| ?[A-Za-z]+| ?[0-9]+| ?[^\sA-Za-z0-9]+|\s+/g;
+    var raw=text.match(re)||[];
+    var toks=[];
+    raw.forEach(function(piece){
+      var lead = piece.charAt(0)===' ';
+      var core = lead? piece.slice(1) : piece;
+      if(/^\s+$/.test(piece)){ toks.push(piece); return; } // pure whitespace run
+      // split long alpha runs into ~4-5 char subwords to mimic subword pieces
+      if(/^[A-Za-z]+$/.test(core) && core.length>5){
+        var parts=[], i=0, sizes=[4,5,3];
+        while(i<core.length){
+          var n=sizes[(parts.length)%sizes.length];
+          if(core.length-i-n<2 && core.length-i>n) n=core.length-i; // avoid tiny tail
+          parts.push(core.slice(i,i+n)); i+=n;
+        }
+        parts.forEach(function(p,idx){ toks.push((idx===0&&lead?' ':'')+p); });
+      } else if(/^[0-9]+$/.test(core) && core.length>1){
+        // digits fragment: first digit, then pairs
+        var d=core, out=[], j=0;
+        out.push(d[0]); j=1;
+        while(j<d.length){ out.push(d.slice(j,j+2)); j+=2; }
+        out.forEach(function(p,idx){ toks.push((idx===0&&lead?' ':'')+p); });
+      } else {
+        toks.push(piece);
+      }
+    });
+    return toks;
+  }
+
+  var tokIn=document.getElementById('tokIn'),
+      chips=document.getElementById('chips'),
+      sTok=document.getElementById('sTok'),
+      sChar=document.getElementById('sChar'),
+      sRatio=document.getElementById('sRatio');
+
+  function render(){
+    var text=tokIn.value;
+    var toks=tokenize(text);
+    chips.innerHTML='';
+    toks.forEach(function(t,i){
+      var el=document.createElement('span');
+      el.className='chip';
+      el.style.background=PAL[i%PAL.length];
+      var display=t;
+      var html='';
+      if(/^\s+$/.test(t)){
+        html='<span class="sp">·</span>'.repeat(t.length);
+      } else if(t.charAt(0)===' '){
+        html='<span class="sp">·</span>'+escapeHtml(t.slice(1));
+      } else {
+        html=escapeHtml(t);
+      }
+      el.innerHTML=html+'<span class="id">'+hashId(t)+'</span>';
+      el.title='token id '+hashId(t);
+      chips.appendChild(el);
+    });
+    sTok.textContent=toks.length;
+    sChar.textContent=text.length;
+    sRatio.textContent=toks.length? (text.length/toks.length).toFixed(1):'0';
+  }
+  function escapeHtml(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  tokIn.addEventListener('input',render);
+
+  var presetData=[
+    "The quick brown fox jumps over the lazy dog.",
+    "kubectl get pods -n internal-tools --watch",
+    "Prices rose 12.7% to $429,000 in Q3 2026.",
+    "안녕하세요 🌏 multilingual tokens vary a lot!",
+    "antidisestablishmentarianism"
+  ];
+  var pc=document.getElementById('presets');
+  presetData.forEach(function(p){
+    var b=document.createElement('button');
+    b.className='preset'; b.textContent=p.length>30?p.slice(0,28)+'…':p;
+    b.addEventListener('click',function(){tokIn.value=p;render();});
+    pc.appendChild(b);
+  });
+  render();
+
+  /* ---------- BPE merge walkthrough ---------- */
+  var bpeWord=document.getElementById('bpeWord'),
+      bpeLog=document.getElementById('bpeLog');
+  // scripted merge sequence over "lowering"
+  var bpeStages=[
+    {units:['l','o','w','e','r','i','n','g'],merge:null,msg:'Start: every character is its own unit.'},
+    {units:['l','o','w','e','r','in','g'],merge:5,msg:'Merge <b>i·n → in</b> — one of the most frequent pairs in English.'},
+    {units:['l','o','w','e','r','ing'],merge:5,msg:'Merge <b>in·g → ing</b> — the suffix falls out of the data.'},
+    {units:['lo','w','e','r','ing'],merge:0,msg:'Merge <b>l·o → lo</b>.'},
+    {units:['low','e','r','ing'],merge:0,msg:'Merge <b>lo·w → low</b> — now a real word-piece.'},
+    {units:['low','er','ing'],merge:1,msg:'Merge <b>e·r → er</b>.'},
+    {units:['low','ering'],merge:1,msg:'Merge <b>er·ing → ering</b>. Final: <b>low + ering</b>, two learned tokens.'}
+  ];
+  var bpeI=0;
+  function drawBpe(){
+    var st=bpeStages[bpeI];
+    bpeWord.innerHTML='';
+    st.units.forEach(function(u,idx){
+      var el=document.createElement('span');
+      el.className='bpe-unit';
+      if(st.merge===idx){el.className+=' merged';}
+      el.textContent=u;
+      bpeWord.appendChild(el);
+    });
+    bpeLog.innerHTML=st.msg;
+  }
+  document.getElementById('bpeNext').addEventListener('click',function(){
+    if(bpeI<bpeStages.length-1){bpeI++;drawBpe();}
+  });
+  document.getElementById('bpeReset').addEventListener('click',function(){bpeI=0;drawBpe();});
+  drawBpe();
+
+  /* ---------- embedding row ---------- */
+  var embedRow=document.getElementById('embedRow');
+  (function(){
+    var seed=27972;
+    function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return (seed/0x7fffffff);}
+    for(var i=0;i<24;i++){
+      var v=(rnd()*2-1); // -1..1
+      var cell=document.createElement('div');
+      cell.className='embed-cell';
+      // teal for positive, violet for negative, intensity by magnitude
+      var mag=Math.abs(v);
+      var base = v>=0? '53,224,196' : '169,139,240';
+      cell.style.background='rgba('+base+','+(0.18+mag*0.72).toFixed(2)+')';
+      cell.textContent=v.toFixed(1).replace('0.','.').replace('-0.','-.');
+      embedRow.appendChild(cell);
+    }
+  })();
+
+  /* ---------- semantic scatter ---------- */
+  (function(){
+    var sc=document.getElementById('scatter');
+    var pts=[
+      {t:'king',x:24,y:30,c:'--t5'},{t:'queen',x:40,y:26,c:'--t7'},
+      {t:'man',x:20,y:70,c:'--t5'},{t:'woman',x:37,y:66,c:'--t7'},
+      {t:'kubernetes',x:74,y:40,c:'--t4'},{t:'docker',x:82,y:55,c:'--t4'},
+      {t:'pod',x:68,y:60,c:'--t4'},{t:'apple',x:60,y:20,c:'--t3'},
+      {t:'banana',x:72,y:18,c:'--t3'}
+    ];
+    pts.forEach(function(p){
+      var d=document.createElement('div');
+      d.className='dot';
+      d.style.left=p.x+'%'; d.style.top=p.y+'%';
+      var col=getComputedStyle(document.documentElement).getPropertyValue(p.c).trim();
+      d.style.color=col;
+      d.style.background='rgba(255,255,255,.04)';
+      d.textContent=p.t;
+      sc.appendChild(d);
+    });
+  })();
+
+  /* ---------- softmax / temperature ---------- */
+  var candidates=[
+    {t:'·useless',logit:6.2},
+    {t:'·empty',logit:5.1},
+    {t:'·full',logit:4.4},
+    {t:'·cold',logit:3.2},
+    {t:'·rebuilt',logit:2.6},
+    {t:'·gone',logit:1.9}
+  ];
+  var bars=document.getElementById('bars'),
+      temp=document.getElementById('temp'),
+      tempVal=document.getElementById('tempVal'),
+      tempNote=document.getElementById('tempNote');
+
+  function softmax(logits,T){
+    var scaled=logits.map(function(l){return l/T;});
+    var m=Math.max.apply(null,scaled);
+    var ex=scaled.map(function(s){return Math.exp(s-m);});
+    var sum=ex.reduce(function(a,b){return a+b;},0);
+    return ex.map(function(e){return e/sum;});
+  }
+  function buildBars(){
+    bars.innerHTML='';
+    candidates.forEach(function(c,i){
+      var line=document.createElement('div');line.className='bar-line';
+      line.innerHTML='<span class="bar-tok">'+c.t.replace('·','<span class="sp" style="color:var(--faint)">·</span>')+'</span>'+
+        '<span class="bar-track"><span class="bar-fill" id="fill'+i+'"></span></span>'+
+        '<span class="bar-pct" id="pct'+i+'"></span>';
+      bars.appendChild(line);
+    });
+  }
+  function updateBars(){
+    var T=parseFloat(temp.value);
+    tempVal.textContent=T.toFixed(2);
+    var probs=softmax(candidates.map(function(c){return c.logit;}),T);
+    probs.forEach(function(p,i){
+      document.getElementById('fill'+i).style.width=(p*100).toFixed(1)+'%';
+      document.getElementById('pct'+i).textContent=(p*100).toFixed(1)+'%';
+    });
+    if(T<=0.35) tempNote.textContent='sharp — nearly always picks the top token';
+    else if(T<=0.9) tempNote.textContent='balanced — sensible with some variety';
+    else if(T<=1.4) tempNote.textContent='flat — rarer tokens get a real shot';
+    else tempNote.textContent='chaotic — the tail competes with the head';
+  }
+  buildBars();updateBars();
+  temp.addEventListener('input',updateBars);
+
+  /* ---------- autoregressive loop ---------- */
+  var loop=document.getElementById('loop');
+  var prompt='Alfred is';
+  var gen=['·scaling','·pods','·now','⏹ stop'];
+  var loopI=0;
+  function drawLoop(){
+    loop.innerHTML='';
+    for(var k=0;k<=loopI;k++){
+      var row=document.createElement('div');row.className='loop-step';
+      var known=prompt+gen.slice(0,k).join('').replace(/·/g,' ');
+      var newTok=k<gen.length? gen[k]:'';
+      var isStop=newTok.indexOf('⏹')>-1;
+      row.innerHTML='<span class="k">'+(k+1)+'</span>'+
+        '<span class="loop-ctx"><span class="known">'+known+'</span>'+
+        (newTok? ' <span class="'+(isStop?'cursor':'new')+'">'+ (isStop?newTok:newTok.replace('·',' ')) +'</span> <span class="cursor">▌</span>':' <span class="cursor">▌</span>')+
+        '</span>';
+      loop.appendChild(row);
+    }
+  }
+  document.getElementById('loopStep').addEventListener('click',function(){
+    if(loopI<gen.length-1){loopI++;drawLoop();}
+  });
+  document.getElementById('loopReset').addEventListener('click',function(){loopI=0;drawLoop();});
+  drawLoop();
+
+  /* ---------- context budget bar ---------- */
+  (function(){
+    var b=document.getElementById('budget');
+    var segs=[['--accent-dim',12],['--t6',34],['--t1',22],['--line',32]];
+    segs.forEach(function(s){
+      var i=document.createElement('i');
+      i.style.width=s[1]+'%';
+      i.style.background=getComputedStyle(document.documentElement).getPropertyValue(s[0]).trim();
+      b.appendChild(i);
+    });
+  })();
+
+})();
+</script>
+</body>
+</html>

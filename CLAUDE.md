@@ -28,6 +28,16 @@ data/
     timelineData.ts      # Full 2021–2026 month-by-month career timeline
   blog/
     blogsData.ts         # 22 blog posts (Medium, LinkedIn, Substack)
+  artifacts/
+    artifactsData.ts     # Index of self-contained learning HTML pages
+```
+
+### Adding an artifact
+Drop the standalone `.html` into `public/artifacts/`, then add an entry to `artifactsData.ts`
+with its `file` name. The pages carry their own CSS/fonts and open in a new tab — the site
+never renders them inline, so their design is free to clash with the portfolio's.
+
+```
 ```
 
 ### Key exports from meData.ts
@@ -62,6 +72,7 @@ Each highlight: `{ title, date?, description?, tags?, link? }`.
 | `/me` | `components/pages/MeComp.tsx` | About — arc, milestones, skills, education, projects, certs, writing |
 | `/me/timeline` | `components/pages/TimelineComp.tsx` | Full detailed timeline from timelineData.ts |
 | `/blog` | `components/pages/BlogComp.tsx` | Blog listing with search + tag filter |
+| `/artifacts` | `components/pages/ArtifactsComp.tsx` | Index of standalone learning pages served from `public/artifacts/` |
 
 ## Navbar
 
@@ -86,7 +97,7 @@ Always cross-reference these when updating timeline or milestone data — the da
 
 ## What NOT to Do
 
-- Do not add a Learn section — it was intentionally removed
+- Do not resurrect the old Learn section (a curriculum/roadmap listing) — it was intentionally removed. The `/artifacts` section is a different thing and is intentional.
 - Do not add numeric stats to the homepage (removed intentionally)
 - Do not mention specific OMSCS courses on the site
 - Do not commit `out/`, `node_modules/`, or `.context/` (all gitignored)

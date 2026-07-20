@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subnetting, from first principles to fluent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f5f7;
+    --paper:#ffffff;
+    --ink:#16202c;
+    --muted:#5b6b7a;
+    --faint:#8a98a6;
+    --rule:#dde3e9;
+    --net:#2563eb;      /* network bits */
+    --net-bg:#e8f0fe;
+    --host:#e26a02;     /* host bits */
+    --host-bg:#fdf0e3;
+    --borrow:#9333ea;   /* borrowed / subnet bits */
+    --borrow-bg:#f3e9fc;
+    --good:#15803d;
+    --good-bg:#e9f6ee;
+    --term-bg:#0e1722;
+    --term-ink:#cfe3f5;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Inter',system-ui,-apple-system,sans-serif;
+    --display:'Space Grotesk','Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--sans);line-height:1.62;font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;
+    display:grid;grid-template-columns:230px 1fr;gap:48px;}
+  @media(max-width:900px){.wrap{grid-template-columns:1fr;gap:0}}
+
+  /* ---- sidebar ---- */
+  aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+    padding:32px 0 32px;border-right:1px solid var(--rule);}
+  @media(max-width:900px){aside{position:static;height:auto;border-right:none;
+    border-bottom:1px solid var(--rule);padding:20px 0}}
+  .brand{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--net);font-weight:700;margin-bottom:4px}
+  .brand small{color:var(--faint)}
+  aside nav{margin-top:22px;display:flex;flex-direction:column;gap:2px}
+  aside nav a{font-size:13.5px;color:var(--muted);text-decoration:none;
+    padding:5px 10px;border-radius:6px;border-left:2px solid transparent;}
+  aside nav a:hover{background:var(--paper);color:var(--ink)}
+  aside nav a.num{color:var(--faint);font-family:var(--mono);font-size:11px;margin-right:6px}
+
+  /* ---- main ---- */
+  main{padding:40px 0 120px;min-width:0}
+  header.hero{padding:18px 0 38px;border-bottom:1px solid var(--rule);margin-bottom:42px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--host);font-weight:700}
+  h1{font-family:var(--display);font-size:clamp(34px,5vw,52px);line-height:1.04;
+    margin:14px 0 16px;letter-spacing:-.02em;font-weight:700}
+  .lede{font-size:18px;color:var(--muted);max-width:60ch}
+  .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:26px;font-size:13px;
+    font-family:var(--mono)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .swatch{width:14px;height:14px;border-radius:3px;display:inline-block}
+
+  section{margin:0 0 64px;scroll-margin-top:24px}
+  h2{font-family:var(--display);font-size:28px;letter-spacing:-.01em;margin:0 0 6px;
+    display:flex;align-items:baseline;gap:12px}
+  h2 .n{font-family:var(--mono);font-size:14px;color:var(--net);font-weight:700;
+    background:var(--net-bg);padding:2px 9px;border-radius:6px}
+  h3{font-family:var(--display);font-size:19px;margin:34px 0 8px;letter-spacing:-.01em}
+  p{margin:12px 0}
+  .section-rule{height:1px;background:var(--rule);margin:8px 0 24px}
+  strong{font-weight:600}
+  code{font-family:var(--mono);font-size:.92em;background:#eef1f4;
+    padding:1.5px 6px;border-radius:5px;color:#0d3b66}
+  a.inline{color:var(--net)}
+
+  /* callouts */
+  .note,.warn,.key{border-radius:12px;padding:16px 18px;margin:20px 0;font-size:15px}
+  .note{background:#eef4ff;border:1px solid #cfe0fd}
+  .warn{background:#fff5ea;border:1px solid #f5d9b5}
+  .key{background:var(--good-bg);border:1px solid #c4e4cf}
+  .note b,.warn b,.key b{font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;display:block;margin-bottom:6px}
+  .note b{color:var(--net)} .warn b{color:var(--host)} .key b{color:var(--good)}
+
+  /* bit grid */
+  .bits{display:flex;flex-wrap:wrap;gap:5px;margin:18px 0;font-family:var(--mono)}
+  .octet{display:flex;gap:3px;padding:6px;border-radius:8px;background:#f0f3f6}
+  .bit{width:30px;height:38px;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;border-radius:5px;font-size:14px;font-weight:700;
+    background:#fff;border:1px solid var(--rule)}
+  .bit small{font-size:9px;font-weight:500;color:var(--faint)}
+  .bit.net{background:var(--net-bg);color:var(--net);border-color:#bcd3fb}
+  .bit.host{background:var(--host-bg);color:var(--host);border-color:#f3cfa3}
+  .bit.borrow{background:var(--borrow-bg);color:var(--borrow);border-color:#dcc0f3}
+  .dot{align-self:center;font-weight:700;color:var(--faint);padding:0 2px}
+
+  /* tables */
+  .tbl-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--rule);border-radius:12px}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap}
+  th{background:#eef2f6;font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--muted);font-weight:700}
+  td{font-family:var(--mono);font-size:13px}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#f7fafd}
+  td.lbl{font-family:var(--sans);font-weight:500}
+  .hl{background:#fff7e8 !important}
+
+  /* terminal / worked block */
+  .term{background:var(--term-bg);color:var(--term-ink);border-radius:12px;
+    padding:18px 20px;font-family:var(--mono);font-size:13.5px;line-height:1.75;
+    overflow-x:auto;margin:18px 0}
+  .term .c{color:#7fa8cf}      /* comment */
+  .term .g{color:#7fe0a8}      /* good/result */
+  .term .o{color:#f0a868}      /* orange highlight */
+  .term .b{color:#7fb3ff}      /* blue highlight */
+  .term .dim{color:#5a6f84}
+
+  /* exercise */
+  details{background:var(--paper);border:1px solid var(--rule);border-radius:12px;
+    padding:0 18px;margin:14px 0;transition:border-color .2s}
+  details[open]{border-color:#bcd3fb}
+  summary{cursor:pointer;padding:16px 0;font-weight:600;list-style:none;
+    display:flex;align-items:flex-start;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  .qtag{font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;
+    background:var(--net);border-radius:5px;padding:2px 7px;flex-shrink:0;margin-top:2px}
+  .qtag.med{background:var(--host)} .qtag.hard{background:var(--borrow)}
+  summary .qtxt{flex:1}
+  summary::after{content:'▸ reveal';font-family:var(--mono);font-size:11px;
+    color:var(--faint);flex-shrink:0;margin-top:3px}
+  details[open] summary::after{content:'▾ hide'}
+  .answer{padding:4px 0 20px;border-top:1px dashed var(--rule);margin-top:2px}
+  .answer .final{font-family:var(--mono);font-weight:700;color:var(--good);
+    background:var(--good-bg);display:inline-block;padding:4px 11px;border-radius:7px;margin-top:8px}
+
+  /* calculator */
+  .calc{background:var(--paper);border:1px solid var(--rule);border-radius:16px;padding:24px;margin:22px 0}
+  .calc-in{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .calc-in label{display:flex;flex-direction:column;font-size:12px;font-family:var(--mono);
+    text-transform:uppercase;letter-spacing:.06em;color:var(--muted);gap:6px}
+  .calc-in input,.calc-in select{font-family:var(--mono);font-size:16px;padding:9px 12px;
+    border:1px solid var(--rule);border-radius:9px;background:#fbfcfd}
+  .calc-in input{width:170px}
+  .calc button{font-family:var(--mono);font-weight:700;font-size:14px;background:var(--net);
+    color:#fff;border:none;border-radius:9px;padding:11px 20px;cursor:pointer}
+  .calc button:hover{background:#1d4fc4}
+  .calc-out{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;
+    background:var(--rule);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+  .cell{background:var(--paper);padding:13px 16px}
+  .cell .k{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+  .cell .v{font-family:var(--mono);font-size:15px;font-weight:700;margin-top:3px;word-break:break-all}
+  .calc-err{color:#c0392b;font-family:var(--mono);font-size:13px;margin-top:14px}
+
+  .footer{border-top:1px solid var(--rule);padding-top:24px;color:var(--faint);
+    font-size:13px;font-family:var(--mono)}
+  ul.tight{margin:10px 0;padding-left:22px}
+  ul.tight li{margin:6px 0}
+  .kbd{font-family:var(--mono);background:#0d3b66;color:#fff;padding:1px 7px;border-radius:5px;font-size:.85em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside>
+    <div class="brand">SUBNET<span style="color:var(--ink)">·</span>LAB<br><small>from bits to fluent</small></div>
+    <nav>
+      <a href="#why"><span class="num">00</span>Why subnetting exists</a>
+      <a href="#anatomy"><span class="num">01</span>Anatomy of an IPv4 address</a>
+      <a href="#binary"><span class="num">02</span>Binary you must own</a>
+      <a href="#split"><span class="num">03</span>Network vs host</a>
+      <a href="#mask"><span class="num">04</span>The subnet mask</a>
+      <a href="#cidr"><span class="num">05</span>CIDR &amp; the master table</a>
+      <a href="#fournumbers"><span class="num">06</span>The four numbers</a>
+      <a href="#magic"><span class="num">07</span>The magic-number method</a>
+      <a href="#worked"><span class="num">08</span>Worked examples</a>
+      <a href="#borrow"><span class="num">09</span>Borrowing bits to subnet</a>
+      <a href="#vlsm"><span class="num">10</span>VLSM (real design)</a>
+      <a href="#summ"><span class="num">11</span>Summarization</a>
+      <a href="#special"><span class="num">12</span>Private &amp; special ranges</a>
+      <a href="#cloud"><span class="num">13</span>Where this bites you in prod</a>
+      <a href="#drills"><span class="num">14</span>Graded drills</a>
+      <a href="#calc"><span class="num">15</span>Live calculator</a>
+      <a href="#cheat"><span class="num">16</span>Cheat sheet</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow">A working engineer's guide</div>
+      <h1>Subnetting, from first&nbsp;principles to fluent.</h1>
+      <p class="lede">No memorized tables. By the end you'll look at <code>172.16.77.200/26</code> and read off the network, the broadcast, the host range and the host count in under ten seconds — in your head.</p>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--net)"></span>network bits</span>
+        <span><span class="swatch" style="background:var(--host)"></span>host bits</span>
+        <span><span class="swatch" style="background:var(--borrow)"></span>borrowed (subnet) bits</span>
+      </div>
+    </header>
+
+    <!-- 00 -->
+    <section id="why">
+      <h2><span class="n">00</span>Why subnetting exists</h2>
+      <div class="section-rule"></div>
+      <p>An IPv4 address is just a 32-bit number — about 4.3 billion of them. Early on, addresses were handed out in three rigid sizes (the old "classes"): a Class A block held ~16 million addresses, a Class B held ~65 thousand, a Class C held 254. If you needed 300 machines, a Class C was too small and a Class B wasted 65,000 addresses. That waste, multiplied across the planet, was burning the address space alive.</p>
+      <p><strong>Subnetting is the act of slicing one block into right-sized pieces</strong> by moving the boundary between "which network" and "which host" wherever you want it — not just at the three legacy sizes. The same mechanism also lets routers aggregate many small networks back into one line in a routing table (summarization). Slice down, summarize up: it's the same knob turned in two directions.</p>
+      <div class="note"><b>Mental model</b>Every address is a <em>street + house number</em>. Subnetting decides how many bits name the street vs. the house. More street bits → more streets, fewer houses each. That single trade-off is the whole topic.</div>
+    </section>
+
+    <!-- 01 -->
+    <section id="anatomy">
+      <h2><span class="n">01</span>Anatomy of an IPv4 address</h2>
+      <div class="section-rule"></div>
+      <p>32 bits, written as four 8-bit groups (<strong>octets</strong>) in decimal, separated by dots. Each octet ranges 0–255, because 8 bits can represent 256 values.</p>
+      <div class="bits">
+        <div class="octet"><div class="bit net">1<small>128</small></div><div class="bit net">0<small>64</small></div><div class="bit net">1<small>32</small></div><div class="bit net">0<small>16</small></div><div class="bit net">1<small>8</small></div><div class="bit net">1<small>4</small></div><div class="bit net">0<small>2</small></div><div class="bit net">0<small>1</small></div></div>
+        <span class="dot">.</span>
+        <div class="octet"><div class="bit net">0<small>128</small></div><div class="bit net">0<small>64</small></div><div class="bit net">0<small>32</small></div><div class="bit net">1<small>16</small></div><div class="bit net">0<small>8</small></div><div class="bit net">0<small>4</small></div><div class="bit net">0<small>2</small></div><div class="bit net">0<small>1</small></div></div>
+        <span class="dot">.</span>
+        <div class="octet"><div class="bit net">0<small>128</small></div><div class="bit net">0<small>64</small></div><div class="bit net">1<small>32</small></div><div class="bit net">0<small>16</small></div><div class="bit net">1<small>8</small></div><div class="bit net">1<small>4</small></div><div class="bit net">0<small>2</small></div><div class="bit net">1<small>1</small></div></div>
+        <span class="dot">.</span>
+        <div class="octet"><div class="bit host">0<small>128</small></div><div class="bit host">0<small>64</small></div><div class="bit host">0<small>32</small></div><div class="bit host">0<small>16</small></div><div class="bit host">0<small>8</small></div><div class="bit host">0<small>4</small></div><div class="bit host">0<small>2</small></div><div class="bit host">1<small>1</small></div></div>
+      </div>
+      <p>The grid above is <code>172.16.45.1</code>. Read each octet by adding the place-values under the <code>1</code>s: <code>128+32+8+4 = 172</code>, then <code>16</code>, then <code>32+8+4+1 = 45</code>, then <code>1</code>. The first three octets are coloured as network here, the last as host — but <strong>where that colour boundary sits is exactly what the mask decides</strong>, which is the rest of this guide.</p>
+    </section>
+
+    <!-- 02 -->
+    <section id="binary">
+      <h2><span class="n">02</span>The binary you must own</h2>
+      <div class="section-rule"></div>
+      <p>You don't need to convert big numbers in binary all day. You need <em>two</em> small skills cold: the eight place-values of an octet, and the eight "mask values". Burn these in.</p>
+      <h3>The eight bit place-values</h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>bit position</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">place-value</td><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+          <tr><td class="lbl">power of 2</td><td>2⁷</td><td>2⁶</td><td>2⁵</td><td>2⁴</td><td>2³</td><td>2²</td><td>2¹</td><td>2⁰</td></tr>
+        </tbody>
+      </table></div>
+      <p>To turn an octet into decimal, add the place-values wherever there's a <code>1</code>. <code>11000000 = 128+64 = 192</code>. To go the other way, greedily subtract from 128 down: <code>200 → 128 (leaves 72) → 64 (leaves 8) → 8 (leaves 0)</code> so <code>200 = 11001000</code>.</p>
+
+      <h3>The eight mask values (memorize this row)</h3>
+      <p>A mask octet is always a run of <code>1</code>s from the left, then <code>0</code>s — never mixed. So only nine values are legal per octet. These are the only ones you'll ever see:</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th># of 1-bits</th><th>binary</th><th>decimal</th><th>block size (256−dec)</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>00000000</td><td>0</td><td>256</td></tr>
+          <tr><td>1</td><td>10000000</td><td class="hl">128</td><td>128</td></tr>
+          <tr><td>2</td><td>11000000</td><td class="hl">192</td><td>64</td></tr>
+          <tr><td>3</td><td>11100000</td><td class="hl">224</td><td>32</td></tr>
+          <tr><td>4</td><td>11110000</td><td class="hl">240</td><td>16</td></tr>
+          <tr><td>5</td><td>11111000</td><td class="hl">248</td><td>8</td></tr>
+          <tr><td>6</td><td>11111100</td><td class="hl">252</td><td>4</td></tr>
+          <tr><td>7</td><td>11111110</td><td class="hl">254</td><td>2</td></tr>
+          <tr><td>8</td><td>11111111</td><td>255</td><td>1</td></tr>
+        </tbody>
+      </table></div>
+      <div class="key"><b>The single most useful fact in subnetting</b>Block size = <code>256 − mask&nbsp;value</code>. The <code>192</code> mask has block size 64. The <code>224</code> mask has block size 32. This "block size" (a.k.a. the magic number) is what makes the whole thing doable in your head. We'll use it constantly from §07 on.</div>
+    </section>
+
+    <!-- 03 -->
+    <section id="split">
+      <h2><span class="n">03</span>Network vs host: the only split that matters</h2>
+      <div class="section-rule"></div>
+      <p>Take the 32 bits and draw one vertical line through them. Everything <strong>left of the line is the network ID</strong> — shared by every device on that wire. Everything <strong>right of the line is the host ID</strong> — unique to each device. Move the line right, you get more host bits (bigger subnet, fewer subnets). Move it left, fewer host bits (smaller subnets, more of them).</p>
+      <div class="bits">
+        <div class="octet"><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div></div>
+        <span class="dot">.</span>
+        <div class="octet"><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div></div>
+        <span class="dot">.</span>
+        <div class="octet"><div class="bit net">·</div><div class="bit net">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div></div>
+        <span class="dot">.</span>
+        <div class="octet"><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div></div>
+      </div>
+      <p>Above the line sits after 18 network bits — a <code>/18</code>. There are 14 host bits left, so this subnet holds <code>2¹⁴ = 16384</code> addresses. Two of those are reserved (next section), leaving <strong>16382 usable hosts</strong>.</p>
+      <div class="warn"><b>Two addresses are never yours to assign</b>The <em>all-host-bits-0</em> address is the <strong>network address</strong> (the name of the wire). The <em>all-host-bits-1</em> address is the <strong>broadcast</strong> (everyone on the wire). That's why usable hosts = <code>2ⁿ − 2</code>, where <code>n</code> = host bits.</div>
+    </section>
+
+    <!-- 04 -->
+    <section id="mask">
+      <h2><span class="n">04</span>The subnet mask is just where the line is</h2>
+      <div class="section-rule"></div>
+      <p>The mask is a second 32-bit number whose <code>1</code>s mark the network portion and <code>0</code>s mark the host portion. A <code>/24</code> means 24 ones then 8 zeros:</p>
+      <div class="bits">
+        <div class="octet"><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div></div><span class="dot">.</span>
+        <div class="octet"><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div></div><span class="dot">.</span>
+        <div class="octet"><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div><div class="bit net">1</div></div><span class="dot">.</span>
+        <div class="octet"><div class="bit host">0</div><div class="bit host">0</div><div class="bit host">0</div><div class="bit host">0</div><div class="bit host">0</div><div class="bit host">0</div><div class="bit host">0</div><div class="bit host">0</div></div>
+      </div>
+      <p>Three octets of all-ones (<code>255</code>) and one of all-zeros (<code>0</code>) → <code>255.255.255.0</code>. The router computes the network ID by a bitwise <strong>AND</strong> of the address and the mask: wherever the mask is <code>1</code> the address bit passes through; wherever the mask is <code>0</code> the result is forced to <code>0</code>. That AND is the only arithmetic a router actually does here — everything in this guide is just doing it faster than the long way.</p>
+    </section>
+
+    <!-- 05 -->
+    <section id="cidr">
+      <h2><span class="n">05</span>CIDR &amp; the master table</h2>
+      <div class="section-rule"></div>
+      <p>CIDR (Classless Inter-Domain Routing) is just the <code>/n</code> shorthand: <code>n</code> = number of network bits. <code>10.0.0.0/8</code>, <code>192.168.1.0/24</code>, <code>172.16.4.0/30</code>. It killed the rigid classes for good. This is the one table worth half-memorizing — but really you only need the <em>pattern</em>, because §07 lets you regenerate any row on demand.</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>CIDR</th><th>mask</th><th>host bits</th><th>total addrs</th><th>usable hosts</th><th>block size*</th></tr></thead>
+        <tbody>
+          <tr><td>/8</td><td>255.0.0.0</td><td>24</td><td>16,777,216</td><td>16,777,214</td><td>1 (oct&nbsp;1)</td></tr>
+          <tr><td>/16</td><td>255.255.0.0</td><td>16</td><td>65,536</td><td>65,534</td><td>1 (oct&nbsp;2)</td></tr>
+          <tr><td>/20</td><td>255.255.240.0</td><td>12</td><td>4,096</td><td>4,094</td><td>16 (oct&nbsp;3)</td></tr>
+          <tr><td>/22</td><td>255.255.252.0</td><td>10</td><td>1,024</td><td>1,022</td><td>4 (oct&nbsp;3)</td></tr>
+          <tr><td>/23</td><td>255.255.254.0</td><td>9</td><td>512</td><td>510</td><td>2 (oct&nbsp;3)</td></tr>
+          <tr class="hl"><td>/24</td><td>255.255.255.0</td><td>8</td><td>256</td><td>254</td><td>1 (oct&nbsp;4)</td></tr>
+          <tr><td>/25</td><td>255.255.255.128</td><td>7</td><td>128</td><td>126</td><td>128 (oct&nbsp;4)</td></tr>
+          <tr><td>/26</td><td>255.255.255.192</td><td>6</td><td>64</td><td>62</td><td>64 (oct&nbsp;4)</td></tr>
+          <tr><td>/27</td><td>255.255.255.224</td><td>5</td><td>32</td><td>30</td><td>32 (oct&nbsp;4)</td></tr>
+          <tr><td>/28</td><td>255.255.255.240</td><td>4</td><td>16</td><td>14</td><td>16 (oct&nbsp;4)</td></tr>
+          <tr><td>/29</td><td>255.255.255.248</td><td>3</td><td>8</td><td>6</td><td>8 (oct&nbsp;4)</td></tr>
+          <tr><td>/30</td><td>255.255.255.252</td><td>2</td><td>4</td><td>2</td><td>4 (oct&nbsp;4)</td></tr>
+          <tr><td>/31</td><td>255.255.255.254</td><td>1</td><td>2</td><td>2†</td><td>2 (oct&nbsp;4)</td></tr>
+          <tr><td>/32</td><td>255.255.255.255</td><td>0</td><td>1</td><td>1†</td><td>1 (oct&nbsp;4)</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:13px;color:var(--muted)">* "block size" = how much the network address jumps each step, in the octet where the mask isn't 0 or 255. † <code>/31</code> and <code>/32</code> are special-cased — see §12.</p>
+      <div class="note"><b>Read the pattern, not the rows</b>Every drop of one in the prefix <em>doubles</em> the hosts and <em>halves</em> the number of subnets. <code>/26</code>→<code>/25</code> doubles 62→126 usable. That doubling is the entire table.</div>
+    </section>
+
+    <!-- 06 -->
+    <section id="fournumbers">
+      <h2><span class="n">06</span>The four numbers you compute for any subnet</h2>
+      <div class="section-rule"></div>
+      <p>Given any address with a prefix, you describe its subnet with four facts. Everything else is derived from these.</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>#</th><th>name</th><th>what it is</th><th>how to get it</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="lbl">Network address</td><td>name of the wire; host bits all 0</td><td>round the address <em>down</em> to a block-size multiple</td></tr>
+          <tr><td>2</td><td class="lbl">Broadcast address</td><td>reaches everyone; host bits all 1</td><td>next network − 1</td></tr>
+          <tr><td>3</td><td class="lbl">First usable host</td><td>first assignable IP</td><td>network + 1</td></tr>
+          <tr><td>4</td><td class="lbl">Last usable host</td><td>last assignable IP</td><td>broadcast − 1</td></tr>
+        </tbody>
+      </table></div>
+      <p>Host <em>count</em> = <code>2^(host bits) − 2</code>. Once you can place the network and broadcast, the two host ends are just ±1 from them. So the real skill is step 1 — and that's what the magic-number method gives you instantly.</p>
+    </section>
+
+    <!-- 07 -->
+    <section id="magic">
+      <h2><span class="n">07</span>The magic-number method (the expert shortcut)</h2>
+      <div class="section-rule"></div>
+      <p>This is the technique that lets people answer subnet questions out loud. Four steps, no binary.</p>
+      <ul class="tight">
+        <li><strong>1. Find the interesting octet.</strong> Write the mask. The "interesting" octet is the one that's neither <code>255</code> nor <code>0</code>. (For a <code>/26</code>, mask <code>255.255.255.192</code> → 4th octet.)</li>
+        <li><strong>2. Block size = 256 − that octet's mask value.</strong> (<code>256 − 192 = 64</code>.)</li>
+        <li><strong>3. Network = round the address's interesting-octet down to a multiple of the block size.</strong> The multiples <em>are</em> your subnet boundaries: 0, block, 2×block, …</li>
+        <li><strong>4. Broadcast = network's interesting octet + block size − 1.</strong> Host range sits between, ±1.</li>
+      </ul>
+      <div class="term">
+<span class="c"># Given: 172.16.77.200/26</span>
+mask          = 255.255.255.<span class="o">192</span>     <span class="dim">→ interesting octet = 4th</span>
+block size    = 256 − 192 = <span class="o">64</span>
+multiples     = 0, 64, 128, <span class="b">192</span>, (256)
+200 lands in  → <span class="b">192</span> block
+<span class="g">network       = 172.16.77.192</span>
+<span class="g">broadcast     = 172.16.77.(192+64−1) = 172.16.77.255</span>
+<span class="g">host range    = 172.16.77.193  →  172.16.77.254</span>
+<span class="g">usable hosts  = 2^6 − 2 = 62</span>
+      </div>
+      <div class="key"><b>Say it as one sentence</b>"<code>/26</code> is block-64 in the last octet; 200 rounds down to 192; so .192 network, .255 broadcast, .193–.254 hosts, 62 of them." That sentence <em>is</em> fluency. Drill it until it's reflex.</div>
+    </section>
+
+    <!-- 08 -->
+    <section id="worked">
+      <h2><span class="n">08</span>Worked examples (watch the octet move)</h2>
+      <div class="section-rule"></div>
+
+      <h3>Example A — boundary in the 3rd octet</h3>
+      <div class="term">
+<span class="c"># 10.5.20.0/19</span>
+mask        = 255.255.<span class="o">224</span>.0      <span class="dim">→ interesting octet = 3rd</span>
+block size  = 256 − 224 = <span class="o">32</span>
+multiples   = 0, <span class="b">32</span>... ; 20 rounds down to <span class="b">0</span>
+<span class="g">network     = 10.5.0.0</span>
+<span class="g">broadcast   = 10.5.31.255</span>   <span class="dim">(0+32−1 = 31 in oct3, then .255)</span>
+<span class="g">hosts       = 10.5.0.1 → 10.5.31.254   (2^13 − 2 = 8190)</span>
+      </div>
+      <p>When the boundary is in the 3rd octet, the host portion spills across octets 3 <em>and</em> 4. The broadcast's 3rd octet is one below the next block (<code>31</code>), and the 4th octet goes all the way to <code>255</code>. Everything to the right of the boundary is host space.</p>
+
+      <h3>Example B — the trap of a non-zero 3rd octet</h3>
+      <div class="term">
+<span class="c"># 172.16.77.200/19   (same prefix, busier address)</span>
+block size  = 32 (oct 3)
+multiples   = 0,32,64,<span class="b">64</span>... ; 77 rounds down to <span class="b">64</span>
+<span class="g">network     = 172.16.64.0</span>
+<span class="g">broadcast   = 172.16.95.255</span>   <span class="dim">(64+32−1 = 95)</span>
+<span class="g">hosts       = 172.16.64.1 → 172.16.95.254</span>
+      </div>
+      <p>Notice the 4th octet (<code>200</code>) was a <em>distraction</em>: the boundary is in octet 3, so octet 4 is pure host and doesn't affect the network ID at all. Always round in the interesting octet, and zero everything to its right.</p>
+
+      <h3>Example C — a point-to-point link</h3>
+      <div class="term">
+<span class="c"># 192.168.1.6/30</span>
+block size  = 256 − 252 = <span class="o">4</span>  (oct 4)
+multiples   = 0,4,<span class="b">4</span>,8... ; 6 rounds down to <span class="b">4</span>
+<span class="g">network     = 192.168.1.4</span>
+<span class="g">broadcast   = 192.168.1.7</span>
+<span class="g">hosts       = .5 and .6   (exactly 2 usable — perfect for a router-to-router link)</span>
+      </div>
+    </section>
+
+    <!-- 09 -->
+    <section id="borrow">
+      <h2><span class="n">09</span>Borrowing bits: turning one network into many</h2>
+      <div class="section-rule"></div>
+      <p>"Subnetting" in the verb sense means: take a block, steal some host bits to act as a <strong>subnet number</strong>, and split it into equal pieces. Each borrowed bit doubles the count of subnets and halves the hosts each.</p>
+      <ul class="tight">
+        <li>Subnets created = <code>2^(bits borrowed)</code></li>
+        <li>Hosts per subnet = <code>2^(host bits remaining) − 2</code></li>
+      </ul>
+      <p>Borrow 3 bits from a <code>/24</code> (→ <code>/27</code>). The grid: 24 fixed network bits, 3 purple borrowed bits, 5 host bits.</p>
+      <div class="bits">
+        <div class="octet"><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div></div><span class="dot">.</span>
+        <div class="octet"><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div></div><span class="dot">.</span>
+        <div class="octet"><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div><div class="bit net">·</div></div><span class="dot">.</span>
+        <div class="octet"><div class="bit borrow">·</div><div class="bit borrow">·</div><div class="bit borrow">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div><div class="bit host">·</div></div>
+      </div>
+      <p>3 borrowed → <code>2³ = 8</code> subnets. 5 host bits → <code>2⁵ − 2 = 30</code> hosts each. Block size in the last octet = <code>256 − 224 = 32</code>, so the eight subnets of <code>192.168.1.0/24</code> are:</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>subnet</th><th>network</th><th>first host</th><th>last host</th><th>broadcast</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>192.168.1.0</td><td>.1</td><td>.30</td><td>.31</td></tr>
+          <tr><td>1</td><td>192.168.1.32</td><td>.33</td><td>.62</td><td>.63</td></tr>
+          <tr><td>2</td><td>192.168.1.64</td><td>.65</td><td>.94</td><td>.95</td></tr>
+          <tr><td>3</td><td>192.168.1.96</td><td>.97</td><td>.126</td><td>.127</td></tr>
+          <tr><td>4</td><td>192.168.1.128</td><td>.129</td><td>.158</td><td>.159</td></tr>
+          <tr><td>5</td><td>192.168.1.160</td><td>.161</td><td>.190</td><td>.191</td></tr>
+          <tr><td>6</td><td>192.168.1.192</td><td>.193</td><td>.222</td><td>.223</td></tr>
+          <tr><td>7</td><td>192.168.1.224</td><td>.225</td><td>.254</td><td>.255</td></tr>
+        </tbody>
+      </table></div>
+      <p>See the rhythm: each network jumps by the block size (32), and each broadcast is one below the next network. That's the entire table generated from one number.</p>
+    </section>
+
+    <!-- 10 -->
+    <section id="vlsm">
+      <h2><span class="n">10</span>VLSM — sizing each subnet to its real need</h2>
+      <div class="section-rule"></div>
+      <p>Fixed-size subnetting wastes space when your segments differ wildly in size. <strong>Variable Length Subnet Masking</strong> lets each subnet pick its own prefix. The discipline: <em>allocate largest-first, always carving the next block immediately after the previous one.</em></p>
+      <div class="note"><b>Why largest-first</b>If you place a small subnet in the middle of the range first, you fragment it and may not be able to fit a large one later. Sort descending by host need, then walk straight up the address space.</div>
+      <p>Brief: split <code>192.168.10.0/24</code> for segments needing <strong>100, 50, 25, and 2</strong> hosts (two point-to-point links).</p>
+      <div class="term">
+<span class="c"># round each need UP to a power of two, then add the two reserved</span>
+need 100 → /25  (126 usable)  → <span class="g">192.168.10.0/25</span>     .0   – .127
+need  50 → /26  ( 62 usable)  → <span class="g">192.168.10.128/26</span>   .128 – .191
+need  25 → /27  ( 30 usable)  → <span class="g">192.168.10.192/27</span>   .192 – .223
+need   2 → /30  (  2 usable)  → <span class="g">192.168.10.224/30</span>   .224 – .227
+need   2 → /30  (  2 usable)  → <span class="g">192.168.10.228/30</span>   .228 – .231
+                                <span class="dim">.232 – .255 still free for growth</span>
+      </div>
+      <p>Each block starts exactly where the last one ended, and no two overlap. The leftover <code>.232–.255</code> is real, reclaimable space — the payoff of VLSM over fixed sizing.</p>
+    </section>
+
+    <!-- 11 -->
+    <section id="summ">
+      <h2><span class="n">11</span>Summarization — the same knob, turned up</h2>
+      <div class="section-rule"></div>
+      <p>Routers don't want 50 routes when one will do. <strong>Summarization (supernetting)</strong> collapses several adjacent networks into one advertisement by moving the boundary <em>left</em> until a single prefix covers them all. The trick: find the longest prefix where all the networks share identical bits.</p>
+      <p>Collapse these four:</p>
+      <div class="term">
+192.168.<span class="o">4</span>.0/24   → oct3 = 0000010<span class="dim">0</span>
+192.168.<span class="o">5</span>.0/24   → oct3 = 0000010<span class="dim">1</span>
+192.168.<span class="o">6</span>.0/24   → oct3 = 0000011<span class="dim">0</span>
+192.168.<span class="o">7</span>.0/24   → oct3 = 0000011<span class="dim">1</span>
+                       <span class="b">^^^^^^</span>‾‾  first 6 bits identical, last 2 vary
+<span class="g">summary = 192.168.4.0/22</span>   <span class="dim">(24 − 2 varying bits = /22)</span>
+      </div>
+      <p>The four <code>/24</code>s (4,5,6,7) differ only in their lowest two bits, so a <code>/22</code> covers all of them and nothing extra. One route instead of four. <strong>This only works on a properly aligned, contiguous block</strong> — 4,5,6,7 summarize cleanly; 5,6,7,8 do not, because they straddle a boundary.</p>
+    </section>
+
+    <!-- 12 -->
+    <section id="special">
+      <h2><span class="n">12</span>Private &amp; special-case ranges</h2>
+      <div class="section-rule"></div>
+      <h3>RFC 1918 private space (memorize)</h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>range</th><th>CIDR</th><th>size</th><th>typical use</th></tr></thead>
+        <tbody>
+          <tr><td>10.0.0.0 – 10.255.255.255</td><td>10.0.0.0/8</td><td>~16.7M</td><td class="lbl">big cloud VNets, k8s</td></tr>
+          <tr><td>172.16.0.0 – 172.31.255.255</td><td>172.16.0.0/12</td><td>~1M</td><td class="lbl">mid-size estates</td></tr>
+          <tr><td>192.168.0.0 – 192.168.255.255</td><td>192.168.0.0/16</td><td>65K</td><td class="lbl">homes, small labs</td></tr>
+        </tbody>
+      </table></div>
+      <div class="warn"><b>Common gotcha</b>The middle one is <code>172.16.0.0/12</code>, not <code>/16</code>. It spans <code>172.16.x.x</code> through <code>172.31.x.x</code> — sixteen Class-B-sized blocks. People misread this constantly.</div>
+      <h3>Other ranges worth knowing</h3>
+      <ul class="tight">
+        <li><code>127.0.0.0/8</code> — loopback (<code>127.0.0.1</code> = localhost).</li>
+        <li><code>169.254.0.0/16</code> — link-local / APIPA. If a host shows this, DHCP failed.</li>
+        <li><code>100.64.0.0/10</code> — carrier-grade NAT (and Tailscale's default range).</li>
+        <li><code>224.0.0.0/4</code> — multicast.</li>
+      </ul>
+      <h3>The /31 and /32 exceptions</h3>
+      <p>By the <code>2ⁿ−2</code> rule a <code>/31</code> would have <em>zero</em> usable hosts. RFC 3021 special-cases it: on a point-to-point link a <code>/31</code> gives you <strong>both</strong> addresses as usable hosts (no network/broadcast waste). A <code>/32</code> is a single host — used for loopbacks, host routes, and matching one exact IP in a firewall or route table.</p>
+    </section>
+
+    <!-- 13 -->
+    <section id="cloud">
+      <h2><span class="n">13</span>Where this actually bites you in prod</h2>
+      <div class="section-rule"></div>
+      <p>This isn't an exam topic for you — it's the thing behind half your incidents. A few translations into your world:</p>
+      <ul class="tight">
+        <li><strong>VNet / subnet sizing.</strong> A VNet is just a CIDR (say <code>10.20.0.0/16</code>); each subnet carves a slice. Size a subnet too tight and you run out of IPs mid-scale-out — the node pool can't get addresses and pods go <code>Pending</code>.</li>
+        <li><strong>AKS / pod CIDRs.</strong> In Azure CNI every <em>pod</em> consumes a real subnet IP, so a <code>/24</code> node subnet (254 usable) can be exhausted by a couple of busy nodes. The "careful IP planning" you did during the AGIC pod-IP-update incident is exactly §10 VLSM thinking — carving non-overlapping subnets sized to real pod density.</li>
+        <li><strong>App Gateway subnets.</strong> AGIC wants headroom in its dedicated subnet; an undersized one is why pod-IP updates stall. Knowing block size at a glance tells you instantly whether a <code>/27</code> can survive a scale event.</li>
+        <li><strong>Route tables &amp; NSGs.</strong> A rule scoped to <code>10.20.0.0/22</code> covers four <code>/24</code>s — that's §11 summarization. Get the prefix wrong and you either leak access or black-hole traffic.</li>
+        <li><strong>Peering overlap.</strong> Two VNets that both use <code>10.0.0.0/16</code> can't peer. Disciplined allocation from one parent block is what prevents the collision.</li>
+      </ul>
+    </section>
+
+    <!-- 14 -->
+    <section id="drills">
+      <h2><span class="n">14</span>Graded drills</h2>
+      <div class="section-rule"></div>
+      <p>Do these on paper, out loud, <em>then</em> reveal. The goal isn't the answer — it's the <em>sentence</em> you say to get there. If you can't narrate the block-size step, you're not fluent yet.</p>
+
+      <details>
+        <summary><span class="qtag">EASY</span><span class="qtxt">For <code>192.168.4.77/26</code>: network, broadcast, host range, usable count?</span></summary>
+        <div class="answer">
+          <p>Mask <code>…255.192</code> → block 64 in oct 4. Multiples 0/64/128/192; 77 rounds down to 64.</p>
+          <p>Broadcast = 64 + 64 − 1 = 127.</p>
+          <div class="final">net 192.168.4.64 · bcast 192.168.4.127 · hosts .65–.126 · 62 usable</div>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">EASY</span><span class="qtxt">How many usable hosts in a <code>/29</code>? And what's its mask?</span></summary>
+        <div class="answer">
+          <p>32 − 29 = 3 host bits → <code>2³ − 2 = 6</code>. Mask: 5 ones in the last octet = <code>248</code>.</p>
+          <div class="final">6 usable · mask 255.255.255.248 · block size 8</div>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="qtag med">MEDIUM</span><span class="qtxt">For <code>10.34.150.200/21</code>: network &amp; broadcast?</span></summary>
+        <div class="answer">
+          <p>Mask <code>255.255.248.0</code> → interesting octet 3, block 256 − 248 = 8. Multiples in oct 3: 0,8,…,144,<strong>152</strong>; 150 rounds down to <strong>144</strong> (next is 152).</p>
+          <p>Broadcast oct 3 = 144 + 8 − 1 = 151, oct 4 = 255.</p>
+          <div class="final">net 10.34.144.0 · bcast 10.34.151.255 · hosts 10.34.144.1 – 10.34.151.254</div>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="qtag med">MEDIUM</span><span class="qtxt">Is <code>172.16.93.40/26</code> in the same subnet as <code>172.16.93.70/26</code>?</span></summary>
+        <div class="answer">
+          <p>Block 64 in oct 4. 40 rounds to 0 (range .0–.63). 70 rounds to 64 (range .64–.127). Different blocks.</p>
+          <div class="final">No — .40 is in subnet .0/26, .70 is in subnet .64/26</div>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="qtag hard">HARD</span><span class="qtxt">VLSM: carve <code>10.10.0.0/24</code> for needs of 60, 30, 12, and 2 hosts.</span></summary>
+        <div class="answer">
+          <p>Round each up: 60→/26 (62), 30→/27 (30), 12→/28 (14), 2→/30 (2). Allocate largest-first, contiguously:</p>
+          <div class="term">
+60 → <span class="g">10.10.0.0/26</span>    .0   – .63
+30 → <span class="g">10.10.0.64/27</span>   .64  – .95
+12 → <span class="g">10.10.0.96/28</span>   .96  – .111
+ 2 → <span class="g">10.10.0.112/30</span>  .112 – .115
+                       <span class="dim">.116 – .255 free</span>
+          </div>
+          <div class="final">No overlaps; 140 addresses still free for growth</div>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="qtag hard">HARD</span><span class="qtxt">Summarize <code>10.8.16.0/24</code>, <code>10.8.17.0/24</code>, <code>10.8.18.0/24</code>, <code>10.8.19.0/24</code> into one route.</span></summary>
+        <div class="answer">
+          <p>Octet 3 values 16–19 in binary: <code>00010000 / 00010001 / 00010010 / 00010011</code>. First 6 bits identical, last 2 vary → drop 2 bits from /24.</p>
+          <div class="final">10.8.16.0/22  (covers .16 through .19, nothing extra)</div>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="qtag hard">HARD</span><span class="qtxt">Trap check: can you summarize <code>10.8.17.0/24 … 10.8.20.0/24</code> (17,18,19,20) into one clean route?</span></summary>
+        <div class="answer">
+          <p>No. 17–20 straddle the /22 boundary: 16–19 form one aligned /22, but 20 starts the next. A single prefix that covers 17–20 (a /21 = 16–23) would also pull in 16, 21, 22, 23 — addresses you didn't intend. Summarization needs a <em>power-of-two-aligned, contiguous</em> set.</p>
+          <div class="final">Not summarizable into one exact route — alignment fails</div>
+        </div>
+      </details>
+    </section>
+
+    <!-- 15 -->
+    <section id="calc">
+      <h2><span class="n">15</span>Live calculator — check your own work</h2>
+      <div class="section-rule"></div>
+      <p>Use this <em>after</em> you've worked a problem by hand, never before. The point is to verify the sentence in your head, not replace it.</p>
+      <div class="calc">
+        <div class="calc-in">
+          <label>IPv4 address
+            <input id="ip" type="text" value="172.16.77.200" spellcheck="false">
+          </label>
+          <label>prefix
+            <select id="prefix"></select>
+          </label>
+          <button onclick="calc()">Compute</button>
+        </div>
+        <div id="err" class="calc-err"></div>
+        <div class="calc-out" id="out" style="display:none">
+          <div class="cell"><div class="k">mask</div><div class="v" id="o-mask"></div></div>
+          <div class="cell"><div class="k">network</div><div class="v" id="o-net"></div></div>
+          <div class="cell"><div class="k">broadcast</div><div class="v" id="o-bc"></div></div>
+          <div class="cell"><div class="k">first host</div><div class="v" id="o-first"></div></div>
+          <div class="cell"><div class="k">last host</div><div class="v" id="o-last"></div></div>
+          <div class="cell"><div class="k">usable hosts</div><div class="v" id="o-hosts"></div></div>
+          <div class="cell"><div class="k">block size</div><div class="v" id="o-block"></div></div>
+          <div class="cell"><div class="k">wildcard</div><div class="v" id="o-wild"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 -->
+    <section id="cheat">
+      <h2><span class="n">16</span>Cheat sheet — the whole thing on one card</h2>
+      <div class="section-rule"></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>you want…</th><th>do this</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">usable hosts</td><td>2^(32 − prefix) − 2</td></tr>
+          <tr><td class="lbl">host bits</td><td>32 − prefix</td></tr>
+          <tr><td class="lbl">block size (magic number)</td><td>256 − (mask value of interesting octet)</td></tr>
+          <tr><td class="lbl">network address</td><td>round interesting octet DOWN to a block multiple; zero everything right</td></tr>
+          <tr><td class="lbl">broadcast</td><td>network's interesting octet + block − 1; 255 everything right</td></tr>
+          <tr><td class="lbl">first / last host</td><td>network + 1 / broadcast − 1</td></tr>
+          <tr><td class="lbl"># subnets when borrowing b bits</td><td>2^b</td></tr>
+          <tr><td class="lbl">VLSM rule</td><td>sort needs descending, round up to powers of 2, allocate contiguously</td></tr>
+          <tr><td class="lbl">summarization</td><td>find longest prefix where all networks share identical bits</td></tr>
+          <tr><td class="lbl">mask octet values</td><td>128·192·224·240·248·252·254·255</td></tr>
+        </tbody>
+      </table></div>
+      <div class="key"><b>If you remember one thing</b><code>block size = 256 − mask</code>, and the network address is the multiple of the block size at or below your octet. Everything else falls out of that.</div>
+      <p>Now go drill §14 until the sentences come without effort, then test yourself against §15. That's the path from "I can derive it slowly" to "I just know."</p>
+    </section>
+
+    <div class="footer">subnet·lab — one self-contained file · works offline · no tracking</div>
+  </main>
+</div>
+
+<script>
+  // populate prefix dropdown
+  (function(){
+    const sel = document.getElementById('prefix');
+    for(let p=8;p<=32;p++){
+      const o=document.createElement('option');
+      o.value=p; o.textContent='/'+p;
+      if(p===26)o.selected=true;
+      sel.appendChild(o);
+    }
+  })();
+
+  function ipToInt(parts){return ((parts[0]<<24)>>>0)+(parts[1]<<16)+(parts[2]<<8)+parts[3];}
+  function intToIp(n){return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.');}
+
+  function calc(){
+    const err=document.getElementById('err');
+    const out=document.getElementById('out');
+    err.textContent='';
+    const raw=document.getElementById('ip').value.trim();
+    const prefix=parseInt(document.getElementById('prefix').value,10);
+    const parts=raw.split('.').map(x=>parseInt(x,10));
+    if(parts.length!==4||parts.some(x=>isNaN(x)||x<0||x>255)){
+      out.style.display='none';
+      err.textContent='Enter a valid IPv4 address, e.g. 10.34.150.200';
+      return;
+    }
+    const ipInt=ipToInt(parts);
+    const maskInt = prefix===0 ? 0 : (0xFFFFFFFF << (32-prefix))>>>0;
+    const netInt = (ipInt & maskInt)>>>0;
+    const hostBits = 32-prefix;
+    const bcastInt = (netInt | (~maskInt>>>0))>>>0;
+    const wildInt = (~maskInt)>>>0;
+
+    let firstHost, lastHost, usable;
+    if(prefix>=31){            // /31 and /32 special cases
+      firstHost = intToIp(netInt);
+      lastHost  = intToIp(bcastInt);
+      usable    = prefix===32 ? 1 : 2;
+    } else {
+      firstHost = intToIp((netInt+1)>>>0);
+      lastHost  = intToIp((bcastInt-1)>>>0);
+      usable    = Math.pow(2,hostBits)-2;
+    }
+
+    // interesting octet + block size
+    const maskOctets=[(maskInt>>>24)&255,(maskInt>>>16)&255,(maskInt>>>8)&255,maskInt&255];
+    let block=1, interesting=4;
+    for(let i=0;i<4;i++){ if(maskOctets[i]!==255 && maskOctets[i]!==0){ block=256-maskOctets[i]; interesting=i+1; break; } if(maskOctets[i]===0 && i===0){block=1;interesting=1;} }
+    if(prefix>=24){block=256-maskOctets[3];interesting=4;}
+
+    document.getElementById('o-mask').textContent=intToIp(maskInt);
+    document.getElementById('o-net').textContent=intToIp(netInt)+'/'+prefix;
+    document.getElementById('o-bc').textContent=intToIp(bcastInt);
+    document.getElementById('o-first').textContent=firstHost;
+    document.getElementById('o-last').textContent=lastHost;
+    document.getElementById('o-hosts').textContent=usable.toLocaleString();
+    document.getElementById('o-block').textContent=block+'  (octet '+interesting+')';
+    document.getElementById('o-wild').textContent=intToIp(wildInt);
+    out.style.display='grid';
+  }
+  calc();
+</script>
+</body>
+</html>
